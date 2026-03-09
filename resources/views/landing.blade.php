@@ -667,11 +667,11 @@
                         <i class="bi bi-shield-check me-2"></i>Distributor Resmi & Terpercaya
                     </span>
                     <h1 class="hero-title">
-                        Solusi Profesional<br>
-                        <span class="hero-highlight">Alat Kesehatan Radiologi</span>
+                        {{ setting('hero_title_1', 'Solusi Profesional') }}<br>
+                        <span class="hero-highlight">{{ setting('hero_title_2', 'Alat Kesehatan Radiologi') }}</span>
                     </h1>
                     <p class="hero-subtitle">
-                        Partner terpercaya untuk kebutuhan peralatan medis radiologi Anda. Kami menyediakan produk berkualitas tinggi dengan layanan konsultasi profesional untuk rumah sakit dan fasilitas kesehatan.
+                        {{ setting('hero_subtitle', 'Partner terpercaya untuk kebutuhan peralatan medis radiologi Anda. Kami menyediakan produk berkualitas tinggi dengan layanan konsultasi profesional untuk rumah sakit dan fasilitas kesehatan.') }}
                     </p>
                     <!-- Buttons on desktop only -->
                     <div class="d-none d-lg-flex gap-3 flex-wrap">
@@ -684,9 +684,39 @@
                     </div>
                 </div>
                 
-                <!-- Image - Order 2 on mobile, Order 2 on desktop -->
+                <!-- Image - Carousel on mobile and desktop -->
                 <div class="col-lg-6 text-center order-2 order-lg-2 mb-4 mb-lg-0">
-                    <img src="{{ asset('assets/images/TaeAugust19.jpg') }}" alt="Medical Equipment" class="img-fluid floating-img" style="max-width: 85%;">
+                    <style>
+                        #heroCarousel .carousel-item {
+                            transition: transform 2s ease-in-out, opacity 2s ease-in-out;
+                        }
+                        #heroCarousel .carousel-fade .active.carousel-item-start,
+                        #heroCarousel .carousel-fade .active.carousel-item-end {
+                            transition: opacity 0s 2s; /* delays hiding until new one is fully visible */
+                        }
+                    </style>
+                    <div id="heroCarousel" class="carousel slide carousel-fade floating-img" data-bs-ride="carousel" data-bs-interval="4000" style="max-width: 85%; margin: 0 auto;">
+                        <div class="carousel-inner">
+                            @php
+                                $hero_images = [];
+                                if (setting('hero_image_1')) $hero_images[] = setting('hero_image_1');
+                                if (setting('hero_image_2')) $hero_images[] = setting('hero_image_2');
+                                if (setting('hero_image_3')) $hero_images[] = setting('hero_image_3');
+                            @endphp
+
+                            @if(count($hero_images) > 0)
+                                @foreach($hero_images as $index => $img)
+                                <div class="carousel-item {{ $index === 0 ? 'active' : '' }}">
+                                    <img src="{{ Storage::url($img) }}" class="d-block w-100 img-fluid" alt="Hero Image {{ $index + 1 }}" style="border-radius: 16px;">
+                                </div>
+                                @endforeach
+                            @else
+                                <div class="carousel-item active">
+                                    <img src="{{ asset('assets/images/TaeAugust19.jpg') }}" class="d-block w-100 img-fluid" alt="Medical Equipment" style="border-radius: 16px;">
+                                </div>
+                            @endif
+                        </div>
+                    </div>
                 </div>
                 
                 <!-- Buttons on mobile only - Order 3 -->
@@ -710,19 +740,19 @@
             <div class="row">
                 <div class="col-md-4">
                     <div class="stat-card">
-                        <div class="stat-number" data-target="3">0</div>
+                        <div class="stat-number" data-target="{{ setting('stat_years', '3') }}">0</div>
                         <div class="stat-label">Tahun Pengalaman</div>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="stat-card">
-                        <div class="stat-number" data-target="500">0</div>
+                        <div class="stat-number" data-target="{{ setting('stat_clients', '500') }}">0</div>
                         <div class="stat-label">Klien Terlayani</div>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="stat-card">
-                        <div class="stat-number" data-target="100">0</div>
+                        <div class="stat-number" data-target="{{ setting('stat_products', '100') }}">0</div>
                         <div class="stat-label">Produk Bergaransi</div>
                     </div>
                 </div>
@@ -746,9 +776,9 @@
                         <div class="feature-icon icon-blue">
                             <i class="bi bi-hospital"></i>
                         </div>
-                        <h3 class="feature-title">Peralatan Medis Lengkap</h3>
+                        <h3 class="feature-title">{{ setting('feature_1_title', 'Peralatan Medis Lengkap') }}</h3>
                         <p class="feature-desc">
-                            Menyediakan berbagai jenis alat kesehatan radiologi dan umum dari brand terkemuka dengan teknologi terkini.
+                            {{ setting('feature_1_desc', 'Menyediakan berbagai jenis alat kesehatan radiologi dan umum dari brand terkemuka dengan teknologi terkini.') }}
                         </p>
                     </div>
                 </div>
@@ -758,9 +788,9 @@
                         <div class="feature-icon icon-teal">
                             <i class="bi bi-shield-check"></i>
                         </div>
-                        <h3 class="feature-title">Terstandarisasi & Berizin</h3>
+                        <h3 class="feature-title">{{ setting('feature_2_title', 'Terstandarisasi & Berizin') }}</h3>
                         <p class="feature-desc">
-                            Seluruh produk memiliki izin edar resmi dan memenuhi standar keselamatan Kementerian Kesehatan RI.
+                            {{ setting('feature_2_desc', 'Seluruh produk memiliki izin edar resmi dan memenuhi standar keselamatan Kementerian Kesehatan RI.') }}
                         </p>
                     </div>
                 </div>
@@ -770,9 +800,9 @@
                         <div class="feature-icon icon-orange">
                             <i class="bi bi-headset"></i>
                         </div>
-                        <h3 class="feature-title">Layanan Purna Jual</h3>
+                        <h3 class="feature-title">{{ setting('feature_3_title', 'Layanan Purna Jual') }}</h3>
                         <p class="feature-desc">
-                            Dukungan teknis 24/7, garansi resmi, dan maintenance berkala untuk performa optimal peralatan Anda.
+                            {{ setting('feature_3_desc', 'Dukungan teknis 24/7, garansi resmi, dan maintenance berkala untuk performa optimal peralatan Anda.') }}
                         </p>
                     </div>
                 </div>
@@ -790,27 +820,45 @@
                 </p>
             </div>
 
-            <div class="row g-4 justify-content-center">
-                <div class="col-md-5">
-                    <a href="https://wa.me/6285280002289" target="_blank" class="text-decoration-none">
-                        <div class="contact-card">
-                            <i class="bi bi-whatsapp contact-icon text-success"></i>
-                            <h4>WhatsApp</h4>
-                            <p class="text-muted mb-0">Chat langsung untuk respons cepat</p>
-                            <p class="contact-value text-success">0852-8000-2289</p>
-                        </div>
-                    </a>
+            <div class="row g-4">
+                <!-- Informasi Kontak -->
+                <div class="col-lg-5">
+                    <div class="d-flex flex-column gap-4 h-100">
+                        @php
+                            // Bersihkan nomor wa agar cocok untuk url (hanya angka)
+                            $wa_raw = setting('contact_wa', '0852-8000-2289');
+                            $wa_clean = preg_replace('/[^0-9]/', '', $wa_raw);
+                            // Ubah 0 jadi 62 jika depan adalah 0
+                            if(str_starts_with($wa_clean, '0')) {
+                                $wa_clean = '62' . substr($wa_clean, 1);
+                            }
+                        @endphp
+                        <a href="https://wa.me/{{ $wa_clean }}" target="_blank" class="text-decoration-none h-100">
+                            <div class="contact-card h-100 d-flex flex-column justify-content-center align-items-center">
+                                <i class="bi bi-whatsapp contact-icon text-success"></i>
+                                <h4>WhatsApp</h4>
+                                <p class="text-muted mb-0">Chat langsung untuk respons cepat</p>
+                                <p class="contact-value text-success">{{ $wa_raw }}</p>
+                            </div>
+                        </a>
+                        
+                        @php $email = setting('company_email', 'ranaysejahtera@gmail.com'); @endphp
+                        <a href="mailto:{{ $email }}" class="text-decoration-none h-100">
+                            <div class="contact-card h-100 d-flex flex-column justify-content-center align-items-center">
+                                <i class="bi bi-envelope contact-icon text-primary"></i>
+                                <h4>Email</h4>
+                                <p class="text-muted mb-0">Kirim permintaan penawaran resmi</p>
+                                <p class="contact-value text-primary">{{ $email }}</p>
+                            </div>
+                        </a>
+                    </div>
                 </div>
-                
-                <div class="col-md-5">
-                    <a href="mailto:ranaysejahtera@gmail.com" class="text-decoration-none">
-                        <div class="contact-card">
-                            <i class="bi bi-envelope contact-icon text-primary"></i>
-                            <h4>Email</h4>
-                            <p class="text-muted mb-0">Kirim permintaan penawaran resmi</p>
-                            <p class="contact-value text-primary">ranaysejahtera@gmail.com</p>
-                        </div>
-                    </a>
+
+                <!-- Google Maps Embed -->
+                <div class="col-lg-7">
+                    <div class="contact-card p-0 overflow-hidden h-100" style="min-height: 400px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.08);">
+                        {!! setting('contact_map', '<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d6671.844028397217!2d106.22508504933977!3d-6.116943585888045!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e41f5b1331602eb%3A0xa9a901928822a606!2sPerumahan%20Kepuren%20Residence!5e0!3m2!1sid!2sid!4v1773079955926!5m2!1sid!2sid" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>') !!}
+                    </div>
                 </div>
             </div>
         </div>
@@ -849,9 +897,7 @@
                 <div class="col-lg-3 col-4">
                     <h6>Alamat</h6>
                     <p class="footer-address" style="color: rgba(255, 255, 255, 0.8); line-height: 1.8;">
-                        Jl. Raya Serang - Jakarta Km. 6,5<br>
-                        Kepuren Residence, Kota Serang<br>
-                        Banten - 42183
+                        {!! nl2br(e(setting('company_address', "Jl. Raya Serang - Jakarta Km. 6,5\nKepuren Residence, Kota Serang\nBanten - 42183"))) !!}
                     </p>
                 </div>
             </div>
