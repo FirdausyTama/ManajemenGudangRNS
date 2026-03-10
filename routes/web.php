@@ -60,4 +60,35 @@ Route::middleware('auth')->group(function () {
     Route::post('/admin/monitoring-stok/scan', [\App\Http\Controllers\MonitoringStokController::class, 'scan'])->name('monitoring-stok.scan');
     Route::get('/admin/monitoring-stok/{barang}/print-barcode', [\App\Http\Controllers\MonitoringStokController::class, 'printBarcode'])->name('monitoring-stok.print-barcode');
     Route::delete('/admin/monitoring-stok/{id}', [\App\Http\Controllers\MonitoringStokController::class, 'destroy'])->name('monitoring-stok.destroy');
+
+    // Kelola Penjualan
+    Route::resource('/admin/penjualan', \App\Http\Controllers\PenjualanController::class)->except(['create', 'edit'])->names([
+        'index'   => 'penjualan.index',
+        'store'   => 'penjualan.store',
+        'update'  => 'penjualan.update',
+        'destroy' => 'penjualan.destroy',
+    ]);
+    Route::patch('/admin/penjualan/{penjualan}/status', [\App\Http\Controllers\PenjualanController::class, 'updateStatus'])->name('penjualan.updateStatus');
+    Route::get('/admin/penjualan/{penjualan}/invoice', [\App\Http\Controllers\PenjualanController::class, 'printInvoice'])->name('penjualan.invoice');
+
+    // Surat Invoice
+    Route::get('/admin/invoice', [\App\Http\Controllers\InvoiceController::class, 'index'])->name('invoice.index');
+    Route::post('/admin/invoice', [\App\Http\Controllers\InvoiceController::class, 'store'])->name('invoice.store');
+    Route::get('/admin/invoice/{invoice}/print', [\App\Http\Controllers\InvoiceController::class, 'print'])->name('invoice.print');
+    Route::delete('/admin/invoice/{invoice}', [\App\Http\Controllers\InvoiceController::class, 'destroy'])->name('invoice.destroy');
+    Route::post('/admin/invoice/bulk-destroy', [\App\Http\Controllers\InvoiceController::class, 'bulkDestroy'])->name('invoice.bulkDestroy');
+
+    // Surat Kwitansi
+    Route::get('/admin/kwitansi', [\App\Http\Controllers\KwitansiController::class, 'index'])->name('kwitansi.index');
+    Route::post('/admin/kwitansi', [\App\Http\Controllers\KwitansiController::class, 'store'])->name('kwitansi.store');
+    Route::get('/admin/kwitansi/{kwitansi}/print', [\App\Http\Controllers\KwitansiController::class, 'print'])->name('kwitansi.print');
+    Route::delete('/admin/kwitansi/{kwitansi}', [\App\Http\Controllers\KwitansiController::class, 'destroy'])->name('kwitansi.destroy');
+    Route::post('/admin/kwitansi/bulk-destroy', [\App\Http\Controllers\KwitansiController::class, 'bulkDestroy'])->name('kwitansi.bulkDestroy');
+
+    // Surat Jalan
+    Route::get('/admin/surat-jalan', [\App\Http\Controllers\SuratJalanController::class, 'index'])->name('surat-jalan.index');
+    Route::post('/admin/surat-jalan', [\App\Http\Controllers\SuratJalanController::class, 'store'])->name('surat-jalan.store');
+    Route::get('/admin/surat-jalan/{surat_jalan}/print', [\App\Http\Controllers\SuratJalanController::class, 'print'])->name('surat-jalan.print');
+    Route::delete('/admin/surat-jalan/{surat_jalan}', [\App\Http\Controllers\SuratJalanController::class, 'destroy'])->name('surat-jalan.destroy');
+    Route::post('/admin/surat-jalan/bulk-destroy', [\App\Http\Controllers\SuratJalanController::class, 'bulkDestroy'])->name('surat-jalan.bulkDestroy');
 });

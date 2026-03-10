@@ -172,8 +172,8 @@
                             </tbody>
                         </table>
                     </div>
-                    <div class="p-4 border-t border-gray-100">
-                        {{ $barangMasuks->links() }}
+                    <div class="p-4 border-t border-gray-100 flex justify-center">
+                        {{ $barangMasuks->withQueryString()->links('vendor.pagination.custom') }}
                     </div>
                 </div>
 
