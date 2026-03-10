@@ -221,7 +221,7 @@
         <div class="footer">
             
             <div class="signature-box">
-                <div>Cimahi, {{ \Carbon\Carbon::parse($kwitansi->tanggal_kwitansi)->translatedFormat('d F Y') }}</div>
+                <div>Serang, {{ \Carbon\Carbon::parse($kwitansi->tanggal_kwitansi)->translatedFormat('d F Y') }}</div>
                 
                 <div style="height: 10px;"></div>
                 @if(strpos(strtolower($kwitansi->penandatangan), 'dewi') !== false)

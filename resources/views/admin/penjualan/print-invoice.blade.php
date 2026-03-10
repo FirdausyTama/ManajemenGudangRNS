@@ -282,8 +282,8 @@
                     <td>{{ $idx + 1 }}</td>
                     <td style="font-weight: 500;">{{ $item->barang->name ?? 'Barang Terhapus' }}</td>
                     <td class="center">{{ $item->kuantitas }}</td>
-                    <td class="right">{{ number_format($item->harga_satuan, 0, ',', '.') }}</td>
-                    <td class="right" style="font-weight: 600;">{{ number_format($item->total_harga, 0, ',', '.') }}</td>
+                    <td class="right">Rp {{ number_format($item->harga_satuan, 0, ',', '.') }}</td>
+                    <td class="right" style="font-weight: 600;">Rp {{ number_format($item->total_harga, 0, ',', '.') }}</td>
                 </tr>
                 @endforeach
             </tbody>
@@ -294,11 +294,11 @@
                 @if($penjualan->is_ongkir_aktif)
                 <tr>
                     <td>Subtotal Barang</td>
-                    <td class="right">{{ number_format($penjualan->total_keseluruhan - $penjualan->total_ongkir, 0, ',', '.') }}</td>
+                    <td class="right">Rp {{ number_format($penjualan->total_keseluruhan - $penjualan->total_ongkir, 0, ',', '.') }}</td>
                 </tr>
                 <tr>
                     <td>Ongkos Kirim ({{ $penjualan->berat_total }} kg)</td>
-                    <td class="right">{{ number_format($penjualan->total_ongkir, 0, ',', '.') }}</td>
+                    <td class="right">Rp {{ number_format($penjualan->total_ongkir, 0, ',', '.') }}</td>
                 </tr>
                 @endif
                 <tr class="total">
@@ -318,6 +318,7 @@
                 </p>
             </div>
             <div class="signature">
+                <p style="margin:0 0 10px 0; color:#333; font-size:12px;">Serang, {{ $penjualan->tanggal_transaksi->translatedFormat('d F Y') }}</p>
                 <p style="margin:0; color:#666; font-size:12px;">Hormat Kami,</p>
                 <p style="margin:5px 0 0 0; font-weight:600; color:#1e3a8a; font-size:13px;">PT Ranay Nusantara Sejahtera</p>
                 

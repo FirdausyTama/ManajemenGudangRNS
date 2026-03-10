@@ -192,14 +192,12 @@
                             <select name="penjualan_id" id="penjualanId" required class="w-full rounded-lg border-gray-300 border px-4 py-2 text-sm focus:ring-rns-blue focus:border-rns-blue bg-white" onchange="loadPenjualanData(this.value)">
                                 <option value="">-- Pilih Transaksi Pembelian --</option>
                                 @foreach($penjualans as $p)
-                                    @if($p->status_pembayaran !== 'belum lunas')
                                     <option value="{{ $p->id }}" data-customer="{{ $p->nama_customer }}" data-total="{{ $p->total_keseluruhan }}">
                                         {{ $p->no_transaksi }} - {{ $p->nama_customer }} (Rp {{ number_format($p->total_keseluruhan, 0, ',', '.') }})
                                     </option>
-                                    @endif
                                 @endforeach
                             </select>
-                            <p class="text-[11px] text-gray-500 mt-1">Hanya transaksi dengan status Lunas atau Cicilan yang dapat dibuatkan invoice.</p>
+                            <p class="text-[11px] text-gray-500 mt-1">Invoice dapat dicetak kapanpun (termasuk status Belum Lunas).</p>
                         </div>
                         
                         <div>

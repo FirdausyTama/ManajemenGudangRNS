@@ -62,7 +62,7 @@ class InvoiceController
             'user_id' => Auth::id(),
         ]);
 
-        return redirect()->route('invoice.index')->with('success', 'Invoice berhasil dibuat dan disimpan.');
+        return back()->with('success', 'Invoice berhasil dibuat dan disimpan.');
     }
 
     public function print(Invoice $invoice)

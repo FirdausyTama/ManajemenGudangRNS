@@ -158,7 +158,7 @@
             <div class="info-box">
                 <h4>PENGIRIM</h4>
                 <div><strong>{{ $surat_jalan->nama_pengirim }}</strong></div>
-                <div>Cimahi, Jawa Barat</div>
+                <div>Serang, Banten</div>
             </div>
             
             <div class="info-box">
@@ -192,7 +192,7 @@
                         @endif
                     </td>
                     <td class="center font-bold">{{ $surat_jalan->qty }}</td>
-                    <td class="right">{{ number_format($surat_jalan->jumlah, 0, ',', '.') }}</td>
+                    <td class="right">Rp {{ number_format($surat_jalan->jumlah, 0, ',', '.') }}</td>
                 </tr>
             </tbody>
         </table>

@@ -112,6 +112,10 @@ class PenjualanController
 
             $penjualan->update(['total_keseluruhan' => $total_keseluruhan]);
 
+            if ($request->status_pembayaran === 'lunas') {
+                $this->autoCreateKwitansiLunas($penjualan);
+            }
+
             DB::commit();
             return redirect()->route('penjualan.index')->with('success', 'Data penjualan berhasil ditambahkan.');
 
@@ -127,6 +131,10 @@ class PenjualanController
             'status_pembayaran' => 'required|in:lunas,belum lunas,cicilan',
         ]);
 
+        if ($request->status_pembayaran === 'lunas' && $penjualan->status_pembayaran !== 'lunas') {
+            $this->autoCreateKwitansiLunas($penjualan);
+        }
+
         $penjualan->update([
             'status_pembayaran' => $request->status_pembayaran
         ]);
@@ -138,20 +146,158 @@ class PenjualanController
     {
         DB::beginTransaction();
         try {
-            // Restore stok barangs
-            foreach ($penjualan->items as $item) {
-                if ($item->barang) {
-                    $item->barang->increment('stock', $item->kuantitas);
+            // Restore stok barangs khusus untuk status 'belum lunas'
+            if ($penjualan->status_pembayaran === 'belum lunas') {
+                foreach ($penjualan->items as $item) {
+                    if ($item->barang) {
+                        $item->barang->increment('stock', $item->kuantitas);
+                    }
                 }
             }
 
+            $statusText = $penjualan->status_pembayaran;
             $penjualan->delete(); // automatically cascades deletes to items based on DB migration
 
             DB::commit();
-            return back()->with('success', 'Data penjualan berhasil dihapus dan stok barang telah dikembalikan.');
+            
+            $msg = 'Data penjualan berhasil dihapus.';
+            if ($statusText === 'belum lunas') {
+                $msg .= ' Stok barang telah dikembalikan ke dalam gudang.';
+            } else {
+                $msg .= ' Stok tidak dikembalikan karena status pembelian sudah Cicilan/Lunas.';
+            }
+            
+            return redirect()->route('penjualan.index')->with('success', $msg);
         } catch (\Exception $e) {
             DB::rollBack();
             return back()->with('error', 'Gagal menghapus penjualan: ' . $e->getMessage());
         }
+    }
+
+    public function setTenor(Request $request, Penjualan $penjualan)
+    {
+        $request->validate([
+            'tenor_bulan' => 'required|integer|min:1|max:60',
+            'dp_nominal' => 'nullable|numeric|min:0'
+        ]);
+
+        $penjualan->update([
+            'tenor_bulan' => $request->tenor_bulan
+        ]);
+
+        // Jika ada DP, catat sebagai kwitansi pertama
+        if ($request->filled('dp_nominal') && $request->dp_nominal > 0) {
+            $year = date('Y');
+            $latest = \App\Models\Kwitansi::whereYear('tanggal_kwitansi', $year)->latest('id')->first();
+            $nextId = $latest ? $latest->id + 1 : 1;
+            $nomor_kwitansi = 'KWT/' . str_pad($nextId, 3, '0', STR_PAD_LEFT) . '/RNS/' . $year;
+
+            $kwtController = new \App\Http\Controllers\KwitansiController();
+            $bilangan = $kwtController->terbilang($request->dp_nominal) . ' Rupiah';
+
+            \App\Models\Kwitansi::create([
+                'nomor_kwitansi' => $nomor_kwitansi,
+                'penjualan_id' => $penjualan->id,
+                'tanggal_kwitansi' => today(),
+                'nama_penerima' => $penjualan->nama_customer,
+                'alamat_penerima' => $penjualan->alamat_customer,
+                'total_bilangan' => ucwords($bilangan),
+                'keterangan' => 'Pembayaran Uang Muka (DP)',
+                'total_pembayaran' => $request->dp_nominal,
+                'penandatangan' => auth()->user()->name ?? 'Dewi Sulistiowati',
+                'user_id' => auth()->id(),
+            ]);
+            
+            $totalDibayar = $penjualan->kwitansis()->sum('total_pembayaran');
+            if ($totalDibayar >= $penjualan->total_keseluruhan) {
+                $penjualan->update(['status_pembayaran' => 'lunas']);
+            }
+        }
+
+        return back()->with('success', 'Tenor cicilan berhasil diatur menjadi ' . $request->tenor_bulan . ' bulan.');
+    }
+
+    public function storeCicilan(Request $request, Penjualan $penjualan)
+    {
+        $request->validate([
+            'total_pembayaran' => 'required|numeric|min:1',
+            'tanggal_kwitansi' => 'required|date',
+            'keterangan' => 'nullable|string'
+        ]);
+
+        DB::beginTransaction();
+        try {
+            // Auto-generate kwitansi number
+            $lastKwitansi = \App\Models\Kwitansi::latest('id')->first();
+            $nextId = $lastKwitansi ? $lastKwitansi->id + 1 : 1;
+            $nomorKwitansi = 'KWT-' . date('Ymd') . '-' . str_pad($nextId, 4, '0', STR_PAD_LEFT);
+
+            // Determine cicilan count
+            $cicilanKe = $penjualan->kwitansis()->count() + 1;
+            
+            // Format received amount for 'terbilang' (words)
+            // We use the same 'terbilang' logic as the main KwitansiController
+            $terbilang = app(\App\Http\Controllers\KwitansiController::class)->terbilang($request->total_pembayaran) . ' Rupiah';
+
+            // Create kwitansi specifically for this installment
+            $penjualan->kwitansis()->create([
+                'nomor_kwitansi' => $nomorKwitansi,
+                'tanggal_kwitansi' => $request->tanggal_kwitansi,
+                'nama_penerima' => $penjualan->nama_customer,
+                'alamat_penerima' => $penjualan->alamat_customer ?? '-',
+                'total_bilangan' => $terbilang,
+                'total_pembayaran' => $request->total_pembayaran,
+                'keterangan' => $request->keterangan ?? "Pembayaran Cicilan ke-{$cicilanKe} untuk Transaksi {$penjualan->no_transaksi}",
+                'penandatangan' => auth()->user()->name,
+                'user_id' => auth()->id()
+            ]);
+
+            // Check if fully paid
+            $totalDibayar = $penjualan->kwitansis()->sum('total_pembayaran');
+            if ($totalDibayar >= $penjualan->total_keseluruhan) {
+                $penjualan->update(['status_pembayaran' => 'lunas']);
+                $msg = 'Pembayaran cicilan berhasil dicatat. Transaksi ini sekarang telah LUNAS!';
+            } else {
+                $msg = 'Pembayaran cicilan ke-' . $cicilanKe . ' berhasil dicatat sebagai Kwitansi.';
+            }
+
+            DB::commit();
+            return back()->with('success', $msg);
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->with('error', 'Terjadi kesalahan saat menyimpan cicilan: ' . $e->getMessage());
+        }
+    }
+
+    private function autoCreateKwitansiLunas(Penjualan $penjualan)
+    {
+        $exists = \App\Models\Kwitansi::where('penjualan_id', $penjualan->id)
+                    ->where('keterangan', 'like', '%Lunas%')
+                    ->exists();
+
+        if ($exists) {
+            return;
+        }
+
+        $year = date('Y', strtotime($penjualan->tanggal_transaksi));
+        $latest = \App\Models\Kwitansi::whereYear('tanggal_kwitansi', $year)->latest('id')->first();
+        $nextId = $latest ? $latest->id + 1 : 1;
+        $nomor_kwitansi = 'KWT/' . str_pad($nextId, 3, '0', STR_PAD_LEFT) . '/RNS/' . $year;
+
+        $terbilang = app(\App\Http\Controllers\KwitansiController::class)->terbilang($penjualan->total_keseluruhan) . ' Rupiah';
+
+        \App\Models\Kwitansi::create([
+            'nomor_kwitansi' => $nomor_kwitansi,
+            'penjualan_id' => $penjualan->id,
+            'tanggal_kwitansi' => $penjualan->tanggal_transaksi ?? today(),
+            'nama_penerima' => $penjualan->nama_customer,
+            'alamat_penerima' => $penjualan->alamat_customer ?? '-',
+            'total_bilangan' => ucwords($terbilang),
+            'keterangan' => 'Pembayaran Lunas untuk Transaksi ' . $penjualan->no_transaksi,
+            'total_pembayaran' => $penjualan->total_keseluruhan,
+            'penandatangan' => auth()->user()->name ?? 'Admin',
+            'user_id' => auth()->id()
+        ]);
     }
 }

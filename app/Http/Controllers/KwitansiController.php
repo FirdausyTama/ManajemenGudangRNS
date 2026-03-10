@@ -44,7 +44,7 @@ class KwitansiController
             'penandatangan' => 'required|string',
             'nama_penerima' => 'required|string',
             'alamat_penerima' => 'required|string',
-            'total_bilangan' => 'required|string',
+            'total_bilangan' => 'nullable|string',
             'keterangan' => 'required|string',
             'total_pembayaran' => 'required|numeric',
         ]);
@@ -96,7 +96,7 @@ class KwitansiController
         return response()->json(['success' => true]);
     }
 
-    private function terbilang($angka)
+    public function terbilang($angka)
     {
         $angka = abs((float)$angka);
         $baca = array("", "satu", "dua", "tiga", "empat", "lima", "enam", "tujuh", "delapan", "sembilan", "sepuluh", "sebelas");

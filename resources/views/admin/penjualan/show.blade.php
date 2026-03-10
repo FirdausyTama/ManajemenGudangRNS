@@ -158,6 +158,194 @@
                             </div>
                         </div>
 
+                        <!-- Fitur Cicilan (Moved to Left Column) -->
+                        @if($penjualan->status_pembayaran === 'cicilan' || ($penjualan->status_pembayaran === 'lunas' && $penjualan->tenor_bulan))
+                        <div class="bg-white rounded-xl shadow-sm border border-amber-100 overflow-hidden mt-6">
+                            <div class="p-5 border-b border-amber-100 flex items-center justify-between bg-amber-50">
+                                <h3 class="font-bold text-amber-900 flex items-center gap-2">
+                                    <svg class="w-5 h-5 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                    Manajemen Cicilan
+                                </h3>
+                                @if($penjualan->tenor_bulan)
+                                    <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-white text-amber-800 border border-amber-200">
+                                        Tenor: {{ $penjualan->tenor_bulan }} Bulan
+                                    </span>
+                                @endif
+                            </div>
+                            
+                            <div class="p-5">
+                                @if(!$penjualan->tenor_bulan)
+                                    <!-- Form Atur Tenor -->
+                                    <form action="{{ route('penjualan.setTenor', $penjualan->id) }}" method="POST" class="mb-4">
+                                        @csrf
+                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                            <div>
+                                                <label class="block text-sm font-medium text-gray-700 mb-2">Uang Muka (DP) Rp:</label>
+                                                <input type="number" name="dp_nominal" min="0" placeholder="0 (Opsional)" class="w-full rounded-lg border-gray-300 border px-3 py-2 text-sm focus:ring-amber-500 focus:border-amber-500 bg-white">
+                                                <p class="text-[10px] text-gray-500 mt-1">Isi jika pelanggan langsung membayar DP.</p>
+                                            </div>
+                                            <div>
+                                                <label class="block text-sm font-medium text-gray-700 mb-2">Jangka Waktu (Bulan):</label>
+                                                <div class="flex gap-2">
+                                                    <input type="number" name="tenor_bulan" min="1" max="60" required placeholder="Tenor" class="w-full rounded-lg border-gray-300 border px-3 py-2 text-sm focus:ring-amber-500 focus:border-amber-500 bg-white">
+                                                    <button type="submit" class="py-2 px-4 bg-amber-600 text-white rounded-lg hover:bg-amber-700 font-medium text-sm transition-colors shadow-sm whitespace-nowrap">
+                                                        Simpan
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                @else
+                                    @php
+                                        $totalDibayar = $penjualan->kwitansis()->sum('total_pembayaran');
+                                        $sisaTagihan = $penjualan->total_keseluruhan - $totalDibayar;
+                                        $persentase = $penjualan->total_keseluruhan > 0 ? ($totalDibayar / $penjualan->total_keseluruhan) * 100 : 0;
+                                        
+                                        $kwitansis = $penjualan->kwitansis()->orderBy('id')->get();
+                                        $dpKwitansi = $kwitansis->first(function($k) { return str_contains(strtolower($k->keterangan), 'dp'); });
+                                        $dp = $dpKwitansi ? $dpKwitansi->total_pembayaran : 0;
+                                        $cicilanKwitansis = $kwitansis->filter(function($k) { return !str_contains(strtolower($k->keterangan), 'dp'); })->values();
+                                        
+                                        $estimasiPerBulan = $penjualan->tenor_bulan > 0 ? ($penjualan->total_keseluruhan - $dp) / $penjualan->tenor_bulan : 0;
+                                        $dibayarCicilanSaja = $cicilanKwitansis->sum('total_pembayaran');
+                                    @endphp
+                                    
+                                    <!-- Progress Bar -->
+                                    <div class="mb-5">
+                                        <div class="flex justify-between text-xs font-medium mb-1">
+                                            <span class="text-gray-500">Progress Pembayaran</span>
+                                            <span class="text-amber-700">{{ number_format($persentase, 1) }}%</span>
+                                        </div>
+                                        <div class="w-full bg-gray-200 rounded-full h-2">
+                                            <div class="bg-amber-500 h-2 rounded-full" style="width: {{ $persentase }}%"></div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Ringkasan Nominal -->
+                                    <div class="grid grid-cols-2 gap-3 mb-4">
+                                        <div class="bg-gray-50 border border-gray-100 p-3 rounded-lg">
+                                            <div class="text-[10px] uppercase font-bold text-gray-500">Sudah Dibayar</div>
+                                            <div class="text-sm font-bold text-green-600">Rp {{ number_format($totalDibayar, 0, ',', '.') }}</div>
+                                        </div>
+                                        <div class="bg-gray-50 border border-gray-100 p-3 rounded-lg">
+                                            <div class="text-[10px] uppercase font-bold text-gray-500">Sisa Tagihan</div>
+                                            <div class="text-sm font-bold text-red-600">Rp {{ number_format(max(0, $sisaTagihan), 0, ',', '.') }}</div>
+                                        </div>
+                                    </div>
+                                    
+                                    <hr class="border-gray-100 my-4">
+                                    
+                                    <!-- Jadwal & Riwayat Pembayaran -->
+                                    <div class="mb-5">
+                                        <div class="text-xs font-bold text-gray-700 uppercase mb-3 flex items-center justify-between">
+                                            <span>Jadwal & Riwayat Cicilan</span>
+                                        </div>
+                                        
+                                        <div class="space-y-3">
+                                            {{-- Baris khusus DP jika ada --}}
+                                            @if($dpKwitansi)
+                                            <div class="bg-green-50 border border-green-200 rounded-lg p-3 text-sm flex justify-between items-center group relative">
+                                                <div class="flex items-center gap-3">
+                                                    <div class="w-6 h-6 rounded-full bg-green-500 text-white flex items-center justify-center">
+                                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                                    </div>
+                                                    <div>
+                                                        <div class="font-bold text-green-800">Uang Muka (DP) : Rp {{ number_format($dpKwitansi->total_pembayaran, 0, ',', '.') }}</div>
+                                                        <div class="text-[11px] text-green-600">{{ \Carbon\Carbon::parse($dpKwitansi->tanggal_kwitansi)->format('d/m/Y') }} &bull; {{ $dpKwitansi->nomor_kwitansi }}</div>
+                                                    </div>
+                                                </div>
+                                                <a href="{{ route('kwitansi.print', $dpKwitansi->id) }}" target="_blank" class="text-green-600 hover:text-green-800 p-1.5 rounded transition-colors" title="Cetak Kwitansi DP">
+                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
+                                                </a>
+                                            </div>
+                                            @endif
+
+                                            {{-- Generate schedule rows up to tenor_bulan --}}
+                                            @php 
+                                                // Keep track of how much of the (total - DP) is still "unallocated" across the loop
+                                                $sisaPokokAlokasi = $penjualan->total_keseluruhan - $dp;
+                                                $akumulasiAlokasiLalu = 0;
+                                            @endphp
+                                            @for($i = 0; $i < $penjualan->tenor_bulan; $i++)
+                                                @php
+                                                    $isPaid = isset($cicilanKwitansis[$i]);
+                                                    $kwitansi = $isPaid ? $cicilanKwitansis[$i] : null;
+                                                    
+                                                    // Jika sudah lunas tapi sisa bulan tidak ada pembayarannya (karena bayar dipercepat misal), 
+                                                    // jangan tampilkan form bayar, tampilkan label lunas
+                                                    $isLunas = $penjualan->status_pembayaran === 'lunas';
+                                                    
+                                                    // Estimasi tgl jatuh tempo (perhitungan dari tgl transaksi + bulan ke-N)
+                                                    $estimasiTgl = \Carbon\Carbon::parse($penjualan->created_at)->addMonths($i + 1)->format('d/m/Y');
+                                                    
+                                                    // Base case: normally you pay the estimated per month
+                                                    $alokasiBulanIni = ceil($estimasiPerBulan);
+                                                    
+                                                    // Final month case: pay whatever is truly remaining from the allocation
+                                                    if ($i === $penjualan->tenor_bulan - 1) {
+                                                        $alokasiBulanIni = $sisaPokokAlokasi - $akumulasiAlokasiLalu;
+                                                    }
+                                                    
+                                                    // Update tracking explicitly 
+                                                    $akumulasiAlokasiLalu += $alokasiBulanIni;
+                                                    
+                                                    $nominalBulanIni = $alokasiBulanIni;
+                                                    if ($isPaid) {
+                                                        $nominalBulanIni = $kwitansi->total_pembayaran;
+                                                    }
+                                                @endphp
+                                                
+                                                @if($isPaid)
+                                                <div class="bg-green-50 border border-green-200 rounded-lg p-3 text-sm flex justify-between items-center group relative">
+                                                    <div class="flex items-center gap-3">
+                                                        <div class="w-6 h-6 rounded-full bg-green-500 text-white flex items-center justify-center">
+                                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                                        </div>
+                                                        <div>
+                                                            <div class="font-bold text-green-800">Bulan Ke-{{ $i + 1 }} Lunas : Rp {{ number_format($kwitansi->total_pembayaran, 0, ',', '.') }}</div>
+                                                            <div class="text-[11px] text-green-600">{{ \Carbon\Carbon::parse($kwitansi->tanggal_kwitansi)->format('d/m/Y') }} &bull; {{ $kwitansi->nomor_kwitansi }}</div>
+                                                        </div>
+                                                    </div>
+                                                    <a href="{{ route('kwitansi.print', $kwitansi->id) }}" target="_blank" class="text-green-600 hover:text-green-800 p-1.5 rounded transition-colors" title="Cetak Kwitansi Cicilan">
+                                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
+                                                    </a>
+                                                </div>
+                                                @elseif(!$isPaid && !$isLunas)
+                                                <div class="bg-white border border-gray-200 rounded-lg p-3 text-sm flex justify-between items-center">
+                                                    <div class="flex items-center gap-3">
+                                                        <div class="w-6 h-6 rounded-full bg-gray-200 text-gray-400 flex items-center justify-center font-bold text-xs">
+                                                            {{ $i + 1 }}
+                                                        </div>
+                                                        <div>
+                                                            <div class="font-bold text-gray-700">Tagihan Ke-{{ $i + 1 }} : Rp {{ number_format($nominalBulanIni, 0, ',', '.') }}</div>
+                                                            <div class="text-[11px] text-gray-500 flex items-center gap-1">
+                                                                <svg class="w-3 h-3 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg> 
+                                                                Estimasi Jatuh Tempo: {{ $estimasiTgl }}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <form action="{{ route('penjualan.storeCicilan', $penjualan->id) }}" method="POST" onsubmit="return confirm('Proses pembayaran tagihan ke-{{ $i + 1 }} senilai Rp {{ number_format($nominalBulanIni, 0, ',', '.') }}?');">
+                                                        @csrf
+                                                        <input type="hidden" name="tanggal_kwitansi" value="{{ date('Y-m-d') }}">
+                                                        <input type="hidden" name="total_pembayaran" value="{{ $nominalBulanIni }}">
+                                                        <input type="hidden" name="keterangan" value="Pembayaran Cicilan Ke-{{ $i + 1 }}">
+                                                        <button type="submit" class="text-xs bg-amber-500 hover:bg-amber-600 text-white font-bold py-1.5 px-3 rounded shadow-sm transition-colors">
+                                                            Bayar
+                                                        </button>
+                                                    </form>
+                                                </div>
+                                                @elseif(!$isPaid && $isLunas)
+                                                <!-- Empty block, Lunas but array elements are empty -->
+                                                @endif
+                                            @endfor
+                                        </div>
+                                    </div>
+
+                                @endif
+                            </div>
+                        </div>
+                        @endif
+
                     </div>
 
                     <!-- Right Column: Actions -->
@@ -181,6 +369,11 @@
                                 </div>
                             </div>
                             <div class="p-5 bg-gray-50/50">
+                                @if($penjualan->status_pembayaran === 'lunas')
+                                    <div class="text-sm text-center text-green-700 font-medium py-3 border border-green-200 bg-green-50 rounded-lg">
+                                        Transaksi ini telah lunas dan statusnya tidak dapat diubah lagi.
+                                    </div>
+                                @else
                                 <form action="{{ route('penjualan.updateStatus', $penjualan->id) }}" method="POST">
                                     @csrf
                                     @method('PATCH')
@@ -194,8 +387,11 @@
                                         Simpan Perubahan
                                     </button>
                                 </form>
+                                @endif
                             </div>
                         </div>
+
+
 
                         <!-- Cetak Dokumen Terkait -->
                         <div class="bg-indigo-50 border border-indigo-100 rounded-xl shadow-sm overflow-hidden mb-6">
@@ -250,7 +446,7 @@
                                     <input type="hidden" name="telp_penerima" value="{{ $penjualan->no_hp_customer ?? '-' }}">
                                     <input type="hidden" name="alamat_penerima" value="{{ $penjualan->alamat_customer }}">
                                     <input type="hidden" name="nama_barang_jasa" value="Barang/Jasa Sesuai Pesanan">
-                                    <input type="hidden" name="qty" value="{{ count($penjualan->items) }}">
+                                    <input type="hidden" name="qty" value="{{ $penjualan->items->sum('kuantitas') }}">
                                     <input type="hidden" name="jumlah" value="{{ $penjualan->total_keseluruhan }}">
                                     <input type="hidden" name="keterangan" value="-">
                                     <button type="submit" class="flex w-full justify-center py-2 bg-amber-500 text-white rounded-lg hover:bg-amber-600 font-semibold text-sm transition-colors shadow-md">
@@ -349,6 +545,65 @@
             </div>
         </div>
     </main>
+    </main>
+
+    <!-- Modal Tambah Cicilan -->
+    @if($penjualan->status_pembayaran === 'cicilan' && $penjualan->tenor_bulan)
+    <div id="modalTambahCicilan" class="fixed inset-0 z-50 hidden" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+        <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+            <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true" onclick="document.getElementById('modalTambahCicilan').classList.add('hidden')"></div>
+
+            <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+
+            <div class="inline-block align-bottom bg-white rounded-xl text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg w-full">
+                <form action="{{ route('penjualan.storeCicilan', $penjualan->id) }}" method="POST">
+                    @csrf
+                    <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                        <div class="sm:flex sm:items-start">
+                            <div class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-amber-100 sm:mx-0 sm:h-10 sm:w-10">
+                                <svg class="h-6 w-6 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                                </svg>
+                            </div>
+                            <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
+                                <h3 class="text-lg leading-6 font-bold text-gray-900" id="modal-title">
+                                    Catat Pembayaran Cicilan
+                                </h3>
+                                <div class="mt-4 space-y-4">
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">Tanggal Pembayaran <span class="text-red-500">*</span></label>
+                                        <input type="date" name="tanggal_kwitansi" value="{{ date('Y-m-d') }}" required class="w-full rounded-lg border-gray-300 border px-3 py-2 text-sm focus:ring-amber-500 focus:border-amber-500 bg-white">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">Nominal Pembayaran (Rp) <span class="text-red-500">*</span></label>
+                                        <input type="number" name="total_pembayaran" min="1" required placeholder="0" class="w-full rounded-lg border-gray-300 border px-3 py-2 text-sm focus:ring-amber-500 focus:border-amber-500 bg-white">
+                                        @php
+                                            $totalDibayar = $penjualan->kwitansis()->sum('total_pembayaran');
+                                            $sisaTagihan = $penjualan->total_keseluruhan - $totalDibayar;
+                                        @endphp
+                                        <p class="text-xs text-gray-500 mt-1">Sisa tagihan saat ini: Rp {{ number_format(max(0, $sisaTagihan), 0, ',', '.') }}</p>
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">Keterangan (Opsional)</label>
+                                        <textarea name="keterangan" rows="2" class="w-full rounded-lg border-gray-300 border px-3 py-2 text-sm focus:ring-amber-500 focus:border-amber-500 bg-white" placeholder="Contoh: Cicilan bulan pertama..."></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse border-t border-gray-100">
+                        <button type="submit" class="w-full inline-flex justify-center rounded-lg border border-transparent shadow-sm px-4 py-2 bg-amber-600 text-base font-medium text-white hover:bg-amber-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-500 sm:ml-3 sm:w-auto sm:text-sm">
+                            Simpan Cicilan
+                        </button>
+                        <button type="button" onclick="document.getElementById('modalTambahCicilan').classList.add('hidden')" class="mt-3 w-full inline-flex justify-center rounded-lg border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
+                            Batal
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    @endif
 
     <script>
         // Sidebar logic 
