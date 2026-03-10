@@ -70,6 +70,43 @@
                 </div>
                 @endif
 
+                <!-- Search and Filter Form -->
+                <form action="{{ route('admin.manage') }}" method="GET" class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex flex-col md:flex-row gap-4 items-end mb-6 relative z-10">
+                    <div class="flex-1 w-full">
+                        <label for="search" class="block text-sm font-medium text-gray-700 mb-1">Cari Admin</label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <svg class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                                </svg>
+                            </div>
+                            <input type="text" name="search" id="search" value="{{ request('search') }}" class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-rns-blue bg-white sm:text-sm transition-colors" placeholder="Nama atau email admin...">
+                        </div>
+                    </div>
+                    
+                    <div class="w-full md:w-56">
+                        <label for="status" class="block text-sm font-medium text-gray-700 mb-1">Status</label>
+                        <select name="status" id="status" class="block w-full py-2 px-3 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-rns-blue sm:text-sm bg-white transition-colors">
+                            <option value="">Semua Status</option>
+                            <option value="active" {{ request('status') === 'active' ? 'selected' : '' }}>Aktif</option>
+                            <option value="inactive" {{ request('status') === 'inactive' ? 'selected' : '' }}>Tidak Aktif</option>
+                            <option value="pending" {{ request('status') === 'pending' ? 'selected' : '' }}>Menunggu Persetujuan</option>
+                        </select>
+                    </div>
+
+                    <div class="w-full md:w-auto flex flex-row gap-2">
+                        <button type="submit" class="flex-1 md:flex-none px-5 py-2 bg-rns-blue text-white rounded-lg hover:bg-blue-800 transition-colors shadow-sm text-sm font-medium flex items-center justify-center gap-2">
+                            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"></path></svg>
+                            Filter
+                        </button>
+                        @if(request()->has('search') && request('search') != '' || request()->has('status') && request('status') != '')
+                            <a href="{{ route('admin.manage') }}" class="flex-1 md:flex-none px-5 py-2 bg-white text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors shadow-sm text-sm font-medium flex items-center justify-center gap-2" title="Reset Pencarian">
+                                Reset
+                            </a>
+                        @endif
+                    </div>
+                </form>
+
                 <!-- Data Table Container -->
                 <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
                     <div class="overflow-x-auto">
@@ -113,25 +150,28 @@
                                                 Menunggu Persetujuan
                                             </span>
                                         @else
-                                            <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                                                <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                                                Aktif
-                                            </span>
+                                            @if($admin->isOnline())
+                                                <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                                    <span class="w-1.5 h-1.5 bg-green-500 rounded-full mr-1.5"></span>
+                                                    Sedang Aktif
+                                                </span>
+                                            @else
+                                                <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                                                    <span class="w-1.5 h-1.5 bg-gray-500 rounded-full mr-1.5"></span>
+                                                    Tidak Aktif
+                                                </span>
+                                            @endif
                                         @endif
                                     </td>
                                     
                                     <!-- Last Visit / Last Login -->
                                     <td class="py-4 px-6">
                                         @if($admin->last_login_at)
-                                            <div class="text-gray-800 font-medium">
-                                                @if($admin->isOnline())
-                                                    <span class="text-green-600 text-xs font-bold uppercase tracking-wider">Sedang Aktif</span>
-                                                @else
-                                                    <span class="text-gray-500 text-xs font-medium uppercase tracking-wider">Tidak Aktif</span>
-                                                @endif
+                                            <div class="text-sm font-medium text-gray-800">
+                                                {{ \Carbon\Carbon::parse($admin->last_login_at)->translatedFormat('d M Y, H:i') }}
                                             </div>
                                             <div class="text-xs text-gray-500 mt-1">
-                                                Terakhir login: {{ $admin->last_login_at->diffForHumans() }}
+                                                Pembaruan: {{ \Carbon\Carbon::parse($admin->last_login_at)->diffForHumans() }}
                                             </div>
                                         @else
                                             <span class="text-gray-400 italic text-sm">Belum pernah login</span>

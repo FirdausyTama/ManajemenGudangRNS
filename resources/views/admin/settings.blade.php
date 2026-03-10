@@ -44,7 +44,7 @@
                         <h2 class="text-2xl font-bold text-gray-800">Pengaturan Halaman Depan (Landing Page)</h2>
                         <p class="text-gray-500 text-sm mt-1">Ubah teks dan gambar konten utama aplikasi tanpa perlu mengubah kode.</p>
                     </div>
-                    <a href="{{ url('/') }}" target="_blank" class="inline-flex items-center justify-center px-4 py-2 bg-white border border-gray-200 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors shadow-sm text-sm font-medium">
+                    <a href="{{ url('/') }}" target="_blank" class="w-full md:w-auto inline-flex items-center justify-center px-4 py-2 bg-white border border-gray-200 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors shadow-sm text-sm font-medium">
                         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
                         Lihat Halaman
                     </a>
@@ -236,13 +236,13 @@
                     </div>
 
                     <!-- Submit action -->
-                    <div class="pt-4 flex justify-between items-center">
-                        <button type="button" onclick="if(confirm('Yakin ingin mereset SEMUA pengaturan ke bawaan awal? Semua teks dan gambar yang diubah akan hilang.')) { document.getElementById('reset-form').submit(); }" class="px-5 py-2.5 bg-white border border-red-200 text-red-600 hover:bg-red-50 hover:border-red-300 font-medium rounded-lg shadow-sm transition-colors flex items-center gap-2 text-sm">
+                    <div class="pt-4 flex flex-col-reverse md:flex-row justify-between items-center gap-4">
+                        <button type="button" onclick="if(confirm('Yakin ingin mereset SEMUA pengaturan ke bawaan awal? Semua teks dan gambar yang diubah akan hilang.')) { document.getElementById('reset-form').submit(); }" class="w-full md:w-auto justify-center px-5 py-2.5 bg-white border border-red-200 text-red-600 hover:bg-red-50 hover:border-red-300 font-medium rounded-lg shadow-sm transition-colors flex items-center gap-2 text-sm">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
                             Reset ke Semula
                         </button>
 
-                        <button type="submit" class="px-6 py-2.5 bg-rns-blue hover:bg-blue-800 text-white font-medium rounded-lg shadow-md transition-colors flex items-center gap-2">
+                        <button type="submit" class="w-full md:w-auto justify-center px-6 py-2.5 bg-rns-blue hover:bg-blue-800 text-white font-medium rounded-lg shadow-md transition-colors flex items-center gap-2">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
                             Simpan Perubahan
                         </button>

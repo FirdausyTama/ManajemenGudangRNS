@@ -46,4 +46,18 @@ Route::middleware('auth')->group(function () {
         Route::post('/admin/settings/reset', [\App\Http\Controllers\SettingController::class, 'reset'])->name('settings.reset');
         Route::post('/admin/settings/image/{key}/delete', [\App\Http\Controllers\SettingController::class, 'deleteImage'])->name('settings.deleteImage');
     });
+
+    // Barang Masuk
+    Route::resource('/admin/barang-masuk', \App\Http\Controllers\BarangMasukController::class)->except(['create', 'show', 'edit'])->names([
+        'index'   => 'barang-masuk.index',
+        'store'   => 'barang-masuk.store',
+        'update'  => 'barang-masuk.update',
+        'destroy' => 'barang-masuk.destroy',
+    ]);
+
+    // Monitoring Stok
+    Route::get('/admin/monitoring-stok', [\App\Http\Controllers\MonitoringStokController::class, 'index'])->name('monitoring-stok.index');
+    Route::post('/admin/monitoring-stok/scan', [\App\Http\Controllers\MonitoringStokController::class, 'scan'])->name('monitoring-stok.scan');
+    Route::get('/admin/monitoring-stok/{barang}/print-barcode', [\App\Http\Controllers\MonitoringStokController::class, 'printBarcode'])->name('monitoring-stok.print-barcode');
+    Route::delete('/admin/monitoring-stok/{id}', [\App\Http\Controllers\MonitoringStokController::class, 'destroy'])->name('monitoring-stok.destroy');
 });
