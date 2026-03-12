@@ -88,4 +88,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/admin/surat-jalan/{surat_jalan}/print', [\App\Http\Controllers\SuratJalanController::class , 'print'])->name('surat-jalan.print');
         Route::delete('/admin/surat-jalan/{surat_jalan}', [\App\Http\Controllers\SuratJalanController::class , 'destroy'])->name('surat-jalan.destroy');
         Route::post('/admin/surat-jalan/bulk-destroy', [\App\Http\Controllers\SuratJalanController::class , 'bulkDestroy'])->name('surat-jalan.bulkDestroy');
+
+        // Laporan Keuntungan
+        Route::get('/admin/laporan-keuntungan', [\App\Http\Controllers\LaporanKeuntunganController::class, 'index'])->name('laporan-keuntungan.index');
     });
