@@ -46,28 +46,53 @@
         <div class="absolute -top-40 -right-40 w-96 h-96 bg-blue-100 rounded-full mix-blend-multiply filter blur-3xl opacity-50 pointer-events-none"></div>
 
         <div class="max-w-7xl mx-auto relative z-10">
-          <div class="py-3 flex flex-col sm:flex-row justify-between items-center mb-6">
+          <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
             <div>
               <h4 class="text-2xl font-bold text-gray-800">Surat Invoice</h4>
-              <p class="text-gray-500 text-sm">Kelola dan pantau seluruh surat invoice Anda</p>
-            </div>
-            
-            <div class="mt-4 sm:mt-0 flex gap-2">
-              <form action="{{ route('invoice.index') }}" method="GET" class="flex items-center">
-                 <select name="filter" class="rounded-l-lg border-gray-300 border-y border-l px-3 py-2 text-sm focus:ring-rns-blue outline-none" onchange="this.form.submit()">
-                    <option value="Semua Waktu" {{ $filter == 'Semua Waktu' ? 'selected' : '' }}>Semua Waktu</option>
-                    <option value="Hari Ini" {{ $filter == 'Hari Ini' ? 'selected' : '' }}>Hari Ini</option>
-                    <option value="Minggu Ini" {{ $filter == 'Minggu Ini' ? 'selected' : '' }}>Minggu Ini</option>
-                    <option value="Bulan Ini" {{ $filter == 'Bulan Ini' ? 'selected' : '' }}>Bulan Ini</option>
-                 </select>
-                 <input type="text" name="search" value="{{ request('search') }}" 
-                        placeholder="Cari invoice/customer..." class="border border-gray-300 px-3 py-2 text-sm outline-none focus:ring-rns-blue" />
-                 <button type="submit" class="bg-rns-blue text-white px-3 py-2 rounded-r-lg hover:bg-blue-800 transition-colors">
-                   Cari
-                 </button>
-              </form>
+              <p class="text-gray-500 text-sm mt-1">Kelola dan pantau seluruh surat invoice Anda</p>
             </div>
           </div>
+
+          <!-- Search & Filter Card -->
+          <form action="{{ route('invoice.index') }}" method="GET" class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex flex-col md:flex-row items-center gap-4 mb-6">
+              <!-- Period Filter -->
+              <div class="w-full md:w-44">
+                  <select name="period" onchange="this.form.submit()" class="block w-full py-2 px-3 border border-gray-300 bg-white rounded-lg outline-none focus:ring-2 focus:ring-rns-blue sm:text-sm transition-all text-gray-700">
+                      <option value="">-- Semua Waktu --</option>
+                      <option value="today" {{ request('period') == 'today' ? 'selected' : '' }}>Hari Ini</option>
+                      <option value="week" {{ request('period') == 'week' ? 'selected' : '' }}>Minggu Ini</option>
+                      <option value="month" {{ request('period') == 'month' ? 'selected' : '' }}>Bulan Ini</option>
+                      <option value="year" {{ request('period') == 'year' ? 'selected' : '' }}>Tahun Ini</option>
+                  </select>
+              </div>
+
+              <!-- Date Picker Filter -->
+              <div class="w-full md:w-44">
+                  <input type="date" name="date" value="{{ request('date') }}" onchange="this.form.submit()" class="block w-full py-2 px-3 border border-gray-300 bg-white rounded-lg outline-none focus:ring-2 focus:ring-rns-blue sm:text-sm transition-all text-gray-700">
+              </div>
+
+              <!-- Search Input -->
+              <div class="flex-1 w-full relative">
+                  <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                      <svg class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                      </svg>
+                  </div>
+                  <input type="text" name="search" value="{{ request('search') }}" class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-rns-blue sm:text-sm" placeholder="Cari invoice atau customer...">
+              </div>
+
+              <!-- Actions -->
+              <div class="flex gap-2 w-full md:w-auto">
+                  <button type="submit" class="flex-1 md:flex-none px-5 py-2 bg-rns-blue text-white rounded-lg hover:bg-blue-800 text-sm font-medium shadow-sm transition-all">
+                      Cari
+                  </button>
+                  @if(request()->anyFilled(['search', 'period', 'date']))
+                      <a href="{{ route('invoice.index') }}" class="flex-1 md:flex-none px-5 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 text-sm font-medium text-center shadow-sm transition-all">
+                          Reset
+                      </a>
+                  @endif
+              </div>
+          </form>
 
           <!-- Alerts -->
           @if(session('success'))

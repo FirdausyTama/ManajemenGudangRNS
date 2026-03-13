@@ -13,20 +13,5 @@ class DatabaseSeeder extends Seeder
     /**
      * Seed the application's database.
      */
-    public function run(): void
-    {
-        User::create([
-            'name' => 'Admin Nibras',
-            'email' => 'admin@nibras.com',
-            'password' => bcrypt('password'),
-            'role' => 'admin',
-        ]);
-
-        User::create([
-            'name' => 'Test User',
-            'email' => 'user@example.com',
-            'password' => bcrypt('password'),
-            'role' => 'user',
-        ]);
-    }
+    
 }

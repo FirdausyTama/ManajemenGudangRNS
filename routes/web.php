@@ -20,12 +20,11 @@ Route::post('/register', [AuthController::class , 'register']);
 
 Route::post('/logout', [AuthController::class , 'logout'])->name('logout');
 
+use App\Http\Controllers\DashboardController;
+
 /* |-------------------------------------------------------------------------- | DASHBOARD |-------------------------------------------------------------------------- */
 Route::middleware('auth')->group(function () {
-    Route::get('/dashboard', function () {
-            return view('dashbor.dashboard');
-        }
-        )->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
         // Kelola Admin (Owner Only)
         Route::middleware('owner')->group(function () {
@@ -90,5 +89,13 @@ Route::middleware('auth')->group(function () {
         Route::post('/admin/surat-jalan/bulk-destroy', [\App\Http\Controllers\SuratJalanController::class , 'bulkDestroy'])->name('surat-jalan.bulkDestroy');
 
         // Laporan Keuntungan
-        Route::get('/admin/laporan-keuntungan', [\App\Http\Controllers\LaporanKeuntunganController::class, 'index'])->name('laporan-keuntungan.index');
+        Route::get('/admin/laporan-keuntungan', [\App\Http\Controllers\LaporanKeuntunganController::class , 'index'])->name('laporan-keuntungan.index');
+
+        // Surat Penawaran Harga (SPH)
+        Route::get('/admin/surat-penawaran', [\App\Http\Controllers\SuratPenawaranController::class , 'index'])->name('surat-penawaran.index');
+        Route::post('/admin/surat-penawaran', [\App\Http\Controllers\SuratPenawaranController::class , 'store'])->name('surat-penawaran.store');
+        Route::put('/admin/surat-penawaran/{surat_penawaran}', [\App\Http\Controllers\SuratPenawaranController::class , 'update'])->name('surat-penawaran.update');
+        Route::get('/admin/surat-penawaran/{surat_penawaran}/print', [\App\Http\Controllers\SuratPenawaranController::class , 'print'])->name('surat-penawaran.print');
+        Route::delete('/admin/surat-penawaran/{surat_penawaran}', [\App\Http\Controllers\SuratPenawaranController::class , 'destroy'])->name('surat-penawaran.destroy');
+        Route::post('/admin/surat-penawaran/bulk-destroy', [\App\Http\Controllers\SuratPenawaranController::class , 'bulkDestroy'])->name('surat-penawaran.bulkDestroy');
     });

@@ -7,23 +7,91 @@ use App\Models\Penjualan;
 use App\Models\PenjualanItem;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class PenjualanController
 {
     public function index(Request $request)
     {
         $search = $request->input('search');
+        $status = $request->input('status');
+        $period = $request->input('period');
+        $date = $request->input('date');
+        
         $query = Penjualan::with(['items.barang', 'user'])->latest();
 
         if ($search) {
-            $query->where('no_transaksi', 'like', "%{$search}%")
+            $query->where(function($q) use ($search) {
+                $q->where('no_transaksi', 'like', "%{$search}%")
                   ->orWhere('nama_customer', 'like', "%{$search}%");
+            });
         }
 
-        $penjualans = $query->paginate(10);
+        if ($status) {
+            $query->where('status_pembayaran', $status);
+        }
+
+        if ($date) {
+            $query->whereDate('tanggal_transaksi', $date);
+        } elseif ($period) {
+            $now = Carbon::now();
+            if ($period === 'today') {
+                $query->whereDate('tanggal_transaksi', $now->toDateString());
+            } elseif ($period === 'week') {
+                $query->whereBetween('tanggal_transaksi', [$now->startOfWeek()->toDateString(), $now->endOfWeek()->toDateString()]);
+            } elseif ($period === 'month') {
+                $query->whereMonth('tanggal_transaksi', $now->month)
+                      ->whereYear('tanggal_transaksi', $now->year);
+            } elseif ($period === 'year') {
+                $query->whereYear('tanggal_transaksi', $now->year);
+            }
+        }
+
+        $penjualans = $query->paginate(10)->withQueryString();
         $barangs = Barang::all();
 
-        return view('admin.penjualan.index', compact('penjualans', 'barangs'));
+        // Calculate Global Statistics for Status Cards
+        $statusStats = [
+            'lunas' => Penjualan::where('status_pembayaran', 'lunas')->count(),
+            'cicilan' => Penjualan::where('status_pembayaran', 'cicilan')->count(),
+            'belum_lunas' => Penjualan::where('status_pembayaran', 'belum lunas')->count(),
+        ];
+
+        /**
+         * Logic for Installment Reminders:
+         * 1. Status is 'cicilan'
+         * 2. The day of 'tanggal_transaksi' is within current day to +7 days
+         * 3. No kwitansi (payment) recorded in the current month
+         */
+        $today = Carbon::today();
+        $sevenDaysLater = $today->copy()->addDays(7);
+
+        $allCicilan = Penjualan::where('status_pembayaran', 'cicilan')
+            ->withCount(['kwitansis as cicilan_paid_count' => function($q) {
+                $q->where('keterangan', 'like', '%Cicilan%');
+            }])
+            ->get();
+
+        $reminders = $allCicilan->filter(function($p) use ($today, $sevenDaysLater) {
+            // Jika tenor belum diatur, kita asumsikan belum ada jadwal
+            if (!$p->tenor_bulan) return false;
+
+            // Hitung cicilan ke berapa yang harus dibayar berikutnya
+            $nextInstallmentNo = $p->cicilan_paid_count + 1;
+
+            // Jika sudah lunas atau melebihi tenor (meski status masih cicilan), jangan ingatkan
+            if ($nextInstallmentNo > $p->tenor_bulan) return false;
+
+            // Hitung tanggal jatuh tempo berikutnya
+            // Transaksi Tgl 10 Jan -> Cicilan 1: 10 Feb, Cicilan 2: 10 Mar, dst.
+            $nextDueDate = Carbon::parse($p->tanggal_transaksi)->addMonths($nextInstallmentNo);
+
+            // Masukkan ke pengingat jika jatuh tempo antara hari ini sampai 7 hari ke depan
+            $p->next_due_date = $nextDueDate; // Simpan untuk ditampilkan di view
+            return $nextDueDate->between($today, $sevenDaysLater);
+        })->take(5);
+
+        return view('admin.penjualan.index', compact('penjualans', 'barangs', 'statusStats', 'reminders'));
     }
 
     public function show(Penjualan $penjualan)
@@ -89,7 +157,7 @@ class PenjualanController
 
             foreach ($request->items as $itemData) {
                 $barang = Barang::findOrFail($itemData['barang_id']);
-                
+
                 // Cek stok
                 if ($barang->stock < $itemData['kuantitas']) {
                     throw new \Exception("Stok barang {$barang->name} tidak mencukupi. Sisa: {$barang->stock}. Diminta: {$itemData['kuantitas']}");
@@ -119,7 +187,8 @@ class PenjualanController
             DB::commit();
             return redirect()->route('penjualan.index')->with('success', 'Data penjualan berhasil ditambahkan.');
 
-        } catch (\Exception $e) {
+        }
+        catch (\Exception $e) {
             DB::rollBack();
             return back()->with('error', 'Gagal menambahkan penjualan: ' . $e->getMessage())->withInput();
         }
@@ -159,16 +228,18 @@ class PenjualanController
             $penjualan->delete(); // automatically cascades deletes to items based on DB migration
 
             DB::commit();
-            
+
             $msg = 'Data penjualan berhasil dihapus.';
             if ($statusText === 'belum lunas') {
                 $msg .= ' Stok barang telah dikembalikan ke dalam gudang.';
-            } else {
+            }
+            else {
                 $msg .= ' Stok tidak dikembalikan karena status pembelian sudah Cicilan/Lunas.';
             }
-            
+
             return redirect()->route('penjualan.index')->with('success', $msg);
-        } catch (\Exception $e) {
+        }
+        catch (\Exception $e) {
             DB::rollBack();
             return back()->with('error', 'Gagal menghapus penjualan: ' . $e->getMessage());
         }
@@ -207,7 +278,7 @@ class PenjualanController
                 'penandatangan' => auth()->user()->name ?? 'Dewi Sulistiowati',
                 'user_id' => auth()->id(),
             ]);
-            
+
             $totalDibayar = $penjualan->kwitansis()->sum('total_pembayaran');
             if ($totalDibayar >= $penjualan->total_keseluruhan) {
                 $penjualan->update(['status_pembayaran' => 'lunas']);
@@ -234,7 +305,7 @@ class PenjualanController
 
             // Determine cicilan count
             $cicilanKe = $penjualan->kwitansis()->count() + 1;
-            
+
             // Format received amount for 'terbilang' (words)
             // We use the same 'terbilang' logic as the main KwitansiController
             $terbilang = app(\App\Http\Controllers\KwitansiController::class)->terbilang($request->total_pembayaran) . ' Rupiah';
@@ -257,14 +328,16 @@ class PenjualanController
             if ($totalDibayar >= $penjualan->total_keseluruhan) {
                 $penjualan->update(['status_pembayaran' => 'lunas']);
                 $msg = 'Pembayaran cicilan berhasil dicatat. Transaksi ini sekarang telah LUNAS!';
-            } else {
+            }
+            else {
                 $msg = 'Pembayaran cicilan ke-' . $cicilanKe . ' berhasil dicatat sebagai Kwitansi.';
             }
 
             DB::commit();
             return back()->with('success', $msg);
 
-        } catch (\Exception $e) {
+        }
+        catch (\Exception $e) {
             DB::rollBack();
             return back()->with('error', 'Terjadi kesalahan saat menyimpan cicilan: ' . $e->getMessage());
         }
@@ -273,8 +346,8 @@ class PenjualanController
     private function autoCreateKwitansiLunas(Penjualan $penjualan)
     {
         $exists = \App\Models\Kwitansi::where('penjualan_id', $penjualan->id)
-                    ->where('keterangan', 'like', '%Lunas%')
-                    ->exists();
+            ->where('keterangan', 'like', '%Lunas%')
+            ->exists();
 
         if ($exists) {
             return;

@@ -71,9 +71,99 @@
                     </ul>
                 </div>
                 @endif
+                <!-- Summary Cards -->
+                <div class="grid grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4 mb-6">
+                    <!-- Belum Lunas -->
+                    <div class="bg-white border border-gray-100 p-3 md:p-4 rounded-xl md:rounded-2xl shadow-sm">
+                        <div class="flex items-center gap-2 md:gap-3 mb-1 md:mb-2">
+                            <div class="p-1.5 md:p-2 bg-red-500 rounded-lg text-white">
+                                <svg class="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            </div>
+                            <div class="text-[9px] md:text-[10px] font-bold text-gray-400 uppercase tracking-widest leading-tight">Belum Lunas</div>
+                        </div>
+                        <div class="text-lg md:text-2xl font-bold text-gray-800">{{ number_format($statusStats['belum_lunas'], 0, ',', '.') }} <span class="text-[10px] md:text-xs font-medium text-gray-400">Transaksi</span></div>
+                    </div>
+
+                    <!-- Cicilan -->
+                    <div class="bg-white border border-gray-100 p-3 md:p-4 rounded-xl md:rounded-2xl shadow-sm">
+                        <div class="flex items-center gap-2 md:gap-3 mb-1 md:mb-2">
+                            <div class="p-1.5 md:p-2 bg-orange-500 rounded-lg text-white">
+                                <svg class="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            </div>
+                            <div class="text-[9px] md:text-[10px] font-bold text-gray-400 uppercase tracking-widest leading-tight">Cicilan</div>
+                        </div>
+                        <div class="text-lg md:text-2xl font-bold text-gray-800">{{ number_format($statusStats['cicilan'], 0, ',', '.') }} <span class="text-[10px] md:text-xs font-medium text-gray-400">Transaksi</span></div>
+                    </div>
+
+                    <!-- Lunas -->
+                    <div class="bg-white border border-gray-100 p-3 md:p-4 rounded-xl md:rounded-2xl shadow-sm col-span-2 lg:col-span-1">
+                        <div class="flex items-center gap-2 md:gap-3 mb-1 md:mb-2">
+                            <div class="p-1.5 md:p-2 bg-green-500 rounded-lg text-white">
+                                <svg class="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            </div>
+                            <div class="text-[9px] md:text-[10px] font-bold text-gray-400 uppercase tracking-widest leading-tight">Lunas</div>
+                        </div>
+                        <div class="text-lg md:text-2xl font-bold text-gray-800">{{ number_format($statusStats['lunas'], 0, ',', '.') }} <span class="text-[10px] md:text-xs font-medium text-gray-400">Transaksi</span></div>
+                    </div>
+                </div>
+
+                <!-- Installment Reminders -->
+                @if($reminders->count() > 0)
+                <div class="bg-white border border-orange-100 rounded-xl shadow-sm overflow-hidden mb-6">
+                    <div class="bg-orange-50 px-4 py-2 border-b border-orange-100 flex items-center gap-2">
+                        <svg class="w-4 h-4 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <h3 class="text-xs font-bold text-orange-800 uppercase tracking-wider">Perhatian: Cicilan Jatuh Tempo</h3>
+                    </div>
+                    <div class="p-4">
+                        <div class="flex flex-nowrap overflow-x-auto gap-4 pb-2 scrollbar-thin scrollbar-thumb-gray-200">
+                            @foreach($reminders as $rem)
+                            <div class="flex-none w-64 p-3 bg-gray-50 rounded-lg border border-gray-100">
+                                <div class="flex justify-between items-start mb-2">
+                                    <span class="text-[10px] font-bold text-orange-600 bg-orange-100 px-2 py-0.5 rounded">Jatuh Tempo: {{ \Carbon\Carbon::parse($rem->next_due_date)->translatedFormat('d M Y') }}</span>
+                                    <a href="{{ route('penjualan.show', $rem->id) }}" class="text-[10px] text-blue-600 hover:underline">Detail</a>
+                                </div>
+                                <h4 class="text-sm font-semibold text-gray-800 truncate">{{ $rem->nama_customer }}</h4>
+                                <p class="text-[11px] text-gray-500 mt-1">{{ $rem->no_transaksi }}</p>
+                                <div class="mt-2 flex justify-between items-center">
+                                    <span class="text-[10px] text-gray-400">Total Tagihan</span>
+                                    <span class="text-sm font-bold text-gray-700">Rp {{ number_format($rem->total_keseluruhan, 0, ',', '.') }}</span>
+                                </div>
+                            </div>
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
+                @endif
 
                 <!-- Search Form -->
-                <form action="{{ route('penjualan.index') }}" method="GET" class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex flex-col md:flex-row gap-4 mb-6 relative z-20">
+                <form action="{{ route('penjualan.index') }}" method="GET" class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex flex-col md:flex-row items-center gap-4 mb-6 relative z-20">
+                    <!-- Status Filter -->
+                    <div class="w-full md:w-44">
+                        <select name="status" onchange="this.form.submit()" class="block w-full py-2 px-3 border border-gray-300 bg-white rounded-lg outline-none focus:ring-2 focus:ring-rns-blue sm:text-sm transition-all text-gray-700">
+                            <option value="">-- Semua Status --</option>
+                            <option value="lunas" {{ request('status') == 'lunas' ? 'selected' : '' }}>Lunas</option>
+                            <option value="cicilan" {{ request('status') == 'cicilan' ? 'selected' : '' }}>Cicilan</option>
+                            <option value="belum lunas" {{ request('status') == 'belum lunas' ? 'selected' : '' }}>Belum Lunas</option>
+                        </select>
+                    </div>
+
+                    <!-- Period Filter -->
+                    <div class="w-full md:w-44">
+                        <select name="period" onchange="this.form.submit()" class="block w-full py-2 px-3 border border-gray-300 bg-white rounded-lg outline-none focus:ring-2 focus:ring-rns-blue sm:text-sm transition-all text-gray-700">
+                            <option value="">-- Semua Waktu --</option>
+                            <option value="today" {{ request('period') == 'today' ? 'selected' : '' }}>Hari Ini</option>
+                            <option value="week" {{ request('period') == 'week' ? 'selected' : '' }}>Minggu Ini</option>
+                            <option value="month" {{ request('period') == 'month' ? 'selected' : '' }}>Bulan Ini</option>
+                            <option value="year" {{ request('period') == 'year' ? 'selected' : '' }}>Tahun Ini</option>
+                        </select>
+                    </div>
+
+                    <!-- Date Picker Filter -->
+                    <div class="w-full md:w-40">
+                        <input type="date" name="date" value="{{ request('date') }}" onchange="this.form.submit()" class="block w-full py-2 px-3 border border-gray-300 bg-white rounded-lg outline-none focus:ring-2 focus:ring-rns-blue sm:text-sm transition-all text-gray-700">
+                    </div>
+
+                    <!-- Search Input -->
                     <div class="flex-1 w-full relative">
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                             <svg class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -82,10 +172,16 @@
                         </div>
                         <input type="text" name="search" value="{{ request('search') }}" class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-rns-blue sm:text-sm" placeholder="Cari No Transaksi atau Nama Customer...">
                     </div>
+                    
+                    <!-- Actions -->
                     <div class="flex gap-2 w-full md:w-auto">
-                        <button type="submit" class="flex-1 md:flex-none px-5 py-2 bg-rns-blue text-white rounded-lg hover:bg-blue-800 text-sm font-medium transition-colors">Cari</button>
-                        @if(request('search'))
-                            <a href="{{ route('penjualan.index') }}" class="flex-1 md:flex-none px-5 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 text-sm font-medium text-center transition-colors">Reset</a>
+                        <button type="submit" class="flex-1 md:flex-none px-5 py-2 bg-rns-blue text-white rounded-lg hover:bg-blue-800 text-sm font-medium shadow-sm transition-all">
+                            Cari
+                        </button>
+                        @if(request()->anyFilled(['search', 'status', 'period', 'date']))
+                            <a href="{{ route('penjualan.index') }}" class="flex-1 md:flex-none px-5 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 text-sm font-medium text-center shadow-sm transition-all">
+                                Reset
+                            </a>
                         @endif
                     </div>
                 </form>
@@ -106,7 +202,7 @@
                                     <th class="py-3 px-4 font-medium text-right">Aksi</th>
                                 </tr>
                             </thead>
-                            <tbody class="divide-y divide-gray-50 text-sm">
+                            <tbody class="divide-y-2 divide-gray-200 text-sm">
                                 @forelse ($penjualans as $p)
                                 <tr class="hover:bg-gray-50/50">
                                     <td class="py-3 px-4 font-mono text-gray-800 font-medium">

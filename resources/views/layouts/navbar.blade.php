@@ -26,14 +26,15 @@
         </a>
         <!-- Dokumen Dropdown -->
         <div class="relative x-dropdown">
-            <button type="button" class="{{ request()->routeIs('invoice.*') || request()->routeIs('kwitansi.*') || request()->routeIs('surat-jalan.*') ? 'bg-blue-50 text-rns-blue' : 'text-gray-600 hover:bg-gray-50 hover:text-rns-blue' }} flex items-center justify-between w-full gap-3 px-4 py-3 rounded-lg transition-colors font-medium text-left" onclick="this.nextElementSibling.classList.toggle('hidden')">
+            <button type="button" class="{{ request()->routeIs('invoice.*') || request()->routeIs('kwitansi.*') || request()->routeIs('surat-jalan.*') || request()->routeIs('surat-penawaran.*') ? 'bg-blue-50 text-rns-blue' : 'text-gray-600 hover:bg-gray-50 hover:text-rns-blue' }} flex items-center justify-between w-full gap-3 px-4 py-3 rounded-lg transition-colors font-medium text-left" onclick="this.nextElementSibling.classList.toggle('hidden')">
                 <div class="flex items-center gap-3">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
                     Dokumen
                 </div>
                 <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
             </button>
-            <div class="{{ request()->routeIs('invoice.*') || request()->routeIs('kwitansi.*') || request()->routeIs('surat-jalan.*') ? 'block' : 'hidden' }} pl-11 pr-4 py-2 space-y-1 mt-1 font-medium text-sm">
+            <div class="{{ request()->routeIs('invoice.*') || request()->routeIs('kwitansi.*') || request()->routeIs('surat-jalan.*') || request()->routeIs('surat-penawaran.*') ? 'block' : 'hidden' }} pl-11 pr-4 py-2 space-y-1 mt-1 font-medium text-sm">
+                
                 <a href="{{ route('invoice.index') }}" class="{{ request()->routeIs('invoice.*') ? 'text-rns-blue font-bold px-2 py-1.5' : 'text-gray-500 hover:text-rns-blue px-2 py-1.5' }} block rounded transition-colors">Surat Invoice</a>
                 <a href="{{ route('kwitansi.index') }}" class="{{ request()->routeIs('kwitansi.*') ? 'text-rns-blue font-bold px-2 py-1.5' : 'text-gray-500 hover:text-rns-blue px-2 py-1.5' }} block rounded transition-colors">Surat Kwitansi</a>
                 <a href="{{ route('surat-jalan.index') }}" class="{{ request()->routeIs('surat-jalan.*') ? 'text-rns-blue font-bold px-2 py-1.5' : 'text-gray-500 hover:text-rns-blue px-2 py-1.5' }} block rounded transition-colors">Surat Jalan</a>

@@ -6,34 +6,45 @@ use App\Models\Kwitansi;
 use App\Models\Penjualan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
 
 class KwitansiController
 {
     public function index(Request $request)
     {
+        $period = $request->input('period');
+        $date = $request->input('date');
         $search = $request->input('search');
-        $filter = $request->input('filter', 'Semua Waktu');
 
         $query = Kwitansi::with(['penjualan', 'user'])->latest();
 
         if ($search) {
-            $query->where('nomor_kwitansi', 'like', "%{$search}%")
+            $query->where(function($q) use ($search) {
+                $q->where('nomor_kwitansi', 'like', "%{$search}%")
                   ->orWhere('nama_penerima', 'like', "%{$search}%");
+            });
         }
 
-        if ($filter == 'Hari Ini') {
-            $query->whereDate('tanggal_kwitansi', today());
-        } elseif ($filter == 'Minggu Ini') {
-            $query->whereBetween('tanggal_kwitansi', [now()->startOfWeek(), now()->endOfWeek()]);
-        } elseif ($filter == 'Bulan Ini') {
-            $query->whereMonth('tanggal_kwitansi', now()->month)
-                  ->whereYear('tanggal_kwitansi', now()->year);
+        if ($date) {
+            $query->whereDate('tanggal_kwitansi', $date);
+        } elseif ($period) {
+            $now = Carbon::now();
+            if ($period === 'today') {
+                $query->whereDate('tanggal_kwitansi', $now->toDateString());
+            } elseif ($period === 'week') {
+                $query->whereBetween('tanggal_kwitansi', [$now->startOfWeek()->toDateString(), $now->endOfWeek()->toDateString()]);
+            } elseif ($period === 'month') {
+                $query->whereMonth('tanggal_kwitansi', $now->month)
+                      ->whereYear('tanggal_kwitansi', $now->year);
+            } elseif ($period === 'year') {
+                $query->whereYear('tanggal_kwitansi', $now->year);
+            }
         }
 
-        $kwitansis = $query->paginate(10);
+        $kwitansis = $query->paginate(10)->withQueryString();
         $penjualans = Penjualan::latest()->get(); // For manual select
 
-        return view('admin.kwitansi.index', compact('kwitansis', 'penjualans', 'filter'));
+        return view('admin.kwitansi.index', compact('kwitansis', 'penjualans'));
     }
 
     public function store(Request $request)

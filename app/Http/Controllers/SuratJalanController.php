@@ -6,34 +6,45 @@ use App\Models\SuratJalan;
 use App\Models\Penjualan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
 
 class SuratJalanController
 {
     public function index(Request $request)
     {
+        $period = $request->input('period');
+        $date = $request->input('date');
         $search = $request->input('search');
-        $filter = $request->input('filter', 'Semua Waktu');
 
         $query = SuratJalan::with(['penjualan', 'user'])->latest();
 
         if ($search) {
-            $query->where('nomor_surat_jalan', 'like', "%{$search}%")
+            $query->where(function($q) use ($search) {
+                $q->where('nomor_surat_jalan', 'like', "%{$search}%")
                   ->orWhere('nama_penerima', 'like', "%{$search}%");
+            });
         }
 
-        if ($filter == 'Hari Ini') {
-            $query->whereDate('tanggal_surat_jalan', today());
-        } elseif ($filter == 'Minggu Ini') {
-            $query->whereBetween('tanggal_surat_jalan', [now()->startOfWeek(), now()->endOfWeek()]);
-        } elseif ($filter == 'Bulan Ini') {
-            $query->whereMonth('tanggal_surat_jalan', now()->month)
-                  ->whereYear('tanggal_surat_jalan', now()->year);
+        if ($date) {
+            $query->whereDate('tanggal_surat_jalan', $date);
+        } elseif ($period) {
+            $now = Carbon::now();
+            if ($period === 'today') {
+                $query->whereDate('tanggal_surat_jalan', $now->toDateString());
+            } elseif ($period === 'week') {
+                $query->whereBetween('tanggal_surat_jalan', [$now->startOfWeek()->toDateString(), $now->endOfWeek()->toDateString()]);
+            } elseif ($period === 'month') {
+                $query->whereMonth('tanggal_surat_jalan', $now->month)
+                      ->whereYear('tanggal_surat_jalan', $now->year);
+            } elseif ($period === 'year') {
+                $query->whereYear('tanggal_surat_jalan', $now->year);
+            }
         }
 
-        $suratJalans = $query->paginate(10);
+        $suratJalans = $query->paginate(10)->withQueryString();
         $penjualans = Penjualan::latest()->get();
 
-        return view('admin.surat_jalan.index', compact('suratJalans', 'penjualans', 'filter'));
+        return view('admin.surat_jalan.index', compact('suratJalans', 'penjualans'));
     }
 
     public function store(Request $request)

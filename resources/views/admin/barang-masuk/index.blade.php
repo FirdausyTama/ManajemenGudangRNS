@@ -68,7 +68,36 @@
                 @endif
 
                 <!-- Search Form -->
-                <form action="{{ route('barang-masuk.index') }}" method="GET" class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex flex-col md:flex-row gap-4 mb-6">
+                <form action="{{ route('barang-masuk.index') }}" method="GET" class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex flex-col md:flex-row items-center gap-4 mb-6">
+                    <!-- Period Filter -->
+                    <div class="w-full md:w-44">
+                        <select name="period" onchange="this.form.submit()" class="block w-full py-2 px-3 border border-gray-300 bg-white rounded-lg outline-none focus:ring-2 focus:ring-rns-blue sm:text-sm transition-all text-gray-700">
+                            <option value="">-- Semua Waktu --</option>
+                            <option value="today" {{ request('period') == 'today' ? 'selected' : '' }}>Hari Ini</option>
+                            <option value="week" {{ request('period') == 'week' ? 'selected' : '' }}>Minggu Ini</option>
+                            <option value="month" {{ request('period') == 'month' ? 'selected' : '' }}>Bulan Ini</option>
+                            <option value="year" {{ request('period') == 'year' ? 'selected' : '' }}>Tahun Ini</option>
+                        </select>
+                    </div>
+
+                    <!-- Date Picker Filter -->
+                    <div class="w-full md:w-40">
+                        <input type="date" name="date" value="{{ request('date') }}" onchange="this.form.submit()" class="block w-full py-2 px-3 border border-gray-300 bg-white rounded-lg outline-none focus:ring-2 focus:ring-rns-blue sm:text-sm transition-all text-gray-700">
+                    </div>
+
+                    <!-- Master Record Filter Toggle -->
+                    <div class="w-full md:w-auto px-2">
+                        <label class="flex items-center space-x-2 cursor-pointer group">
+                            <div class="relative">
+                                <input type="checkbox" name="show_master_only" value="1" onchange="this.form.submit()" {{ request('show_master_only') ? 'checked' : '' }} class="sr-only">
+                                <div class="w-10 h-5 bg-gray-200 rounded-full shadow-inner transition-colors duration-300 group-hover:bg-gray-300 {{ request('show_master_only') ? '!bg-amber-400' : '' }}"></div>
+                                <div class="dot absolute left-1 top-1 bg-white w-3 h-3 rounded-full transition-transform duration-300 transform {{ request('show_master_only') ? 'translate-x-5' : '' }}"></div>
+                            </div>
+                            <span class="text-sm font-medium text-gray-700 select-none">Data Master Saja</span>
+                        </label>
+                    </div>
+
+                    <!-- Search Input -->
                     <div class="flex-1 w-full relative">
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                             <svg class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -77,10 +106,16 @@
                         </div>
                         <input type="text" name="search" value="{{ request('search') }}" class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-rns-blue sm:text-sm" placeholder="Cari nama, SKU, atau pabrik...">
                     </div>
+
+                    <!-- Actions -->
                     <div class="flex gap-2 w-full md:w-auto">
-                        <button type="submit" class="flex-1 md:flex-none px-5 py-2 bg-rns-blue text-white rounded-lg hover:bg-blue-800 text-sm font-medium">Cari</button>
-                        @if(request('search'))
-                            <a href="{{ route('barang-masuk.index') }}" class="flex-1 md:flex-none px-5 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 text-sm font-medium text-center">Reset</a>
+                        <button type="submit" class="flex-1 md:flex-none px-5 py-2 bg-rns-blue text-white rounded-lg hover:bg-blue-800 text-sm font-medium shadow-sm transition-all">
+                            Cari
+                        </button>
+                        @if(request()->anyFilled(['search', 'period', 'date', 'show_master_only']))
+                            <a href="{{ route('barang-masuk.index') }}" class="flex-1 md:flex-none px-5 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 text-sm font-medium text-center shadow-sm transition-all">
+                                Reset
+                            </a>
                         @endif
                     </div>
                 </form>
@@ -91,21 +126,21 @@
                         <table class="w-full text-left border-collapse">
                             <thead>
                                 <tr class="bg-gray-50 border-b border-gray-100 text-sm text-gray-500">
-                                    <th class="py-3 px-4 font-medium">Foto Bukti</th>
+                                    <th class="py-3 px-4 font-medium hidden md:table-cell">Foto Bukti</th>
                                     <th class="py-3 px-4 font-medium">Nama Barang</th>
                                     <th class="py-3 px-4 font-medium">Tanggal</th>
-                                    <th class="py-3 px-4 font-medium">Kode (SKU)</th>
-                                    <th class="py-3 px-4 font-medium">Pabrik & Satuan</th>
+                                    <th class="py-3 px-4 font-medium hidden sm:table-cell">Kode (SKU)</th>
+                                    <th class="py-3 px-4 font-medium hidden lg:table-cell">Pabrik & Satuan</th>
                                     <th class="py-3 px-4 font-medium">Harga Modal</th>
-                                    <th class="py-3 px-4 font-medium">Qty Masuk</th>
-                                    <th class="py-3 px-4 font-medium">Diinput Oleh</th>
+                                    <th class="py-3 px-4 font-medium">Qty</th>
+                                    <th class="py-3 px-4 font-medium hidden xl:table-cell">Diinput Oleh</th>
                                     <th class="py-3 px-4 font-medium text-right">Aksi</th>
                                 </tr>
                             </thead>
-                            <tbody class="divide-y divide-gray-50 text-sm">
+                            <tbody class="divide-y-2 divide-gray-200 text-sm">
                                 @forelse ($barangMasuks as $bm)
                                 <tr class="hover:bg-gray-50/50">
-                                    <td class="py-3 px-4">
+                                    <td class="py-3 px-4 hidden md:table-cell">
                                         @if($bm->images)
                                             <div class="flex -space-x-2">
                                                 @foreach(array_slice($bm->images, 0, 3) as $img)
@@ -125,14 +160,20 @@
                                     </td>
                                     <td class="py-3 px-4 font-medium text-gray-800">
                                         {{ $bm->barang->name }}
+                                        <div class="md:hidden text-[10px] text-gray-500 mt-0.5">{{ $bm->barang->sku }}</div>
                                     </td>
                                     <td class="py-3 px-4 whitespace-nowrap">
-                                        {{ $bm->incoming_date->format('d M Y') }}
+                                        <div class="font-medium text-gray-800">{{ $bm->incoming_date->format('d/m/y') }}</div>
+                                        @if($bm->updated_at && $bm->updated_at->gt($bm->created_at->addMinutes(1)))
+                                            <div class="text-[10px] text-amber-600 font-medium mt-0.5" title="Diperbarui pada: {{ $bm->updated_at->format('d/m/y H:i') }}">
+                                                Edit: {{ $bm->updated_at->format('d/m/y') }}
+                                            </div>
+                                        @endif
                                     </td>
-                                    <td class="py-3 px-4 text-sm text-gray-600">
+                                    <td class="py-3 px-4 text-sm text-gray-600 hidden sm:table-cell">
                                         {{ $bm->barang->sku }}
                                     </td>
-                                    <td class="py-3 px-4">
+                                    <td class="py-3 px-4 hidden lg:table-cell">
                                         <div>{{ $bm->barang->factory ?? '-' }}</div>
                                         <div class="text-xs text-gray-500">{{ $bm->barang->unit }}</div>
                                     </td>
@@ -144,7 +185,7 @@
                                             +{{ $bm->quantity }}
                                         </span>
                                     </td>
-                                    <td class="py-3 px-4 text-sm text-gray-600 whitespace-nowrap">
+                                    <td class="py-3 px-4 text-sm text-gray-600 whitespace-nowrap hidden xl:table-cell">
                                         {{ $bm->user ? $bm->user->name : '-' }}
                                     </td>
                                     <td class="py-3 px-4">
@@ -188,19 +229,22 @@
     </main>
 
     <!-- Modal Tambah Data -->
-    <div id="addModal" class="fixed inset-0 bg-gray-900/50 hidden z-50 flex items-center justify-center overflow-y-auto">
-        <div class="bg-white rounded-xl shadow-xl w-full max-w-2xl my-8 mx-4 transform transition-all">
-            <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center sticky top-0 bg-white rounded-t-xl z-10">
+    <div id="addModal" class="fixed inset-0 bg-gray-900/50 hidden z-50 flex items-center justify-center p-2 sm:p-4">
+        <div class="bg-white rounded-xl shadow-xl w-full max-w-2xl flex flex-col max-h-[95vh] transform transition-all">
+            <!-- Sticky Header -->
+            <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-white rounded-t-xl sticky top-0 z-20">
                 <h3 class="text-lg font-bold text-gray-800">Tambah Barang Masuk</h3>
                 <button onclick="closeModal('addModal')" class="text-gray-400 hover:text-gray-600"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
             </div>
-            <div class="p-6 max-h-[70vh] overflow-y-auto">
+            
+            <!-- Scrollable Body -->
+            <div class="p-4 md:p-6 overflow-y-auto flex-1">
                 <form action="{{ route('barang-masuk.store') }}" method="POST" enctype="multipart/form-data" id="addForm">
                     @csrf
                     
                     <div class="mb-4">
                         <label class="block text-sm font-medium text-gray-700 mb-2">Jenis Input</label>
-                        <div class="flex gap-4">
+                        <div class="flex flex-col sm:flex-row gap-2 sm:gap-4">
                             <label class="flex items-center">
                                 <input type="radio" name="is_new_barang" value="1" checked onchange="toggleBarangInput(true)" class="text-rns-blue focus:ring-rns-blue">
                                 <span class="ml-2 text-sm text-gray-700">Barang Baru</span>
@@ -298,21 +342,26 @@
 
                 </form>
             </div>
-            <div class="px-6 py-4 border-t border-gray-100 bg-gray-50 rounded-b-xl flex justify-end gap-2 sticky bottom-0">
-                <button type="button" onclick="closeModal('addModal')" class="px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 text-sm font-medium">Batal</button>
-                <button type="button" onclick="document.getElementById('addForm').submit()" class="px-4 py-2 bg-rns-blue text-white rounded-lg hover:bg-blue-800 text-sm font-medium">Simpan Data</button>
+
+            <!-- Sticky Footer -->
+            <div class="px-6 py-4 border-t border-gray-100 bg-gray-50 rounded-b-xl flex justify-end gap-2 sticky bottom-0 z-20">
+                <button type="button" onclick="closeModal('addModal')" class="px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 text-sm font-medium transition-colors">Batal</button>
+                <button type="button" onclick="document.getElementById('addForm').submit()" class="px-4 py-2 bg-rns-blue text-white rounded-lg hover:bg-blue-800 text-sm font-medium shadow-sm transition-colors">Simpan Data</button>
             </div>
         </div>
     </div>
 
     <!-- Modal Edit Data -->
-    <div id="editModal" class="fixed inset-0 bg-gray-900/50 hidden z-50 flex items-center justify-center overflow-y-auto">
-        <div class="bg-white rounded-xl shadow-xl w-full max-w-lg my-8 mx-4 transform transition-all">
-            <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-white rounded-t-xl z-10">
+    <div id="editModal" class="fixed inset-0 bg-gray-900/50 hidden z-50 flex items-center justify-center p-2 sm:p-4">
+        <div class="bg-white rounded-xl shadow-xl w-full max-w-2xl flex flex-col max-h-[95vh] transform transition-all">
+            <!-- Sticky Header -->
+            <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-white rounded-t-xl sticky top-0 z-20">
                 <h3 class="text-lg font-bold text-gray-800">Edit Riwayat Masuk</h3>
                 <button onclick="closeModal('editModal')" class="text-gray-400 hover:text-gray-600"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
             </div>
-            <div class="p-6">
+            
+            <!-- Scrollable Body -->
+            <div class="p-4 md:p-6 overflow-y-auto flex-1">
                 <div class="mb-4 p-3 bg-blue-50 rounded-lg border border-blue-100">
                     <p class="text-sm text-gray-600">Barang: <span id="editBarangName" class="font-bold text-rns-blue"></span></p>
                     <p class="text-xs text-gray-500 block">Edit ini hanya merubah riwayat stok masuk & tanggal (stok gudang ikut menyesuaikan). Untuk merubah nama dan harga harap ubah dari data master barang.</p>
@@ -321,16 +370,55 @@
                     @csrf
                     @method('PUT')
                     
+                    <div id="masterDataEditFields" class="hidden space-y-4 mb-4 bg-amber-50/50 p-4 rounded-lg border border-amber-100">
+                        <p class="text-xs font-bold text-amber-700 mb-2 whitespace-normal uppercase tracking-wider">Data Master Barang (Hanya muncul pada input pertama)</p>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="md:col-span-2">
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Nama Barang</label>
+                                <input type="text" name="name" id="edit_name" class="w-full rounded-lg border-gray-300 border px-3 py-2 text-sm focus:ring-rns-blue focus:border-rns-blue">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Pabrik Asal</label>
+                                <input type="text" name="factory" id="edit_factory" class="w-full rounded-lg border-gray-300 border px-3 py-2 text-sm focus:ring-rns-blue focus:border-rns-blue">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Merek</label>
+                                <input type="text" name="merek" id="edit_merek" class="w-full rounded-lg border-gray-300 border px-3 py-2 text-sm focus:ring-rns-blue focus:border-rns-blue">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Kategori Satuan</label>
+                                <select name="unit" id="edit_unit" class="w-full rounded-lg border-gray-300 border px-3 py-2 text-sm focus:ring-rns-blue focus:border-rns-blue">
+                                    <option value="pcs">Pcs</option>
+                                    <option value="unit">Unit</option>
+                                    <option value="box">Box</option>
+                                    <option value="set">Set</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Harga Modal (Rp)</label>
+                                <input type="text" id="disp_edit_purchase" class="w-full rounded-lg border-gray-300 border px-3 py-2 text-sm focus:ring-rns-blue focus:border-rns-blue" onkeyup="formatCurrency(this, 'real_edit_purchase')">
+                                <input type="hidden" name="purchase_price" id="real_edit_purchase">
+                            </div>
+                            <div class="md:col-start-2">
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Harga Jual (Rp)</label>
+                                <input type="text" id="disp_edit_selling" class="w-full rounded-lg border-gray-300 border px-3 py-2 text-sm focus:ring-rns-blue focus:border-rns-blue" onkeyup="formatCurrency(this, 'real_edit_selling')">
+                                <input type="hidden" name="selling_price" id="real_edit_selling">
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Tanggal Masuk</label>
-                            <input type="date" name="incoming_date" id="edit_date" required class="w-full rounded-lg border-gray-300 border px-3 py-2 text-sm focus:ring-rns-blue focus:border-rns-blue">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Tanggal Terdaftar</label>
+                            <input type="date" name="incoming_date" id="edit_date" readonly class="w-full rounded-lg border-gray-300 border px-3 py-2 text-sm bg-gray-50 text-gray-500 cursor-not-allowed outline-none">
+                            <p class="text-[10px] text-gray-400 mt-1">*Tanggal pendaftaran awal tidak dapat diubah.</p>
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Kuantitas Masuk</label>
                             <input type="number" name="quantity" id="edit_qty" min="1" required class="w-full rounded-lg border-gray-300 border px-3 py-2 text-sm focus:ring-rns-blue focus:border-rns-blue">
                         </div>
                     </div>
+
 
                     <div id="existing-edit-images-section" class="mb-4 hidden">
                         <label class="block text-sm font-medium text-gray-700 mb-2">Foto Saat Ini</label>
@@ -356,9 +444,11 @@
 
                 </form>
             </div>
-            <div class="px-6 py-4 border-t border-gray-100 bg-gray-50 rounded-b-xl flex justify-end gap-2">
-                <button type="button" onclick="closeModal('editModal')" class="px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 text-sm font-medium">Batal</button>
-                <button type="button" onclick="document.getElementById('editForm').submit()" class="px-4 py-2 bg-rns-blue text-white rounded-lg hover:bg-blue-800 text-sm font-medium">Update Data</button>
+
+            <!-- Sticky Footer -->
+            <div class="px-6 py-4 border-t border-gray-100 bg-gray-50 rounded-b-xl flex justify-end gap-2 sticky bottom-0 z-20">
+                <button type="button" onclick="closeModal('editModal')" class="px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 text-sm font-medium transition-colors">Batal</button>
+                <button type="button" onclick="document.getElementById('editForm').submit()" class="px-4 py-2 bg-rns-blue text-white rounded-lg hover:bg-blue-800 text-sm font-medium shadow-sm transition-colors">Update Data</button>
             </div>
         </div>
     </div>
@@ -494,21 +584,51 @@
             document.getElementById(elementId).style.display = 'none';
         }
 
-        function openEditModal(bm, barang) {
+        function openEditModal(bm, barangBasic) {
+            // Kita ambil data barang lengkap dari barangsData yang sudah include barangMasuks
+            const barang = barangsData.find(b => b.id == barangBasic.id) || barangBasic;
+            
             document.getElementById('editBarangName').innerText = barang.sku + ' - ' + barang.name;
             document.getElementById('edit_date').value = bm.incoming_date.split('T')[0];
             document.getElementById('edit_qty').value = bm.quantity;
             
             let form = document.getElementById('editForm');
-            // Assuming your route is named barang-masuk.update and requires the ID parameter
             form.action = `/admin/barang-masuk/${bm.id}`; 
             
             // Hapus input hidden deleted_old_images (reset state)
             form.querySelectorAll('input[name="deleted_old_images[]"]').forEach(el => el.remove());
 
+            // --- Logika Master Data Edit ---
+            const masterFields = document.getElementById('masterDataEditFields');
+            
+            // Cari ID terkecil dari riwayat barang masuk (produk ini)
+            let oldestBmId = null;
+            if (barang.barang_masuks && barang.barang_masuks.length > 0) {
+                oldestBmId = barang.barang_masuks.reduce((min, current) => current.id < min ? current.id : min, barang.barang_masuks[0].id);
+            }
+
+            if (bm.id == oldestBmId) {
+                masterFields.classList.remove('hidden');
+                // Pre-fill master data
+                document.getElementById('edit_name').value = barang.name;
+                document.getElementById('edit_factory').value = barang.factory || '';
+                document.getElementById('edit_merek').value = barang.merek || '';
+                document.getElementById('edit_unit').value = barang.unit;
+                
+                document.getElementById('real_edit_purchase').value = parseInt(barang.purchase_price) || 0;
+                document.getElementById('disp_edit_purchase').value = (parseInt(barang.purchase_price) || 0).toLocaleString('id-ID');
+                
+                document.getElementById('real_edit_selling').value = parseInt(barang.selling_price) || 0;
+                document.getElementById('disp_edit_selling').value = (parseInt(barang.selling_price) || 0).toLocaleString('id-ID');
+            } else {
+                masterFields.classList.add('hidden');
+            }
+            // -------------------------------
+
             // Render existing images for Edit
             const container = document.getElementById('existing-edit-images-container');
             const section = document.getElementById('existing-edit-images-section');
+
             container.innerHTML = '';
             
             let imgs = [];

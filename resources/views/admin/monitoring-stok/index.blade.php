@@ -56,6 +56,64 @@
                     </div>
                 </div>
 
+                <!-- Summary Cards -->
+                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 md:gap-4 mb-6 md:mb-8">
+                    <!-- Total Stok Unit -->
+                    <div class="bg-white border border-gray-100 p-3 md:p-4 rounded-xl md:rounded-2xl shadow-sm">
+                        <div class="flex items-center gap-2 md:gap-3 mb-1 md:mb-2">
+                            <div class="p-1.5 md:p-2 bg-indigo-500 rounded-lg text-white">
+                                <svg class="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-12 10-4-4m16 0l-8 4-8-4m16 0l-8 4-8-4"></path></svg>
+                            </div>
+                            <div class="text-[9px] md:text-[10px] font-bold text-gray-400 uppercase tracking-widest leading-tight">Total Stok</div>
+                        </div>
+                        <div class="text-lg md:text-2xl font-bold text-gray-800">{{ number_format($stats['total_stok'], 0, ',', '.') }} <span class="text-[10px] md:text-xs font-medium text-gray-400">Unit</span></div>
+                    </div>
+
+                    <!-- Total Barang -->
+                    <div class="bg-white border border-gray-100 p-3 md:p-4 rounded-xl md:rounded-2xl shadow-sm">
+                        <div class="flex items-center gap-2 md:gap-3 mb-1 md:mb-2">
+                            <div class="p-1.5 md:p-2 bg-gray-500 rounded-lg text-white">
+                                <svg class="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
+                            </div>
+                            <div class="text-[9px] md:text-[10px] font-bold text-gray-400 uppercase tracking-widest leading-tight">Varian</div>
+                        </div>
+                        <div class="text-lg md:text-2xl font-bold text-gray-800">{{ number_format($stats['total_barang'], 0, ',', '.') }} <span class="text-[10px] md:text-xs font-medium text-gray-400">Barang</span></div>
+                    </div>
+
+                    <!-- Stok Tersedia -->
+                    <div class="bg-white border border-gray-100 p-3 md:p-4 rounded-xl md:rounded-2xl shadow-sm">
+                        <div class="flex items-center gap-2 md:gap-3 mb-1 md:mb-2">
+                            <div class="p-1.5 md:p-2 bg-green-500 rounded-lg text-white">
+                                <svg class="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                            </div>
+                            <div class="text-[9px] md:text-[10px] font-bold text-gray-400 uppercase tracking-widest leading-tight">Tersedia</div>
+                        </div>
+                        <div class="text-lg md:text-2xl font-bold text-gray-800">{{ number_format($stats['stok_tersedia'], 0, ',', '.') }} <span class="text-[10px] md:text-xs font-medium text-gray-400">Barang</span></div>
+                    </div>
+
+                    <!-- Stok Menipis -->
+                    <div class="bg-white border border-gray-100 p-3 md:p-4 rounded-xl md:rounded-2xl shadow-sm">
+                        <div class="flex items-center gap-2 md:gap-3 mb-1 md:mb-2">
+                            <div class="p-1.5 md:p-2 bg-orange-500 rounded-lg text-white">
+                                <svg class="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            </div>
+                            <div class="text-[9px] md:text-[10px] font-bold text-gray-400 uppercase tracking-widest leading-tight">Menipis</div>
+                        </div>
+                        <div class="text-lg md:text-2xl font-bold text-gray-800">{{ number_format($stats['stok_menipis'], 0, ',', '.') }} <span class="text-[10px] md:text-xs font-medium text-gray-400">Barang</span></div>
+                    </div>
+
+                    <!-- Stok Habis -->
+                    <div class="bg-white border border-gray-100 p-3 md:p-4 rounded-xl md:rounded-2xl shadow-sm col-span-2 lg:col-span-1">
+                        <div class="flex items-center gap-2 md:gap-3 mb-1 md:mb-2">
+                            <div class="p-1.5 md:p-2 bg-red-500 rounded-lg text-white">
+                                <svg class="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                            </div>
+                            <div class="text-[9px] md:text-[10px] font-bold text-gray-400 uppercase tracking-widest leading-tight">Habis</div>
+                        </div>
+                        <div class="text-lg md:text-2xl font-bold text-gray-800">{{ number_format($stats['stok_habis'], 0, ',', '.') }} <span class="text-[10px] md:text-xs font-medium text-gray-400">Barang</span></div>
+                    </div>
+                </div>
+
                 <!-- Alert Messages -->
                 @if (session('success'))
                     <div class="bg-green-50 border-l-4 border-green-500 p-4 rounded-r-lg mb-6 flex justify-between items-center shadow-sm">
@@ -82,7 +140,18 @@
                 @endif
 
                 <!-- Search Filter Form -->
-                <form action="{{ route('monitoring-stok.index') }}" method="GET" class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex flex-col md:flex-row gap-4 mb-6">
+                <form action="{{ route('monitoring-stok.index') }}" method="GET" class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex flex-col md:flex-row items-center gap-4 mb-6">
+                    <!-- Status Filter -->
+                    <div class="w-full md:w-48">
+                        <select name="status" onchange="this.form.submit()" class="block w-full py-2 px-3 border border-gray-300 bg-white rounded-lg outline-none focus:ring-2 focus:ring-rns-blue sm:text-sm transition-all text-gray-700">
+                            <option value="">-- Semua Status --</option>
+                            <option value="tersedia" {{ request('status') == 'tersedia' ? 'selected' : '' }}>Tersedia (> 10)</option>
+                            <option value="menipis" {{ request('status') == 'menipis' ? 'selected' : '' }}>Menipis (1 - 10)</option>
+                            <option value="habis" {{ request('status') == 'habis' ? 'selected' : '' }}>Habis (0)</option>
+                        </select>
+                    </div>
+
+                    <!-- Search Input -->
                     <div class="flex-1 w-full relative">
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                             <svg class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -91,18 +160,24 @@
                         </div>
                         <input type="text" name="search" value="{{ request('search') }}" class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-rns-blue sm:text-sm" placeholder="Cari Manual: nama, SKU, atau pabrik...">
                     </div>
+
+                    <!-- Actions -->
                     <div class="flex gap-2 w-full md:w-auto">
-                        <button type="submit" class="flex-1 md:flex-none px-5 py-2 bg-rns-blue text-white rounded-lg hover:bg-blue-800 text-sm font-medium">Cari</button>
-                        @if(request('search'))
-                            <a href="{{ route('monitoring-stok.index') }}" class="flex-1 md:flex-none px-5 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 text-sm font-medium text-center">Reset</a>
+                        <button type="submit" class="flex-1 md:flex-none px-5 py-2 bg-rns-blue text-white rounded-lg hover:bg-blue-800 text-sm font-medium shadow-sm transition-all">
+                            Cari
+                        </button>
+                        @if(request()->anyFilled(['search', 'status']))
+                            <a href="{{ route('monitoring-stok.index') }}" class="flex-1 md:flex-none px-5 py-2 bg-white border border-gray-100 text-gray-700 rounded-lg hover:bg-gray-50 text-sm font-medium text-center shadow-sm transition-all">
+                                Reset
+                            </a>
                         @endif
                     </div>
                 </form>
 
                 <!-- Data Grid / Table -->
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                <div class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-6">
                     @forelse ($barangs as $barang)
-                    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow cursor-pointer" onclick="openDetailModal({{ json_encode($barang->load('barangMasuks')) }})">
+                    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow cursor-pointer" onclick="openDetailModal({{ json_encode($barang->load('barangMasuks.user')) }})">
                         @php
                             $latestImage = null;
                             if($barang->barangMasuks->count() > 0) {
@@ -120,7 +195,7 @@
                         @endphp
                         
                         <!-- Header Image Section -->
-                        <div class="w-full h-48 bg-gray-100 relative overflow-hidden flex items-center justify-center border-b border-gray-100 group-hover:opacity-90 transition-opacity">
+                        <div class="w-full h-32 sm:h-48 bg-gray-100 relative overflow-hidden flex items-center justify-center border-b border-gray-100 group-hover:opacity-90 transition-opacity">
                             @if($latestImage)
                                 <img src="{{ asset('storage/' . $latestImage) }}" class="w-full h-full object-cover">
                             @else
@@ -129,46 +204,46 @@
                             @endif
 
                             <!-- Badges Overlay -->
-                            <div class="absolute top-3 left-3 bg-white/90 backdrop-blur-sm shadow-sm text-rns-blue text-xs font-bold px-2.5 py-1 rounded">
+                            <div class="absolute top-2 left-2 sm:top-3 sm:left-3 bg-white/90 backdrop-blur-sm shadow-sm text-rns-blue text-[8px] sm:text-xs font-bold px-1.5 py-0.5 sm:px-2.5 sm:py-1 rounded">
                                 {{ $barang->sku }}
                             </div>
 
-                            <div class="absolute top-3 right-3">
+                            <div class="absolute top-2 right-2 sm:top-3 sm:right-3">
                                 @if($barang->stock > 10)
-                                    <span class="flex items-center text-xs font-medium text-green-700 bg-green-100/90 backdrop-blur-sm px-2.5 py-1 rounded shadow-sm">
-                                        <span class="w-1.5 h-1.5 rounded-full bg-green-500 mr-1.5"></span> Tersedia
+                                    <span class="flex items-center text-[8px] sm:text-xs font-medium text-green-700 bg-green-100/90 backdrop-blur-sm px-1.5 py-0.5 sm:px-2.5 sm:py-1 rounded shadow-sm">
+                                        <span class="w-1 h-1 sm:w-1.5 sm:h-1.5 rounded-full bg-green-500 mr-1 sm:mr-1.5"></span> Tersedia
                                     </span>
                                 @elseif($barang->stock > 0)
-                                    <span class="flex items-center text-xs font-medium text-yellow-700 bg-yellow-100/90 backdrop-blur-sm px-2.5 py-1 rounded shadow-sm">
-                                        <span class="w-1.5 h-1.5 rounded-full bg-yellow-500 mr-1.5"></span> Menipis
+                                    <span class="flex items-center text-[8px] sm:text-xs font-medium text-yellow-700 bg-yellow-100/90 backdrop-blur-sm px-1.5 py-0.5 sm:px-2.5 sm:py-1 rounded shadow-sm">
+                                        <span class="w-1 h-1 sm:w-1.5 sm:h-1.5 rounded-full bg-yellow-500 mr-1 sm:mr-1.5"></span> Menipis
                                     </span>
                                 @else
-                                    <span class="flex items-center text-xs font-medium text-white bg-red-500/90 backdrop-blur-sm px-2.5 py-1 rounded shadow-sm">
-                                        <span class="w-1.5 h-1.5 rounded-full bg-white mr-1.5"></span> Habis
+                                    <span class="flex items-center text-[8px] sm:text-xs font-medium text-white bg-red-500/90 backdrop-blur-sm px-1.5 py-0.5 sm:px-2.5 sm:py-1 rounded shadow-sm">
+                                        <span class="w-1 h-1 sm:w-1.5 sm:h-1.5 rounded-full bg-white mr-1 sm:mr-1.5"></span> Habis
                                     </span>
                                 @endif
                             </div>
                         </div>
 
                         <!-- Card Body -->
-                        <div class="p-4 sm:p-5 flex flex-col flex-1">
-                            <h3 class="text-lg font-bold text-gray-800 mb-1 leading-tight line-clamp-2">{{ $barang->name }}</h3>
-                            <p class="text-xs text-gray-500 mb-4">{{ $barang->factory ?? '-' }}</p>
+                        <div class="p-3 sm:p-5 flex flex-col flex-1">
+                            <h3 class="text-xs sm:text-lg font-bold text-gray-800 mb-0.5 sm:mb-1 leading-tight line-clamp-2 h-8 sm:h-14">{{ $barang->name }}</h3>
+                            <p class="text-[9px] sm:text-xs text-gray-500 mb-2 sm:mb-4 truncate">{{ $barang->factory ?? '-' }}</p>
                             
-                            <div class="bg-gray-50 rounded-xl p-3 flex justify-between items-center mt-auto border border-gray-100">
+                            <div class="bg-gray-50 rounded-lg sm:rounded-xl p-2 sm:p-3 flex flex-col sm:flex-row justify-between items-start sm:items-center mt-auto border border-gray-100 gap-1 sm:gap-0">
                                 <div>
-                                    <p class="text-[11px] text-gray-500 font-medium uppercase tracking-wider mb-0.5">Stok Fisik</p>
-                                    <p class="font-bold text-gray-800 text-xl">{{ $barang->stock }} <span class="text-sm font-medium text-gray-500">{{ $barang->unit }}</span></p>
+                                    <p class="text-[8px] sm:text-[11px] text-gray-500 font-medium uppercase tracking-wider mb-0">Stok</p>
+                                    <p class="font-bold text-gray-800 text-sm sm:text-xl">{{ $barang->stock }} <span class="text-[9px] sm:text-sm font-medium text-gray-500">{{ $barang->unit }}</span></p>
                                 </div>
-                                <div class="text-right">
-                                    <p class="text-[11px] text-gray-500 font-medium uppercase tracking-wider mb-0.5">Harga Jual</p>
-                                    <p class="font-bold text-rns-blue text-sm">Rp {{ number_format($barang->selling_price, 0, ',', '.') }}</p>
+                                <div class="sm:text-right">
+                                    <p class="text-[8px] sm:text-[11px] text-gray-500 font-medium uppercase tracking-wider mb-0 hidden sm:block">Harga Jual</p>
+                                    <p class="font-bold text-rns-blue text-[10px] sm:text-sm">Rp {{ number_format($barang->selling_price, 0, ',', '.') }}</p>
                                 </div>
                             </div>
                         </div>
-                        <div class="bg-gray-50/50 border-t border-gray-100 px-5 py-3 flex justify-between items-center group-hover:bg-blue-50 transition-colors">
-                            <span class="text-xs font-medium text-gray-500">Lihat Detail Produk</span>
-                            <svg class="w-4 h-4 text-gray-400 group-hover:text-rns-blue transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                        <div class="bg-gray-50/50 border-t border-gray-100 px-3 py-2 sm:px-5 sm:py-3 flex justify-between items-center group-hover:bg-blue-50 transition-colors">
+                            <span class="text-[9px] sm:text-xs font-medium text-gray-500">Detail</span>
+                            <svg class="w-3 h-3 sm:w-4 sm:h-4 text-gray-400 group-hover:text-rns-blue transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
                         </div>
                     </div>
                     @empty
@@ -269,6 +344,28 @@
                             <p class="text-[11px] sm:text-xs text-gray-500 mb-0.5 sm:mb-1 block">Harga Jual</p>
                             <p id="detailSelling" class="font-bold text-rns-blue text-lg sm:text-xl"></p>
                         </div>
+                    </div>
+                </div>
+
+                <!-- Stock History Section -->
+                <div class="mt-8 pt-6 border-t border-gray-100">
+                    <p class="text-[11px] sm:text-xs font-bold text-gray-500 uppercase tracking-wider mb-4">Riwayat Penambahan Stok</p>
+                    <div class="bg-white border border-gray-100 rounded-xl overflow-hidden overflow-x-auto">
+                        <table class="w-full text-left text-[11px] sm:text-xs">
+                            <thead class="bg-gray-50 border-b border-gray-100 text-gray-500">
+                                <tr>
+                                    <th class="py-2 px-3 font-semibold">Tanggal</th>
+                                    <th class="py-2 px-3 font-semibold">Qty</th>
+                                    <th class="py-2 px-3 font-semibold">Oleh</th>
+                                </tr>
+                            </thead>
+                            <tbody id="detailHistoryBody" class="divide-y divide-gray-50">
+                                <!-- Populated by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                    <div id="detailHistoryMore" class="mt-3 text-center hidden">
+                        <p class="text-[10px] text-gray-400 font-medium italic">Menampilkan 5 riwayat terbaru. Lihat selengkapnya di menu Barang Masuk.</p>
                     </div>
                 </div>
 
@@ -664,6 +761,51 @@
                 noImgWrapper.className = 'w-full py-8 shrink-0 bg-gray-50 rounded-xl border border-gray-200 border-dashed flex flex-col items-center justify-center text-gray-400';
                 noImgWrapper.innerHTML = '<svg class="w-10 h-10 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg><span class="text-xs font-medium">Belum ada foto</span>';
                 imagesContainer.appendChild(noImgWrapper);
+            }
+            
+            // Populate Stock History
+            const historyBody = document.getElementById('detailHistoryBody');
+            const historyMore = document.getElementById('detailHistoryMore');
+            historyBody.innerHTML = '';
+            
+            if (bMasuks && bMasuks.length > 0) {
+                // Sort manual by date latest
+                const sortedHistory = [...bMasuks].sort((a, b) => new Date(b.incoming_date) - new Date(a.incoming_date));
+                
+                // Limit to 5 items
+                const limitedHistory = sortedHistory.slice(0, 5);
+                
+                limitedHistory.forEach(bm => {
+                    const tr = document.createElement('tr');
+                    tr.className = 'hover:bg-gray-50/50 transition-colors';
+                    
+                    const updateInfo = bm.updated_at && bm.updated_at !== bm.created_at ? 
+                        `<div class="text-[9px] text-amber-600 mt-0.5">Edit: ${new Date(bm.updated_at).toLocaleDateString('id-ID', {day: 'numeric', month: 'short'})}</div>` : '';
+
+                    tr.innerHTML = `
+                        <td class="py-3 px-3">
+                            <div class="font-medium text-gray-800">${new Date(bm.incoming_date).toLocaleDateString('id-ID', {day: 'numeric', month: 'short', year: 'numeric'})}</div>
+                            ${updateInfo}
+                        </td>
+                        <td class="py-3 px-3">
+                            <span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-bold bg-green-50 text-green-700 border border-green-100">+${bm.quantity}</span>
+                        </td>
+                        <td class="py-3 px-3 text-gray-600 font-medium">
+                            ${bm.user ? bm.user.name : '-'}
+                        </td>
+                    `;
+                    historyBody.appendChild(tr);
+                });
+
+                // Show/hide "more" message
+                if (bMasuks.length > 5) {
+                    historyMore.classList.remove('hidden');
+                } else {
+                    historyMore.classList.add('hidden');
+                }
+            } else {
+                historyBody.innerHTML = '<tr><td colspan="3" class="py-4 text-center text-gray-400 italic">Belum ada riwayat stok</td></tr>';
+                historyMore.classList.add('hidden');
             }
 
             // Fetch and display barcode SVG
