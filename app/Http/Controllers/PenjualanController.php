@@ -17,13 +17,13 @@ class PenjualanController
         $status = $request->input('status');
         $period = $request->input('period');
         $date = $request->input('date');
-        
+
         $query = Penjualan::with(['items.barang', 'user'])->latest();
 
         if ($search) {
-            $query->where(function($q) use ($search) {
+            $query->where(function ($q) use ($search) {
                 $q->where('no_transaksi', 'like', "%{$search}%")
-                  ->orWhere('nama_customer', 'like', "%{$search}%");
+                    ->orWhere('nama_customer', 'like', "%{$search}%");
             });
         }
 
@@ -33,16 +33,20 @@ class PenjualanController
 
         if ($date) {
             $query->whereDate('tanggal_transaksi', $date);
-        } elseif ($period) {
+        }
+        elseif ($period) {
             $now = Carbon::now();
             if ($period === 'today') {
                 $query->whereDate('tanggal_transaksi', $now->toDateString());
-            } elseif ($period === 'week') {
+            }
+            elseif ($period === 'week') {
                 $query->whereBetween('tanggal_transaksi', [$now->startOfWeek()->toDateString(), $now->endOfWeek()->toDateString()]);
-            } elseif ($period === 'month') {
+            }
+            elseif ($period === 'month') {
                 $query->whereMonth('tanggal_transaksi', $now->month)
-                      ->whereYear('tanggal_transaksi', $now->year);
-            } elseif ($period === 'year') {
+                    ->whereYear('tanggal_transaksi', $now->year);
+            }
+            elseif ($period === 'year') {
                 $query->whereYear('tanggal_transaksi', $now->year);
             }
         }
@@ -67,20 +71,22 @@ class PenjualanController
         $sevenDaysLater = $today->copy()->addDays(7);
 
         $allCicilan = Penjualan::where('status_pembayaran', 'cicilan')
-            ->withCount(['kwitansis as cicilan_paid_count' => function($q) {
-                $q->where('keterangan', 'like', '%Cicilan%');
-            }])
+            ->withCount(['kwitansis as cicilan_paid_count' => function ($q) {
+            $q->where('keterangan', 'like', '%Cicilan%');
+        }])
             ->get();
 
-        $reminders = $allCicilan->filter(function($p) use ($today, $sevenDaysLater) {
+        $reminders = $allCicilan->filter(function ($p) use ($today, $sevenDaysLater) {
             // Jika tenor belum diatur, kita asumsikan belum ada jadwal
-            if (!$p->tenor_bulan) return false;
+            if (!$p->tenor_bulan)
+                return false;
 
             // Hitung cicilan ke berapa yang harus dibayar berikutnya
             $nextInstallmentNo = $p->cicilan_paid_count + 1;
 
             // Jika sudah lunas atau melebihi tenor (meski status masih cicilan), jangan ingatkan
-            if ($nextInstallmentNo > $p->tenor_bulan) return false;
+            if ($nextInstallmentNo > $p->tenor_bulan)
+                return false;
 
             // Hitung tanggal jatuh tempo berikutnya
             // Transaksi Tgl 10 Jan -> Cicilan 1: 10 Feb, Cicilan 2: 10 Mar, dst.

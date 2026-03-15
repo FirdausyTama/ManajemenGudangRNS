@@ -24,10 +24,10 @@ use App\Http\Controllers\DashboardController;
 
 /* |-------------------------------------------------------------------------- | DASHBOARD |-------------------------------------------------------------------------- */
 Route::middleware('auth')->group(function () {
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class , 'index'])->name('dashboard');
 
-        // Kelola Admin (Owner Only)
-        Route::middleware('owner')->group(function () {
+    // Kelola Admin (Owner Only)
+    Route::middleware('owner')->group(function () {
             Route::get('/admin/manage', [\App\Http\Controllers\AdminController::class , 'index'])->name('admin.manage');
             Route::post('/admin/approve/{id}', [\App\Http\Controllers\AdminController::class , 'approve'])->name('admin.approve');
             Route::post('/admin/reject/{id}', [\App\Http\Controllers\AdminController::class , 'reject'])->name('admin.reject');
@@ -97,5 +97,6 @@ Route::middleware('auth')->group(function () {
         Route::put('/admin/surat-penawaran/{surat_penawaran}', [\App\Http\Controllers\SuratPenawaranController::class , 'update'])->name('surat-penawaran.update');
         Route::get('/admin/surat-penawaran/{surat_penawaran}/print', [\App\Http\Controllers\SuratPenawaranController::class , 'print'])->name('surat-penawaran.print');
         Route::delete('/admin/surat-penawaran/{surat_penawaran}', [\App\Http\Controllers\SuratPenawaranController::class , 'destroy'])->name('surat-penawaran.destroy');
+        Route::get('/admin/surat-penawaran/{surat_penawaran}/edit-data', [\App\Http\Controllers\SuratPenawaranController::class , 'editData'])->name('surat-penawaran.edit-data');
         Route::post('/admin/surat-penawaran/bulk-destroy', [\App\Http\Controllers\SuratPenawaranController::class , 'bulkDestroy'])->name('surat-penawaran.bulkDestroy');
     });

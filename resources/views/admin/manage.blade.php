@@ -226,54 +226,5 @@
         </div>
     </main>
 
-    <!-- Sidebar Toggling Scripts -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const sidebar = document.getElementById('sidebar');
-            const overlay = document.getElementById('sidebar-overlay');
-            const toggleBtn = document.getElementById('sidebar-toggle-btn');
-            const mainContent = document.getElementById('main-content');
-            const topbar = document.getElementById('topbar');
-
-            function toggleSidebar() {
-                const isMobile = window.innerWidth < 768;
-                
-                if (isMobile) {
-                    sidebar.classList.toggle('-translate-x-full');
-                    if (sidebar.classList.contains('-translate-x-full')) {
-                        overlay.classList.add('hidden');
-                    } else {
-                        overlay.classList.remove('hidden');
-                    }
-                } else {
-                    sidebar.classList.toggle('md:-translate-x-full');
-                    sidebar.classList.toggle('md:translate-x-0');
-                    
-                    if (mainContent) {
-                        mainContent.classList.toggle('md:ml-64');
-                        mainContent.classList.toggle('md:ml-0');
-                    }
-                    
-                    if (topbar) {
-                        topbar.classList.toggle('md:left-64');
-                        topbar.classList.toggle('md:left-0');
-                    }
-                }
-            }
-
-            if (toggleBtn) toggleBtn.addEventListener('click', toggleSidebar);
-            if (overlay) overlay.addEventListener('click', toggleSidebar);
-            
-            window.addEventListener('resize', () => {
-                if (window.innerWidth >= 768) {
-                    overlay.classList.add('hidden');
-                } else {
-                    if (!sidebar.classList.contains('-translate-x-full')) {
-                        overlay.classList.remove('hidden');
-                    }
-                }
-            });
-        });
-    </script>
 </body>
 </html>

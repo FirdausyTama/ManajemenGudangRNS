@@ -34,7 +34,7 @@
                 <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
             </button>
             <div class="{{ request()->routeIs('invoice.*') || request()->routeIs('kwitansi.*') || request()->routeIs('surat-jalan.*') || request()->routeIs('surat-penawaran.*') ? 'block' : 'hidden' }} pl-11 pr-4 py-2 space-y-1 mt-1 font-medium text-sm">
-                
+                <a href="{{ route('surat-penawaran.index') }}" class="{{ request()->routeIs('surat-penawaran.*') ? 'text-rns-blue font-bold px-2 py-1.5' : 'text-gray-500 hover:text-rns-blue px-2 py-1.5' }} block rounded transition-colors">Surat Penawaran</a>
                 <a href="{{ route('invoice.index') }}" class="{{ request()->routeIs('invoice.*') ? 'text-rns-blue font-bold px-2 py-1.5' : 'text-gray-500 hover:text-rns-blue px-2 py-1.5' }} block rounded transition-colors">Surat Invoice</a>
                 <a href="{{ route('kwitansi.index') }}" class="{{ request()->routeIs('kwitansi.*') ? 'text-rns-blue font-bold px-2 py-1.5' : 'text-gray-500 hover:text-rns-blue px-2 py-1.5' }} block rounded transition-colors">Surat Kwitansi</a>
                 <a href="{{ route('surat-jalan.index') }}" class="{{ request()->routeIs('surat-jalan.*') ? 'text-rns-blue font-bold px-2 py-1.5' : 'text-gray-500 hover:text-rns-blue px-2 py-1.5' }} block rounded transition-colors">Surat Jalan</a>
@@ -88,3 +88,52 @@
         </div>
     </div>
 </header>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebar-overlay');
+        const toggleBtn = document.getElementById('sidebar-toggle-btn');
+        const mainContent = document.getElementById('main-content');
+        const topbar = document.getElementById('topbar');
+
+        function toggleSidebar() {
+            const isMobile = window.innerWidth < 768;
+            
+            if (isMobile) {
+                sidebar.classList.toggle('-translate-x-full');
+                if (sidebar.classList.contains('-translate-x-full')) {
+                    overlay.classList.add('hidden');
+                } else {
+                    overlay.classList.remove('hidden');
+                }
+            } else {
+                sidebar.classList.toggle('md:-translate-x-full');
+                sidebar.classList.toggle('md:translate-x-0');
+                
+                if (mainContent) {
+                    mainContent.classList.toggle('md:ml-64');
+                    mainContent.classList.toggle('md:ml-0');
+                }
+                
+                if (topbar) {
+                    topbar.classList.toggle('md:left-64');
+                    topbar.classList.toggle('md:left-0');
+                }
+            }
+        }
+
+        if (toggleBtn) toggleBtn.addEventListener('click', toggleSidebar);
+        if (overlay) overlay.addEventListener('click', toggleSidebar);
+        
+        window.addEventListener('resize', () => {
+            if (window.innerWidth >= 768) {
+                overlay.classList.add('hidden');
+            } else {
+                if (!sidebar.classList.contains('-translate-x-full')) {
+                    overlay.classList.remove('hidden');
+                }
+            }
+        });
+    });
+</script>

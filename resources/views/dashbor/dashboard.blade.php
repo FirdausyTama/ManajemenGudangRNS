@@ -79,8 +79,8 @@
                             <svg class="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M12 16V15m0 1H10m4 0h-2"></path></svg>
                         </div>
                         <div>
-                            <p class="text-[9px] md:text-[10px] text-emerald-600 font-black uppercase tracking-widest leading-none mb-1">Profit Bln</p>
-                            <p class="text-sm md:text-lg font-black text-emerald-700 leading-none">Rp{{ number_format($monthlyProfit, 0, ',', '.') }}</p>
+                            <p class="text-[9px] md:text-[10px] text-gray-400 font-black uppercase tracking-widest leading-none mb-1">Profit Bln</p>
+                            <p class="text-sm md:text-lg font-black text-gray-800 leading-none">Rp{{ number_format($monthlyProfit, 0, ',', '.') }}</p>
                         </div>
                     </div>
 
@@ -90,8 +90,8 @@
                             <svg class="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
                         </div>
                         <div>
-                            <p class="text-[9px] md:text-[10px] text-orange-600 font-black uppercase tracking-widest leading-none mb-1">Piutang</p>
-                            <p class="text-sm md:text-lg font-black text-orange-700 leading-none">Rp{{ number_format($totalReceivable, 0, ',', '.') }}</p>
+                            <p class="text-[9px] md:text-[10px] text-gray-400 font-black uppercase tracking-widest leading-none mb-1">Piutang</p>
+                            <p class="text-sm md:text-lg font-black text-gray-800 leading-none">Rp{{ number_format($totalReceivable, 0, ',', '.') }}</p>
                         </div>
                     </div>
 
@@ -102,7 +102,7 @@
                         </div>
                         <div>
                             <p class="text-[9px] md:text-[10px] text-gray-400 font-black uppercase tracking-widest leading-none mb-1">Trx Lunas</p>
-                            <p class="text-lg md:text-xl font-black text-emerald-600 leading-none">{{ $lunasCount }}</p>
+                            <p class="text-lg md:text-xl font-black text-gray-800 leading-none">{{ $lunasCount }}</p>
                         </div>
                     </div>
 
@@ -113,7 +113,7 @@
                         </div>
                         <div>
                             <p class="text-[9px] md:text-[10px] text-gray-400 font-black uppercase tracking-widest leading-none mb-1">Trx Cicilan</p>
-                            <p class="text-lg md:text-xl font-black text-orange-600 leading-none">{{ $cicilanCount }}</p>
+                            <p class="text-lg md:text-xl font-black text-gray-800 leading-none">{{ $cicilanCount }}</p>
                         </div>
                     </div>
                 </div>
