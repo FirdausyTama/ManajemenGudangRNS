@@ -636,6 +636,137 @@
                 }
             }
         }
+
+        /* Expandable Floating WhatsApp Menu */
+        .wa-menu-container {
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                z-index: 1000;
+                display: flex;
+                flex-direction: column;
+                align-items: flex-end;
+                gap: 8px;
+            }
+
+            .wa-options {
+                display: flex;
+                flex-direction: column;
+                align-items: flex-end;
+                gap: 8px;
+                visibility: hidden;
+                opacity: 0;
+                transform: translateY(20px);
+                transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+                pointer-events: none;
+            }
+
+            .wa-menu-container.active:not(.dismissed) .wa-options,
+            .wa-menu-container:hover:not(.dismissed) .wa-options {
+                visibility: visible;
+                opacity: 1;
+                transform: translateY(0);
+                pointer-events: auto;
+            }
+
+            .wa-option-item {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                text-decoration: none;
+                transition: transform 0.3s ease;
+            }
+
+            .wa-option-item:hover {
+                transform: translateX(-5px);
+            }
+
+            .wa-label {
+                background: white;
+                color: #333;
+                padding: 6px 15px;
+                border-radius: 20px;
+                font-size: 13px;
+                font-weight: 700;
+                box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+                white-space: nowrap;
+                border: 1px solid #eee;
+            }
+
+            .wa-icon-btn {
+                width: 55px;
+                height: 55px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 25px;
+                color: white;
+                box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            }
+
+            .bg-cs { background: #3b82f6; } /* Blue */
+            .bg-maint { background: #f59e0b; } /* Orange */
+            .bg-order { background: #10b981; } /* Emerald */
+
+            .wa-main-btn {
+                width: 70px;
+                height: 70px;
+                background-color: #25d366;
+                color: white;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 35px;
+                box-shadow: 0 6px 20px rgba(37, 211, 102, 0.4);
+                cursor: pointer;
+                transition: all 0.4s ease;
+                border: none;
+            }
+
+            .wa-menu-container.active:not(.dismissed) .wa-main-btn,
+            .wa-menu-container:hover:not(.dismissed) .wa-main-btn {
+                transform: rotate(135deg);
+                background-color: #ef4444; /* Red to indicate "Close" */
+                box-shadow: 0 6px 20px rgba(239, 68, 68, 0.4);
+            }
+
+            .wa-menu-container.active:not(.dismissed) .wa-main-btn i::before,
+            .wa-menu-container:hover:not(.dismissed) .wa-main-btn i::before {
+                content: "\f62a"; /* x-lg icon if using bi */
+            }
+
+            /* Periodic Pulse & Shake Animation */
+            .wa-main-btn {
+                animation: wa-zoom-shake 5s infinite;
+            }
+
+            @keyframes wa-zoom-shake {
+                0%, 80%, 100% { transform: scale(1) rotate(0); }
+                82% { transform: scale(1.2) rotate(5deg); }
+                84% { transform: scale(1.2) rotate(-5deg); }
+                86% { transform: scale(1.2) rotate(5deg); }
+                88% { transform: scale(1.2) rotate(-5deg); }
+                90% { transform: scale(1.1) rotate(0); }
+            }
+
+            @media (max-width: 768px) {
+                .wa-menu-container {
+                    bottom: 20px;
+                    right: 20px;
+                }
+                .wa-main-btn {
+                    width: 60px;
+                    height: 60px;
+                    font-size: 30px;
+                }
+                .wa-icon-btn {
+                    width: 50px;
+                    height: 50px;
+                    font-size: 22px;
+                }
+            }
     </style>
 </head>
 <body>
@@ -911,7 +1042,72 @@
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     
+    <!-- Expandable Floating WhatsApp -->
+    @php
+        $wa_raw_float = setting('contact_wa', '0852-8000-2289');
+        $wa_clean_float = preg_replace('/[^0-9]/', '', $wa_raw_float);
+        if(str_starts_with($wa_clean_float, '0')) {
+            $wa_clean_float = '62' . substr($wa_clean_float, 1);
+        }
+    @endphp
+    
+    <div class="wa-menu-container" id="waMenu">
+        <div class="wa-options">
+            <!-- Order -->
+            <a href="https://wa.me/{{ $wa_clean_float }}?text=Halo%20RNS,%20saya%20ingin%20melakukan%20Pemesanan%20Alat..." target="_blank" class="wa-option-item">
+                <span class="wa-label">Order Alkes</span>
+                <div class="wa-icon-btn bg-order">
+                    <i class="bi bi-cart-plus"></i>
+                </div>
+            </a>
+            <!-- Maintenance -->
+            <a href="https://wa.me/{{ $wa_clean_float }}?text=Halo%20RNS,%20saya%20butuh%20layanan%20Maintenance/Perbaikan..." target="_blank" class="wa-option-item">
+                <span class="wa-label">Maintenance</span>
+                <div class="wa-icon-btn bg-maint">
+                    <i class="bi bi-tools"></i>
+                </div>
+            </a>
+            <!-- CS -->
+            <a href="https://wa.me/{{ $wa_clean_float }}?text=Halo%20RNS,%20saya%20ingin%20berkonsultasi%20dengan%20Customer%20Service..." target="_blank" class="wa-option-item">
+                <span class="wa-label">Hubungi CS</span>
+                <div class="wa-icon-btn bg-cs">
+                    <i class="bi bi-headset"></i>
+                </div>
+            </a>
+        </div>
+        <button class="wa-main-btn" onclick="toggleWaMenu()">
+            <i class="bi bi-whatsapp"></i>
+        </button>
+    </div>
+
     <script>
+        function toggleWaMenu() {
+            const menu = document.getElementById('waMenu');
+            if (menu.classList.contains('active') || menu.matches(':hover')) {
+                // If it's open (either via click or hover), clicking the button should "dismiss" it
+                menu.classList.remove('active');
+                menu.classList.add('dismissed');
+            } else {
+                menu.classList.add('active');
+                menu.classList.remove('dismissed');
+            }
+        }
+
+        // Reset dismissal state when mouse leaves
+        const waMenuNode = document.getElementById('waMenu');
+        waMenuNode.addEventListener('mouseleave', function() {
+            waMenuNode.classList.remove('dismissed');
+        });
+
+        // Close WhatsApp menu when clicking outside
+        document.addEventListener('click', function(event) {
+            const waMenu = document.getElementById('waMenu');
+            const isClickInside = waMenu.contains(event.target);
+
+            if (!isClickInside && waMenu.classList.contains('active')) {
+                waMenu.classList.remove('active');
+            }
+        });
         // Navbar scroll effect
         window.addEventListener('scroll', function() {
             const navbar = document.querySelector('.navbar');

@@ -97,42 +97,68 @@
         const mainContent = document.getElementById('main-content');
         const topbar = document.getElementById('topbar');
 
+        if (!sidebar || !toggleBtn) return;
+
         function toggleSidebar() {
             const isMobile = window.innerWidth < 768;
             
             if (isMobile) {
-                sidebar.classList.toggle('-translate-x-full');
-                if (sidebar.classList.contains('-translate-x-full')) {
-                    overlay.classList.add('hidden');
+                const isHidden = sidebar.classList.contains('-translate-x-full');
+                if (isHidden) {
+                    sidebar.classList.remove('-translate-x-full');
+                    if (overlay) overlay.classList.remove('hidden');
                 } else {
-                    overlay.classList.remove('hidden');
+                    sidebar.classList.add('-translate-x-full');
+                    if (overlay) overlay.classList.add('hidden');
                 }
             } else {
-                sidebar.classList.toggle('md:-translate-x-full');
-                sidebar.classList.toggle('md:translate-x-0');
+                const isCollapsed = sidebar.classList.contains('md:-translate-x-full');
                 
-                if (mainContent) {
-                    mainContent.classList.toggle('md:ml-64');
-                    mainContent.classList.toggle('md:ml-0');
-                }
-                
-                if (topbar) {
-                    topbar.classList.toggle('md:left-64');
-                    topbar.classList.toggle('md:left-0');
+                if (isCollapsed) {
+                    // Open it
+                    sidebar.classList.remove('md:-translate-x-full');
+                    sidebar.classList.add('md:translate-x-0');
+                    if (mainContent) {
+                        mainContent.classList.remove('md:ml-0');
+                        mainContent.classList.add('md:ml-64');
+                    }
+                    if (topbar) {
+                        topbar.classList.remove('md:left-0');
+                        topbar.classList.add('md:left-64');
+                    }
+                } else {
+                    // Close it
+                    sidebar.classList.add('md:-translate-x-full');
+                    sidebar.classList.remove('md:translate-x-0');
+                    if (mainContent) {
+                        mainContent.classList.add('md:ml-0');
+                        mainContent.classList.remove('md:ml-64');
+                    }
+                    if (topbar) {
+                        topbar.classList.add('md:left-0');
+                        topbar.classList.remove('md:left-64');
+                    }
                 }
             }
         }
 
-        if (toggleBtn) toggleBtn.addEventListener('click', toggleSidebar);
-        if (overlay) overlay.addEventListener('click', toggleSidebar);
+        toggleBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            toggleSidebar();
+        });
+
+        if (overlay) {
+            overlay.addEventListener('click', function() {
+                sidebar.classList.add('-translate-x-full');
+                overlay.classList.add('hidden');
+            });
+        }
         
+        // Close sidebar on mobile when window is resized to desktop
         window.addEventListener('resize', () => {
             if (window.innerWidth >= 768) {
-                overlay.classList.add('hidden');
-            } else {
-                if (!sidebar.classList.contains('-translate-x-full')) {
-                    overlay.classList.remove('hidden');
-                }
+                sidebar.classList.remove('-translate-x-full');
+                if (overlay) overlay.classList.add('hidden');
             }
         });
     });
