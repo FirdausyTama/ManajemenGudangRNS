@@ -103,41 +103,20 @@
             const isMobile = window.innerWidth < 768;
             
             if (isMobile) {
-                const isHidden = sidebar.classList.contains('-translate-x-full');
-                if (isHidden) {
-                    sidebar.classList.remove('-translate-x-full');
-                    if (overlay) overlay.classList.remove('hidden');
-                } else {
-                    sidebar.classList.add('-translate-x-full');
-                    if (overlay) overlay.classList.add('hidden');
-                }
+                sidebar.classList.toggle('-translate-x-full');
+                if (overlay) overlay.classList.toggle('hidden');
             } else {
-                const isCollapsed = sidebar.classList.contains('md:-translate-x-full');
+                // Desktop Toggle
+                sidebar.classList.toggle('md:-translate-x-full');
+                sidebar.classList.toggle('md:translate-x-0');
                 
-                if (isCollapsed) {
-                    // Open it
-                    sidebar.classList.remove('md:-translate-x-full');
-                    sidebar.classList.add('md:translate-x-0');
-                    if (mainContent) {
-                        mainContent.classList.remove('md:ml-0');
-                        mainContent.classList.add('md:ml-64');
-                    }
-                    if (topbar) {
-                        topbar.classList.remove('md:left-0');
-                        topbar.classList.add('md:left-64');
-                    }
-                } else {
-                    // Close it
-                    sidebar.classList.add('md:-translate-x-full');
-                    sidebar.classList.remove('md:translate-x-0');
-                    if (mainContent) {
-                        mainContent.classList.add('md:ml-0');
-                        mainContent.classList.remove('md:ml-64');
-                    }
-                    if (topbar) {
-                        topbar.classList.add('md:left-0');
-                        topbar.classList.remove('md:left-64');
-                    }
+                if (mainContent) {
+                    mainContent.classList.toggle('md:ml-64');
+                    mainContent.classList.toggle('md:ml-0');
+                }
+                if (topbar) {
+                    topbar.classList.toggle('md:left-64');
+                    topbar.classList.toggle('md:left-0');
                 }
             }
         }
@@ -154,12 +133,33 @@
             });
         }
         
-        // Close sidebar on mobile when window is resized to desktop
+        // Ensure proper state on window resize
         window.addEventListener('resize', () => {
             if (window.innerWidth >= 768) {
+                // On desktop, ensure mobile classes don't interfere
                 sidebar.classList.remove('-translate-x-full');
                 if (overlay) overlay.classList.add('hidden');
+            } else {
+                // On mobile, if sidebar is not hidden, show overlay
+                if (!sidebar.classList.contains('-translate-x-full')) {
+                    if (overlay) overlay.classList.remove('hidden');
+                }
             }
         });
     });
+</script>
+
+<script>
+    // Register Service Worker
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register("{{ asset('sw.js') }}")
+                .then(registration => {
+                    console.log('ServiceWorker registration successful with scope: ', registration.scope);
+                })
+                .catch(err => {
+                    console.log('ServiceWorker registration failed: ', err);
+                });
+        });
+    }
 </script>

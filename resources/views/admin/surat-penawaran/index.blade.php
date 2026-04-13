@@ -9,7 +9,9 @@
   <meta name="author" content="Zoyothemes" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
-  <link rel="shortcut icon" href="{{ asset('assets/images/favicon.ico') }}" />
+  <link rel="shortcut icon" href="{{ asset('assets/images/favicon.ico?v=2') }}" />
+  <link rel="manifest" href="{{ asset('manifest.json') }}">
+  <meta name="theme-color" content="#1e40af">
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {

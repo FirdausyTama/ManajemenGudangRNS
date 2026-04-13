@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PT Ranay Nusantara Sejahtera - Penyedia Alat Kesehatan Terpercaya</title>
-    <link rel="icon" href="{{ asset('assets/images/favicon.ico') }}" type="image/x-icon">
+    <link rel="icon" href="{{ asset('assets/images/favicon.ico?v=2') }}" type="image/x-icon">
     <!-- PWA -->
     <link rel="manifest" href="{{ asset('manifest.json') }}">
     <meta name="theme-color" content="#1e40af">
@@ -647,6 +647,11 @@
                 flex-direction: column;
                 align-items: flex-end;
                 gap: 8px;
+                pointer-events: none; /* Make container click-through */
+            }
+
+            .wa-main-btn {
+                pointer-events: auto; /* Button itself captures clicks */
             }
 
             .wa-options {
@@ -661,12 +666,21 @@
                 pointer-events: none;
             }
 
-            .wa-menu-container.active:not(.dismissed) .wa-options,
-            .wa-menu-container:hover:not(.dismissed) .wa-options {
+            .wa-menu-container.active .wa-options {
                 visibility: visible;
                 opacity: 1;
                 transform: translateY(0);
                 pointer-events: auto;
+            }
+            
+            /* Only allow hover behavior on desktop */
+            @media (min-width: 992px) {
+                .wa-menu-container:hover .wa-options {
+                    visibility: visible;
+                    opacity: 1;
+                    transform: translateY(0);
+                    pointer-events: auto;
+                }
             }
 
             .wa-option-item {
@@ -725,16 +739,28 @@
                 border: none;
             }
 
-            .wa-menu-container.active:not(.dismissed) .wa-main-btn,
-            .wa-menu-container:hover:not(.dismissed) .wa-main-btn {
+            .wa-menu-container.active .wa-main-btn {
                 transform: rotate(135deg);
                 background-color: #ef4444; /* Red to indicate "Close" */
                 box-shadow: 0 6px 20px rgba(239, 68, 68, 0.4);
             }
 
-            .wa-menu-container.active:not(.dismissed) .wa-main-btn i::before,
-            .wa-menu-container:hover:not(.dismissed) .wa-main-btn i::before {
+            @media (min-width: 992px) {
+                .wa-menu-container:hover .wa-main-btn {
+                    transform: rotate(135deg);
+                    background-color: #ef4444;
+                    box-shadow: 0 6px 20px rgba(239, 68, 68, 0.4);
+                }
+            }
+
+            .wa-menu-container.active .wa-main-btn i::before {
                 content: "\f62a"; /* x-lg icon if using bi */
+            }
+
+            @media (min-width: 992px) {
+                .wa-menu-container:hover .wa-main-btn i::before {
+                    content: "\f62a";
+                }
             }
 
             /* Periodic Pulse & Shake Animation */
@@ -1083,25 +1109,14 @@
     <script>
         function toggleWaMenu() {
             const menu = document.getElementById('waMenu');
-            if (menu.classList.contains('active') || menu.matches(':hover')) {
-                // If it's open (either via click or hover), clicking the button should "dismiss" it
-                menu.classList.remove('active');
-                menu.classList.add('dismissed');
-            } else {
-                menu.classList.add('active');
-                menu.classList.remove('dismissed');
-            }
+            menu.classList.toggle('active');
         }
-
-        // Reset dismissal state when mouse leaves
-        const waMenuNode = document.getElementById('waMenu');
-        waMenuNode.addEventListener('mouseleave', function() {
-            waMenuNode.classList.remove('dismissed');
-        });
 
         // Close WhatsApp menu when clicking outside
         document.addEventListener('click', function(event) {
             const waMenu = document.getElementById('waMenu');
+            if (!waMenu) return;
+            
             const isClickInside = waMenu.contains(event.target);
 
             if (!isClickInside && waMenu.classList.contains('active')) {
@@ -1177,6 +1192,7 @@
         const btnInstallPwa = document.getElementById('btnInstallPwa');
 
         window.addEventListener('beforeinstallprompt', (e) => {
+            console.log('beforeinstallprompt event fired');
             // Prevent the mini-infobar from appearing on mobile
             e.preventDefault();
             // Stash the event so it can be triggered later.
@@ -1189,16 +1205,18 @@
 
         if (btnInstallPwa) {
             btnInstallPwa.addEventListener('click', async () => {
-                // Hide the app provided install promotion
-                btnInstallPwa.style.display = 'none';
-                // Show the install prompt
+                // Show the install prompt if available
                 if (deferredPrompt) {
+                    // Hide the app provided install promotion
+                    btnInstallPwa.style.display = 'none';
                     deferredPrompt.prompt();
                     // Wait for the user to respond to the prompt
                     const { outcome } = await deferredPrompt.userChoice;
                     console.log(`User response to the install prompt: ${outcome}`);
                     // We've used the prompt, and can't use it again, throw it away
                     deferredPrompt = null;
+                } else {
+                    alert('Pemasangan aplikasi PWA tidak tersedia saat ini. Mungkin Anda sudah menginstalnya atau browser Anda tidak mendukung.');
                 }
             });
         }

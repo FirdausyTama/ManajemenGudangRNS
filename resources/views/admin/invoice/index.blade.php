@@ -9,7 +9,9 @@
   <meta name="author" content="Zoyothemes" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
-  <link rel="shortcut icon" href="{{ asset('assets/images/favicon.ico') }}" />
+  <link rel="shortcut icon" href="{{ asset('assets/images/favicon.ico?v=2') }}" />
+  <link rel="manifest" href="{{ asset('manifest.json') }}">
+  <meta name="theme-color" content="#1e40af">
 
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
@@ -292,53 +294,7 @@
         totalField.value = new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(total);
     }
 
-    // Sidebar logic 
-    document.addEventListener('DOMContentLoaded', () => {
-        const sidebar = document.getElementById('sidebar');
-        const mainContent = document.getElementById('main-content');
-        const topbar = document.getElementById('topbar');
-        const toggleBtn = document.getElementById('sidebar-toggle-btn');
-        const overlay = document.getElementById('sidebar-overlay');
 
-        function toggleSidebar() {
-            const isMobile = window.innerWidth < 768;
-            
-            if (isMobile) {
-                sidebar.classList.toggle('-translate-x-full');
-                if (sidebar.classList.contains('-translate-x-full')) {
-                    if (overlay) overlay.classList.add('hidden');
-                } else {
-                    if (overlay) overlay.classList.remove('hidden');
-                }
-            } else {
-                sidebar.classList.toggle('md:-translate-x-full');
-                sidebar.classList.toggle('md:translate-x-0');
-                
-                if (mainContent) {
-                    mainContent.classList.toggle('md:ml-64');
-                    mainContent.classList.toggle('md:ml-0');
-                }
-                
-                if (topbar) {
-                    topbar.classList.toggle('md:left-64');
-                    topbar.classList.toggle('md:left-0');
-                }
-            }
-        }
-
-        if (toggleBtn) toggleBtn.addEventListener('click', toggleSidebar);
-        if (overlay) overlay.addEventListener('click', toggleSidebar);
-
-        window.addEventListener('resize', () => {
-            if (window.innerWidth >= 768) {
-                if (overlay) overlay.classList.add('hidden');
-            } else {
-                if (sidebar && !sidebar.classList.contains('-translate-x-full')) {
-                    if (overlay) overlay.classList.remove('hidden');
-                }
-            }
-        });
-    });
   </script>
 </body>
 

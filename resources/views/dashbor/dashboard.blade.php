@@ -46,7 +46,7 @@
             <div class="max-w-7xl mx-auto space-y-4 md:space-y-8 relative z-10">
                 
                 <!-- Welcome Card -->
-                <div class="bg-gradient-to-r from-rns-blue to-rns-light rounded-xl p-5 md:p-8 text-white shadow-lg shadow-blue-200 flex justify-between items-center relative overflow-hidden">
+                <!-- <div class="bg-gradient-to-r from-rns-blue to-rns-light rounded-xl p-5 md:p-8 text-white shadow-lg shadow-blue-200 flex justify-between items-center relative overflow-hidden">
                     <div class="absolute right-0 top-0 opacity-10">
                         <svg width="200" height="200" viewBox="0 0 24 24" fill="currentColor"><path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z"/></svg>
                     </div>
@@ -58,7 +58,7 @@
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
                         Lihat Website
                     </a>
-                </div>
+                </div> -->
 
                 <!-- KPI Cards -->
                 <div class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-5 gap-3 md:gap-4">

@@ -530,9 +530,6 @@
             container.appendChild(rowNode);
             rowCount++;
         }
-
-        }
-    </script>
     </script>
 </body>
 </html>

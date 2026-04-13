@@ -274,30 +274,6 @@
         </div>
     </main>
 
-    <!-- Sidebar Toggling Scripts -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const sidebar = document.getElementById('sidebar');
-            const overlay = document.getElementById('sidebar-overlay');
-            const toggleBtn = document.getElementById('sidebar-toggle-btn');
-            
-            function toggleSidebar() {
-                if (window.innerWidth < 768) {
-                    sidebar.classList.toggle('-translate-x-full');
-                    overlay.classList.toggle('hidden');
-                } else {
-                    sidebar.classList.toggle('md:-translate-x-full');
-                    sidebar.classList.toggle('md:translate-x-0');
-                    document.getElementById('main-content').classList.toggle('md:ml-64');
-                    document.getElementById('main-content').classList.toggle('md:ml-0');
-                    document.getElementById('topbar').classList.toggle('md:left-64');
-                    document.getElementById('topbar').classList.toggle('md:left-0');
-                }
-            }
 
-            if (toggleBtn) toggleBtn.addEventListener('click', toggleSidebar);
-            if (overlay) overlay.addEventListener('click', toggleSidebar);
-        });
-    </script>
 </body>
 </html>

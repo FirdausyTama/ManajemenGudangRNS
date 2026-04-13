@@ -6,7 +6,9 @@
   <title>Logout | PT. Ranay Nusantara Sejahtera</title>
   <link rel="stylesheet" href="assets/css/app.min.css">
   <link rel="stylesheet" href="assets/css/icons.min.css">
-  <link rel="shortcut icon" href="assets/images/favicon.ico">
+  <link rel="shortcut icon" href="{{ asset('assets/images/favicon.ico?v=2') }}">
+  <link rel="manifest" href="{{ asset('manifest.json') }}">
+  <meta name="theme-color" content="#1e40af">
   <style>
     body {
       background-color: #0d47a1;
