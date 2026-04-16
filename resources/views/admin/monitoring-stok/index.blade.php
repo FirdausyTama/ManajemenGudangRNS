@@ -57,60 +57,90 @@
                 </div>
 
                 <!-- Summary Cards -->
-                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 md:gap-4 mb-6 md:mb-8">
+                <div class="grid grid-cols-2 lg:grid-cols-5 gap-3 md:gap-4 mb-6 md:mb-8">
                     <!-- Total Stok Unit -->
-                    <div class="bg-white border border-gray-100 p-3 md:p-4 rounded-xl md:rounded-2xl shadow-sm">
-                        <div class="flex items-center gap-2 md:gap-3 mb-1 md:mb-2">
-                            <div class="p-1.5 md:p-2 bg-indigo-500 rounded-lg text-white">
-                                <svg class="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-12 10-4-4m16 0l-8 4-8-4m16 0l-8 4-8-4"></path></svg>
+                    <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 relative overflow-hidden group hover:shadow-md hover:-translate-y-1 transition-all duration-300">
+                        <div class="absolute right-0 top-0 w-24 h-24 bg-blue-50 rounded-full -mr-12 -mt-12 transition-transform group-hover:scale-110"></div>
+                        <div class="relative z-10 flex flex-col h-full">
+                            <div class="flex items-center gap-2 mb-3">
+                                <div class="p-2 rounded-xl bg-rns-blue text-white shadow-md shadow-blue-100">
+                                    <svg class="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-12 10-4-4m16 0l-8 4-8-4m16 0l-8 4-8-4"></path></svg>
+                                </div>
+                                <span class="text-[9px] md:text-[10px] font-medium text-gray-400 uppercase tracking-widest">Total Stok</span>
                             </div>
-                            <div class="text-[9px] md:text-[10px] font-bold text-gray-400 uppercase tracking-widest leading-tight">Total Stok</div>
+                            <div class="mt-auto">
+                                <h3 class="text-xl md:text-2xl font-medium text-gray-900 leading-none mb-1">{{ number_format($stats['total_stok'], 0, ',', '.') }}</h3>
+                                <p class="text-gray-500 text-[10px] md:text-xs">Unit Keseluruhan</p>
+                            </div>
                         </div>
-                        <div class="text-lg md:text-2xl font-bold text-gray-800">{{ number_format($stats['total_stok'], 0, ',', '.') }} <span class="text-[10px] md:text-xs font-medium text-gray-400">Unit</span></div>
                     </div>
 
                     <!-- Total Barang -->
-                    <div class="bg-white border border-gray-100 p-3 md:p-4 rounded-xl md:rounded-2xl shadow-sm">
-                        <div class="flex items-center gap-2 md:gap-3 mb-1 md:mb-2">
-                            <div class="p-1.5 md:p-2 bg-gray-500 rounded-lg text-white">
-                                <svg class="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
+                    <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 relative overflow-hidden group hover:shadow-md hover:-translate-y-1 transition-all duration-300">
+                        <div class="absolute right-0 top-0 w-24 h-24 bg-gray-100 rounded-full -mr-12 -mt-12 transition-transform group-hover:scale-110"></div>
+                        <div class="relative z-10 flex flex-col h-full">
+                            <div class="flex items-center gap-2 mb-3">
+                                <div class="p-2 rounded-xl bg-gray-500 text-white shadow-md shadow-gray-200">
+                                    <svg class="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
+                                </div>
+                                <span class="text-[9px] md:text-[10px] font-medium text-gray-400 uppercase tracking-widest">Varian</span>
                             </div>
-                            <div class="text-[9px] md:text-[10px] font-bold text-gray-400 uppercase tracking-widest leading-tight">Varian</div>
+                            <div class="mt-auto">
+                                <h3 class="text-xl md:text-2xl font-medium text-gray-900 leading-none mb-1">{{ number_format($stats['total_barang'], 0, ',', '.') }}</h3>
+                                <p class="text-gray-500 text-[10px] md:text-xs">Jenis Barang</p>
+                            </div>
                         </div>
-                        <div class="text-lg md:text-2xl font-bold text-gray-800">{{ number_format($stats['total_barang'], 0, ',', '.') }} <span class="text-[10px] md:text-xs font-medium text-gray-400">Barang</span></div>
                     </div>
 
                     <!-- Stok Tersedia -->
-                    <div class="bg-white border border-gray-100 p-3 md:p-4 rounded-xl md:rounded-2xl shadow-sm">
-                        <div class="flex items-center gap-2 md:gap-3 mb-1 md:mb-2">
-                            <div class="p-1.5 md:p-2 bg-green-500 rounded-lg text-white">
-                                <svg class="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                    <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 relative overflow-hidden group hover:shadow-md hover:-translate-y-1 transition-all duration-300">
+                        <div class="absolute right-0 top-0 w-24 h-24 bg-green-50 rounded-full -mr-12 -mt-12 transition-transform group-hover:scale-110"></div>
+                        <div class="relative z-10 flex flex-col h-full">
+                            <div class="flex items-center gap-2 mb-3">
+                                <div class="p-2 rounded-xl bg-green-500 text-white shadow-md shadow-green-200">
+                                    <svg class="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                </div>
+                                <span class="text-[9px] md:text-[10px] font-medium text-gray-400 uppercase tracking-widest">Tersedia</span>
                             </div>
-                            <div class="text-[9px] md:text-[10px] font-bold text-gray-400 uppercase tracking-widest leading-tight">Tersedia</div>
+                            <div class="mt-auto">
+                                <h3 class="text-xl md:text-2xl font-medium text-gray-900 leading-none mb-1">{{ number_format($stats['stok_tersedia'], 0, ',', '.') }}</h3>
+                                <p class="text-gray-500 text-[10px] md:text-xs">Stok Aman (≥ 10)</p>
+                            </div>
                         </div>
-                        <div class="text-lg md:text-2xl font-bold text-gray-800">{{ number_format($stats['stok_tersedia'], 0, ',', '.') }} <span class="text-[10px] md:text-xs font-medium text-gray-400">Barang</span></div>
                     </div>
 
                     <!-- Stok Menipis -->
-                    <div class="bg-white border border-gray-100 p-3 md:p-4 rounded-xl md:rounded-2xl shadow-sm">
-                        <div class="flex items-center gap-2 md:gap-3 mb-1 md:mb-2">
-                            <div class="p-1.5 md:p-2 bg-orange-500 rounded-lg text-white">
-                                <svg class="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 relative overflow-hidden group hover:shadow-md hover:-translate-y-1 transition-all duration-300">
+                        <div class="absolute right-0 top-0 w-24 h-24 bg-orange-50 rounded-full -mr-12 -mt-12 transition-transform group-hover:scale-110"></div>
+                        <div class="relative z-10 flex flex-col h-full">
+                            <div class="flex items-center gap-2 mb-3">
+                                <div class="p-2 rounded-xl bg-orange-500 text-white shadow-md shadow-orange-200">
+                                    <svg class="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                </div>
+                                <span class="text-[9px] md:text-[10px] font-medium text-gray-400 uppercase tracking-widest">Menipis</span>
                             </div>
-                            <div class="text-[9px] md:text-[10px] font-bold text-gray-400 uppercase tracking-widest leading-tight">Menipis</div>
+                            <div class="mt-auto">
+                                <h3 class="text-xl md:text-2xl font-medium text-gray-900 leading-none mb-1">{{ number_format($stats['stok_menipis'], 0, ',', '.') }}</h3>
+                                <p class="text-gray-500 text-[10px] md:text-xs">Stok Sedikit (< 10)</p>
+                            </div>
                         </div>
-                        <div class="text-lg md:text-2xl font-bold text-gray-800">{{ number_format($stats['stok_menipis'], 0, ',', '.') }} <span class="text-[10px] md:text-xs font-medium text-gray-400">Barang</span></div>
                     </div>
 
                     <!-- Stok Habis -->
-                    <div class="bg-white border border-gray-100 p-3 md:p-4 rounded-xl md:rounded-2xl shadow-sm col-span-2 lg:col-span-1">
-                        <div class="flex items-center gap-2 md:gap-3 mb-1 md:mb-2">
-                            <div class="p-1.5 md:p-2 bg-red-500 rounded-lg text-white">
-                                <svg class="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                    <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 relative overflow-hidden group hover:shadow-md hover:-translate-y-1 transition-all duration-300 col-span-2 lg:col-span-1">
+                        <div class="absolute right-0 top-0 w-24 h-24 bg-red-50 rounded-full -mr-12 -mt-12 transition-transform group-hover:scale-110"></div>
+                        <div class="relative z-10 flex flex-col h-full">
+                            <div class="flex items-center gap-2 mb-3">
+                                <div class="p-2 rounded-xl bg-red-500 text-white shadow-md shadow-red-200">
+                                    <svg class="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                                </div>
+                                <span class="text-[9px] md:text-[10px] font-medium text-gray-400 uppercase tracking-widest">Habis</span>
                             </div>
-                            <div class="text-[9px] md:text-[10px] font-bold text-gray-400 uppercase tracking-widest leading-tight">Habis</div>
+                            <div class="mt-auto">
+                                <h3 class="text-xl md:text-2xl font-medium text-gray-900 leading-none mb-1">{{ number_format($stats['stok_habis'], 0, ',', '.') }}</h3>
+                                <p class="text-gray-500 text-[10px] md:text-xs">Stok 0</p>
+                            </div>
                         </div>
-                        <div class="text-lg md:text-2xl font-bold text-gray-800">{{ number_format($stats['stok_habis'], 0, ',', '.') }} <span class="text-[10px] md:text-xs font-medium text-gray-400">Barang</span></div>
                     </div>
                 </div>
 
@@ -209,11 +239,11 @@
                             </div>
 
                             <div class="absolute top-2 right-2 sm:top-3 sm:right-3">
-                                @if($barang->stock > 10)
+                                @if($barang->stock >= 10)
                                     <span class="flex items-center text-[8px] sm:text-xs font-medium text-green-700 bg-green-100/90 backdrop-blur-sm px-1.5 py-0.5 sm:px-2.5 sm:py-1 rounded shadow-sm">
                                         <span class="w-1 h-1 sm:w-1.5 sm:h-1.5 rounded-full bg-green-500 mr-1 sm:mr-1.5"></span> Tersedia
                                     </span>
-                                @elseif($barang->stock > 0)
+                                @elseif($barang->stock > 0 && $barang->stock < 10)
                                     <span class="flex items-center text-[8px] sm:text-xs font-medium text-yellow-700 bg-yellow-100/90 backdrop-blur-sm px-1.5 py-0.5 sm:px-2.5 sm:py-1 rounded shadow-sm">
                                         <span class="w-1 h-1 sm:w-1.5 sm:h-1.5 rounded-full bg-yellow-500 mr-1 sm:mr-1.5"></span> Menipis
                                     </span>
@@ -328,6 +358,10 @@
                         <p id="detailMerek" class="font-medium text-gray-800 text-sm sm:text-base break-words"></p>
                     </div>
                     <div class="bg-gray-50 p-3 sm:p-0 sm:bg-transparent rounded-lg">
+                        <p class="text-[11px] sm:text-xs text-gray-500 mb-0.5 sm:mb-1 block">Berat (Kg)</p>
+                        <p id="detailBerat" class="font-medium text-gray-800 text-sm sm:text-base break-words"></p>
+                    </div>
+                    <div class="bg-gray-50 p-3 sm:p-0 sm:bg-transparent rounded-lg">
                         <p class="text-[11px] sm:text-xs text-gray-500 mb-0.5 sm:mb-1 block">Tanggal Terdaftar</p>
                         <p id="detailDate" class="font-medium text-gray-800 text-sm sm:text-base break-words"></p>
                     </div>
@@ -381,10 +415,12 @@
             
             <div class="px-4 py-3 sm:px-6 sm:py-4 bg-gray-50 border-t border-gray-100 flex flex-col sm:flex-row justify-between shrink-0 gap-3">
                 <div class="w-full sm:w-auto">
+                    @if(auth()->user()->role === 'owner')
                     <button type="button" onclick="openModal('passwordModal')" class="w-full sm:w-auto px-5 py-2.5 sm:py-2.5 bg-red-50 text-red-600 border border-red-200 rounded-lg hover:bg-red-100 font-medium text-sm transition-colors text-center flex items-center justify-center gap-2">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
                         Hapus Permanen
                     </button>
+                    @endif
                 </div>
                 <div class="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
                     <button id="detailPrintBarcodeBtn" type="button" class="w-full sm:w-auto px-5 py-2.5 sm:py-2.5 bg-blue-50 text-rns-blue border border-blue-200 rounded-lg hover:bg-blue-100 font-medium text-sm transition-colors text-center flex items-center justify-center gap-2">
@@ -681,6 +717,7 @@
             document.getElementById('detailName').innerText = barang.name;
             document.getElementById('detailFactory').innerText = barang.factory || '-';
             document.getElementById('detailMerek').innerText = barang.merek || '-';
+            document.getElementById('detailBerat').innerText = barang.berat_barang ? `${barang.berat_barang} Kg` : '-';
             
             document.getElementById('detailUser').innerText = barang.user ? barang.user.name : 'Sistem / Tidak Diketahui';
             

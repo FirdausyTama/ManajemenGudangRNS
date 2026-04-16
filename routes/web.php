@@ -94,9 +94,7 @@ Route::middleware('auth')->group(function () {
         // Surat Penawaran Harga (SPH)
         Route::get('/admin/surat-penawaran', [\App\Http\Controllers\SuratPenawaranController::class , 'index'])->name('surat-penawaran.index');
         Route::post('/admin/surat-penawaran', [\App\Http\Controllers\SuratPenawaranController::class , 'store'])->name('surat-penawaran.store');
-        Route::put('/admin/surat-penawaran/{surat_penawaran}', [\App\Http\Controllers\SuratPenawaranController::class , 'update'])->name('surat-penawaran.update');
         Route::get('/admin/surat-penawaran/{surat_penawaran}/print', [\App\Http\Controllers\SuratPenawaranController::class , 'print'])->name('surat-penawaran.print');
         Route::delete('/admin/surat-penawaran/{surat_penawaran}', [\App\Http\Controllers\SuratPenawaranController::class , 'destroy'])->name('surat-penawaran.destroy');
-        Route::get('/admin/surat-penawaran/{surat_penawaran}/edit-data', [\App\Http\Controllers\SuratPenawaranController::class , 'editData'])->name('surat-penawaran.edit-data');
         Route::post('/admin/surat-penawaran/bulk-destroy', [\App\Http\Controllers\SuratPenawaranController::class , 'bulkDestroy'])->name('surat-penawaran.bulkDestroy');
     });

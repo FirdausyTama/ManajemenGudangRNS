@@ -333,7 +333,8 @@
                             <div id="ongkirFields" class="hidden grid grid-cols-1 md:grid-cols-2 gap-6 bg-indigo-50/50 p-5 rounded-lg border border-indigo-100">
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 mb-1">Berat Total (Kg) <span class="text-red-500">*</span></label>
-                                    <input type="number" step="0.01" min="0" name="berat_total" id="beratTotal" class="w-full rounded-lg border-gray-300 border px-3 py-2 text-sm focus:ring-rns-blue focus:border-rns-blue bg-white shadow-sm" onchange="calculateGrandTotal()" onkeyup="calculateGrandTotal()" placeholder="Contoh: 15.5">
+                                    <input type="number" step="0.01" min="0" name="berat_total" id="beratTotal" class="w-full rounded-lg border-gray-300 border px-3 py-2 text-sm bg-gray-100 text-gray-600 focus:ring-rns-blue focus:border-rns-blue shadow-sm cursor-not-allowed" readonly placeholder="Otomatis dihitung">
+                                    <p class="text-[10px] mt-1 text-indigo-600 font-medium">*Dihitung otomatis dari total barang</p>
                                 </div>
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 mb-1">Harga per Kg (Rp) <span class="text-red-500">*</span></label>
@@ -426,8 +427,10 @@
 
         function calculateGrandTotal() {
             let total = 0;
+            let totalWeight = 0;
             const rows = document.querySelectorAll('.item-row');
             rows.forEach(row => {
+                const selectElement = row.querySelector('select[name^="items["]');
                 const qtyInput = row.querySelector('.item-qty');
                 const priceInput = row.querySelector('.item-price');
                 const subtotalDisplay = row.querySelector('.item-subtotal');
@@ -436,14 +439,24 @@
                 const price = parseInt(priceInput.value) || 0;
                 const subtotal = qty * price;
                 
+                // Add to total weight
+                if (selectElement && selectElement.selectedIndex > 0) {
+                    const selectedOpt = selectElement.options[selectElement.selectedIndex];
+                    const weight = parseFloat(selectedOpt.getAttribute('data-weight')) || 0;
+                    totalWeight += (weight * qty);
+                }
+                
                 subtotalDisplay.innerText = formatRupiah(subtotal);
                 total += subtotal;
             });
+            
+            // Set Total Weight Input
+            document.getElementById('beratTotal').value = totalWeight > 0 ? totalWeight : '';
 
             // Calculate Ongkir
             let ongkir = 0;
             if (document.getElementById('isOngkirAktif').checked) {
-                const berat = parseFloat(document.getElementById('beratTotal').value) || 0;
+                const berat = totalWeight;
                 const harga = parseInt(document.getElementById('hargaPerKg').value) || 0;
                 ongkir = berat * harga;
                 document.getElementById('subtotalOngkirDisplay').innerText = formatRupiah(ongkir);
@@ -488,7 +501,7 @@
             barangsData.forEach(b => {
                 const stockText = b.stock > 0 ? `(Stok: ${b.stock})` : '(HABIS)';
                 const disabled = b.stock <= 0 ? 'disabled' : '';
-                optionsHtml += `<option value="${b.id}" data-price="${b.selling_price || 0}" data-stock="${b.stock}" data-unit="${b.unit || ''}" ${disabled}>${b.sku} - ${b.name} ${stockText}</option>`;
+                optionsHtml += `<option value="${b.id}" data-price="${b.selling_price || 0}" data-stock="${b.stock}" data-unit="${b.unit || ''}" data-weight="${b.berat_barang || 0}" ${disabled}>${b.sku} - ${b.name} ${stockText}</option>`;
             });
 
             const rowNode = document.createElement('div');

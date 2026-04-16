@@ -60,10 +60,7 @@ class KwitansiController
             'total_pembayaran' => 'required|numeric',
         ]);
 
-        $year = date('Y', strtotime($request->tanggal_kwitansi));
-        $latest = Kwitansi::whereYear('tanggal_kwitansi', $year)->latest('id')->first();
-        $nextId = $latest ? $latest->id + 1 : 1;
-        $nomor_kwitansi = 'KWT/' . str_pad($nextId, 3, '0', STR_PAD_LEFT) . '/RNS/' . $year;
+        $nomor_kwitansi = Kwitansi::generateNumber($request->tanggal_kwitansi);
 
         // Auto Terbilang Logic
         $bilangan = $request->total_bilangan;

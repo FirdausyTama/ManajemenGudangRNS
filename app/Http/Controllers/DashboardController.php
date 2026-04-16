@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Barang;
+use App\Models\BarangMasuk;
 use App\Models\Penjualan;
 use App\Models\PenjualanItem;
 use App\Models\Kwitansi;
@@ -83,6 +84,18 @@ class DashboardController
             'values' => $topSelling->map(fn($t) => (int)$t->total_qty),
         ];
 
+        // 8. Low Stock Count
+        $lowStockCount = Barang::where('stock', '>', 0)->where('stock', '<', 10)->count();
+
+        // 9. Total Asset Value
+        $totalAssetValue = (float)Barang::select(DB::raw('SUM(stock * purchase_price) as total'))->first()->total;
+
+        // 10. Total Revenue Month
+        $monthlyRevenue = (float)Penjualan::whereBetween('tanggal_transaksi', [$thisMonthStart, $thisMonthEnd])->sum('total_keseluruhan');
+
+        // 11. Recent Stock In
+        $recentStockIn = BarangMasuk::with('barang')->latest()->take(5)->get();
+
         return view('dashbor.dashboard', compact(
             'totalStok', 
             'monthlyProfit', 
@@ -91,7 +104,11 @@ class DashboardController
             'recentTransactions', 
             'chartData',
             'lunasCount',
-            'cicilanCount'
+            'cicilanCount',
+            'lowStockCount',
+            'totalAssetValue',
+            'monthlyRevenue',
+            'recentStockIn'
         ));
     }
 }

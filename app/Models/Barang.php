@@ -12,6 +12,7 @@ class Barang extends Model
         'factory',
         'merek',
         'unit',
+        'berat_barang',
         'purchase_price',
         'selling_price',
         'stock',

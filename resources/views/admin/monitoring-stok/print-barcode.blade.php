@@ -112,7 +112,7 @@
         <div class="barcode-container">
             
             <div class="header">
-                {{ Str::limit($barang->name, 50) }}
+                {{ $barang->name }}
             </div>
 
             <div class="details">
@@ -130,8 +130,8 @@
                 </div>
                 
                 <div style="margin-top: 5px; font-size: 14px;">
-                    <span>Harga Jual:</span>
-                    <span>Rp {{ number_format($barang->selling_price, 0, ',', '.') }}</span>
+                    <span>Berat:</span>
+                    <span>{{ $barang->berat_barang ? $barang->berat_barang . ' Kg' : '-' }}</span>
                 </div>
             </div>
 

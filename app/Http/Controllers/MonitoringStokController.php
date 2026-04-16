@@ -27,9 +27,9 @@ class MonitoringStokController
 
         if ($status) {
             if ($status === 'tersedia') {
-                $query->where('stock', '>', 10);
+                $query->where('stock', '>=', 10);
             } elseif ($status === 'menipis') {
-                $query->where('stock', '>', 0)->where('stock', '<=', 10);
+                $query->where('stock', '>', 0)->where('stock', '<', 10);
             } elseif ($status === 'habis') {
                 $query->where('stock', '<=', 0);
             }
@@ -41,8 +41,8 @@ class MonitoringStokController
         $stats = [
             'total_stok' => Barang::sum('stock'),
             'total_barang' => Barang::count(),
-            'stok_tersedia' => Barang::where('stock', '>', 10)->count(),
-            'stok_menipis' => Barang::where('stock', '>', 0)->where('stock', '<=', 10)->count(),
+            'stok_tersedia' => Barang::where('stock', '>=', 10)->count(),
+            'stok_menipis' => Barang::where('stock', '>', 0)->where('stock', '<', 10)->count(),
             'stok_habis' => Barang::where('stock', '<=', 0)->count(),
         ];
 
@@ -75,6 +75,10 @@ class MonitoringStokController
 
     public function destroy(Request $request, $id)
     {
+        if (auth()->user()->role !== 'owner') {
+            return back()->with('error', 'Hanya Owner yang diperbolehkan untuk menghapus data barang.');
+        }
+
         $request->validate([
             'password' => 'required|string',
         ]);

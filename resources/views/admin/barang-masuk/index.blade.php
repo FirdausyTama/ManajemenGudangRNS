@@ -305,6 +305,10 @@
                                 </select>
                             </div>
                             <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Berat per Unit (Kg) <span class="text-red-500">*</span></label>
+                                <input type="number" step="0.01" name="berat_barang" class="w-full rounded-lg border-gray-300 border px-3 py-2 text-sm focus:ring-rns-blue focus:border-rns-blue" placeholder="0.0">
+                            </div>
+                            <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Harga Modal (Rp)</label>
                                 <input type="text" id="disp_purchase" class="w-full rounded-lg border-gray-300 border px-3 py-2 text-sm focus:ring-rns-blue focus:border-rns-blue" placeholder="0" onkeyup="formatCurrency(this, 'real_purchase')">
                                 <input type="hidden" name="purchase_price" id="real_purchase">
@@ -393,6 +397,10 @@
                                     <option value="box">Box</option>
                                     <option value="set">Set</option>
                                 </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Berat per Unit (Kg)</label>
+                                <input type="number" step="0.01" name="berat_barang" id="edit_berat_barang" class="w-full rounded-lg border-gray-300 border px-3 py-2 text-sm focus:ring-rns-blue focus:border-rns-blue" placeholder="0.0">
                             </div>
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Harga Modal (Rp)</label>
@@ -614,6 +622,7 @@
                 document.getElementById('edit_factory').value = barang.factory || '';
                 document.getElementById('edit_merek').value = barang.merek || '';
                 document.getElementById('edit_unit').value = barang.unit;
+                document.getElementById('edit_berat_barang').value = barang.berat_barang || 0;
                 
                 document.getElementById('real_edit_purchase').value = parseInt(barang.purchase_price) || 0;
                 document.getElementById('disp_edit_purchase').value = (parseInt(barang.purchase_price) || 0).toLocaleString('id-ID');

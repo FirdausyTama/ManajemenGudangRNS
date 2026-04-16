@@ -136,9 +136,6 @@
                                       <a href="{{ route('surat-penawaran.print', $s->id) }}" target="_blank" class="p-1.5 text-blue-600 hover:bg-blue-50 rounded" title="Cetak SPH">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
                                       </a>
-                                      <button type="button" onclick="editSPH({{ $s->id }})" class="p-1.5 text-orange-600 hover:bg-orange-50 rounded" title="Edit SPH">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
-                                      </button>
                                       <form action="{{ route('surat-penawaran.destroy', $s->id) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus SPH ini?');" class="inline">
                                           @csrf @method('DELETE')
                                           <button type="submit" class="p-1.5 text-red-600 hover:bg-red-50 rounded" title="Hapus SPH">
@@ -193,10 +190,7 @@
         document.body.classList.remove('modal-open');
     }
 
-    // Edit logic placeholder - will implement in modals file
-    function editSPH(id) {
-        // Fetch data via AJAX and open edit modal
-    }
+    // Edit logic is handled in modals.blade.php
   </script>
 </body>
 </html>

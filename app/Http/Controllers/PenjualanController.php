@@ -264,10 +264,7 @@ class PenjualanController
 
         // Jika ada DP, catat sebagai kwitansi pertama
         if ($request->filled('dp_nominal') && $request->dp_nominal > 0) {
-            $year = date('Y');
-            $latest = \App\Models\Kwitansi::whereYear('tanggal_kwitansi', $year)->latest('id')->first();
-            $nextId = $latest ? $latest->id + 1 : 1;
-            $nomor_kwitansi = 'KWT/' . str_pad($nextId, 3, '0', STR_PAD_LEFT) . '/RNS/' . $year;
+            $nomor_kwitansi = \App\Models\Kwitansi::generateNumber(today());
 
             $kwtController = new \App\Http\Controllers\KwitansiController();
             $bilangan = $kwtController->terbilang($request->dp_nominal) . ' Rupiah';
@@ -305,9 +302,7 @@ class PenjualanController
         DB::beginTransaction();
         try {
             // Auto-generate kwitansi number
-            $lastKwitansi = \App\Models\Kwitansi::latest('id')->first();
-            $nextId = $lastKwitansi ? $lastKwitansi->id + 1 : 1;
-            $nomorKwitansi = 'KWT-' . date('Ymd') . '-' . str_pad($nextId, 4, '0', STR_PAD_LEFT);
+            $nomorKwitansi = \App\Models\Kwitansi::generateNumber($request->tanggal_kwitansi);
 
             // Determine cicilan count
             $cicilanKe = $penjualan->kwitansis()->count() + 1;
@@ -359,10 +354,7 @@ class PenjualanController
             return;
         }
 
-        $year = date('Y', strtotime($penjualan->tanggal_transaksi));
-        $latest = \App\Models\Kwitansi::whereYear('tanggal_kwitansi', $year)->latest('id')->first();
-        $nextId = $latest ? $latest->id + 1 : 1;
-        $nomor_kwitansi = 'KWT/' . str_pad($nextId, 3, '0', STR_PAD_LEFT) . '/RNS/' . $year;
+        $nomor_kwitansi = \App\Models\Kwitansi::generateNumber($penjualan->tanggal_transaksi ?? today());
 
         $terbilang = app(\App\Http\Controllers\KwitansiController::class)->terbilang($penjualan->total_keseluruhan) . ' Rupiah';
 

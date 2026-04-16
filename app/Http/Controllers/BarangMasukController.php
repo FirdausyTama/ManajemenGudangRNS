@@ -77,10 +77,11 @@ class BarangMasukController
             'is_new_barang' => 'required|boolean',
             // Validasi jika barang baru
             'sku' => 'required_if:is_new_barang,1|unique:barangs,sku|nullable|string',
-            'name' => 'required_if:is_new_barang,1|nullable|string',
+            'name' => 'required_if:is_new_barang,1|unique:barangs,name|nullable|string',
             'factory' => 'nullable|string',
             'merek' => 'nullable|string',
             'unit' => 'required_if:is_new_barang,1|nullable|string',
+            'berat_barang' => 'required_if:is_new_barang,1|nullable|numeric|min:0',
             'purchase_price' => 'required_if:is_new_barang,1|nullable|numeric',
             'selling_price' => 'required_if:is_new_barang,1|nullable|numeric',
             'images.*' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
@@ -88,6 +89,9 @@ class BarangMasukController
             'barang_id' => 'required_if:is_new_barang,0|nullable|exists:barangs,id',
             'deleted_old_images' => 'nullable|array',
             'deleted_old_images.*' => 'string'
+        ], [
+            'name.unique' => 'nama barang yang sama sudah ada sebelumnya',
+            'sku.unique' => 'SKU / Kode barang sudah ada sebelumnya',
         ]);
 
         $barangId = $request->barang_id;
@@ -117,6 +121,7 @@ class BarangMasukController
                 'factory' => $request->factory,
                 'merek' => $request->merek,
                 'unit' => $request->unit,
+                'berat_barang' => $request->berat_barang,
                 'purchase_price' => $request->purchase_price,
                 'selling_price' => $request->selling_price,
                 'stock' => $request->quantity,
@@ -190,6 +195,7 @@ class BarangMasukController
             'factory' => 'nullable|string',
             'merek' => 'nullable|string',
             'unit' => 'nullable|string',
+            'berat_barang' => 'nullable|numeric|min:0',
             'purchase_price' => 'nullable|numeric',
             'selling_price' => 'nullable|numeric',
         ]);
@@ -201,6 +207,7 @@ class BarangMasukController
                 'factory' => $request->factory,
                 'merek' => $request->merek,
                 'unit' => $request->unit,
+                'berat_barang' => $request->berat_barang,
                 'purchase_price' => $request->purchase_price,
                 'selling_price' => $request->selling_price,
             ]);
