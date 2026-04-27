@@ -1,6 +1,6 @@
 {
-    "name": "PT. Ranay Nusantara Sejahtera",
-    "short_name": "RNS",
+    "name": "PT. RAND",
+    "short_name": "RAND",
     "start_url": "/?source=pwa",
     "scope": "/",
     "display": "standalone",
@@ -9,21 +9,32 @@
     "description": "Penyedia Alat Kesehatan Terpercaya",
     "icons": [
         {
-            "src": "/assets/images/favicon.ico",
-            "sizes": "64x64 32x32 24x24 16x16",
-            "type": "image/x-icon"
-        },
-        {
-            "src": "/assets/images/favicon.ico",
+            "src": "/assets/images/splash-screen.png",
             "sizes": "192x192",
             "type": "image/png",
             "purpose": "any"
         },
         {
-            "src": "/assets/images/favicon.ico",
+            "src": "/assets/images/splash-screen.png",
             "sizes": "512x512",
             "type": "image/png",
             "purpose": "maskable"
+        }
+    ],
+    "screenshots": [
+        {
+            "src": "/assets/images/splash-screen.png",
+            "sizes": "1280x720",
+            "type": "image/png",
+            "form_factor": "wide",
+            "label": "Tampilan Aplikasi RNS"
+        },
+        {
+            "src": "/assets/images/splash-screen.png",
+            "sizes": "720x1280",
+            "type": "image/png",
+            "form_factor": "narrow",
+            "label": "Tampilan Mobile RNS"
         }
     ]
 }

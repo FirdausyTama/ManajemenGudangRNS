@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Logout | PT. Ranay Nusantara Sejahtera</title>
+  <title>Logout | PT. Rand Nusantara Sejahtera</title>
   <link rel="stylesheet" href="assets/css/app.min.css">
   <link rel="stylesheet" href="assets/css/icons.min.css">
   <link rel="shortcut icon" href="{{ asset('assets/images/favicon.ico?v=2') }}">
@@ -77,14 +77,14 @@
 <body>
 
   <div class="logout-card">
-    <img src="assets/images/logo-rns-bg.png" alt="Logo PT. Ranay Nusantara Sejahtera">
+    <img src="assets/images/logo-rns-bg.png" alt="Logo PT. Rand Nusantara Sejahtera">
     <h2>Anda Telah Keluar</h2>
-    <p>Terima kasih telah menggunakan sistem PT. Ranay Nusantara Sejahtera.</p>
+    <p>Terima kasih telah menggunakan sistem PT. Rand Nusantara Sejahtera.</p>
     <button onclick="window.location.href='/'" class="btn-login">Kembali ke Halaman Login</button>
   </div>
 
   <footer>
-    © 2025 PT. Ranay Nusantara Sejahtera. All rights reserved.
+    © 2025 PT. Rand Nusantara Sejahtera. All rights reserved.
   </footer>
 
 </body>

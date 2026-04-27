@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
   <meta charset="utf-8" />
-  <title>Kwitansi | RNS - Ranay Nusantara Sejahtera</title>
+  <title>Kwitansi | RNS - Rand Nusantara Sejahtera</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="Daftar Kwitansi Pembayaran RNS" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -12,6 +12,7 @@
   <meta name="theme-color" content="#1e40af">
 
   <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script>
     tailwind.config = {
         theme: {
@@ -141,9 +142,9 @@
                                       <a href="{{ route('kwitansi.print', $inv->id) }}" target="_blank" class="p-1.5 text-blue-600 hover:bg-blue-50 rounded" title="Cetak Kwitansi">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
                                       </a>
-                                      <form action="{{ route('kwitansi.destroy', $inv->id) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus kwitansi ini?');" class="inline">
+                                      <form action="{{ route('kwitansi.destroy', $inv->id) }}" method="POST" id="delete-form-{{ $inv->id }}" class="inline">
                                           @csrf @method('DELETE')
-                                          <button type="submit" class="p-1.5 text-red-600 hover:bg-red-50 rounded" title="Hapus Kwitansi">
+                                          <button type="button" onclick="confirmDelete('{{ $inv->id }}')" class="p-1.5 text-red-600 hover:bg-red-50 rounded" title="Hapus Kwitansi">
                                               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
                                           </button>
                                       </form>
@@ -317,6 +318,23 @@
         // Basic auto terbilang wrapper helper logic if user wants to use js (optional, user can fill manually for clarity)
     }
 
+
+    function confirmDelete(id) {
+        Swal.fire({
+            title: 'Hapus Kwitansi?',
+            text: 'Yakin ingin menghapus kwitansi ini?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#ef4444',
+            cancelButtonColor: '#9ca3af',
+            confirmButtonText: 'Ya, Hapus!',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById('delete-form-' + id).submit();
+            }
+        });
+    }
 
   </script>
 </body>

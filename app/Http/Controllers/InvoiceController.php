@@ -60,21 +60,25 @@ class InvoiceController
             'penjualan_id' => 'required|exists:penjualans,id',
             'tanggal_invoice' => 'required|date',
             'penandatangan' => 'required|string',
+            'keterangan' => 'nullable|string'
         ]);
 
         $penjualan = Penjualan::findOrFail($request->penjualan_id);
 
-        // Generate Invoice Number
+        // Generate Invoice Number: XX/INV/RNS-[Month]/[Year]
         $year = date('Y', strtotime($request->tanggal_invoice));
-        $latestInvoice = Invoice::whereYear('tanggal_invoice', $year)->latest('id')->first();
-        $nextId = $latestInvoice ? $latestInvoice->id + 1 : 1;
-        $no_invoice = 'INV/' . str_pad($nextId, 3, '0', STR_PAD_LEFT) . '/RNS/' . $year;
+        $month = date('n', strtotime($request->tanggal_invoice));
+        $romanMonths = ['', 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII'];
+        
+        $count = Invoice::whereYear('tanggal_invoice', $year)->count() + 1;
+        $no_invoice = str_pad($count, 2, '0', STR_PAD_LEFT) . '/INV/RNS-' . $romanMonths[$month] . '/' . $year;
 
         $invoice = Invoice::create([
             'no_invoice' => $no_invoice,
             'penjualan_id' => $penjualan->id,
             'tanggal_invoice' => $request->tanggal_invoice,
             'penandatangan' => $request->penandatangan,
+            'keterangan' => $request->keterangan,
             'user_id' => Auth::id(),
         ]);
 
@@ -88,8 +92,9 @@ class InvoiceController
         $penandatangan = $invoice->penandatangan;
         $no_invoice = $invoice->no_invoice;
         $tanggal_invoice = $invoice->tanggal_invoice;
+        $keterangan = $invoice->keterangan;
 
-        return view('admin.penjualan.print-invoice', compact('penjualan', 'penandatangan', 'no_invoice', 'tanggal_invoice'));
+        return view('admin.penjualan.print-invoice', compact('penjualan', 'penandatangan', 'no_invoice', 'tanggal_invoice', 'keterangan'));
     }
 
     public function destroy(Invoice $invoice)

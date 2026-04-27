@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Kelola Penjualan | Ranay Nusantara Sejathera</title>
+    <title>Kelola Penjualan | Rand Nusantara Sejahtera</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -72,38 +72,73 @@
                 </div>
                 @endif
                 <!-- Summary Cards -->
-                <div class="grid grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4 mb-6">
-                    <!-- Belum Lunas -->
-                    <div class="bg-white border border-gray-100 p-3 md:p-4 rounded-xl md:rounded-2xl shadow-sm">
-                        <div class="flex items-center gap-2 md:gap-3 mb-1 md:mb-2">
-                            <div class="p-1.5 md:p-2 bg-red-500 rounded-lg text-white">
-                                <svg class="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 mb-6 md:mb-8">
+                    <!-- Total Transaksi -->
+                    <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 relative overflow-hidden group hover:shadow-md hover:-translate-y-1 transition-all duration-300">
+                        <div class="absolute right-0 top-0 w-24 h-24 bg-blue-50 rounded-full -mr-12 -mt-12 transition-transform group-hover:scale-110"></div>
+                        <div class="relative z-10 flex flex-col h-full">
+                            <div class="flex items-center gap-2 mb-3">
+                                <div class="p-2 rounded-xl bg-rns-blue text-white shadow-md shadow-blue-200">
+                                    <svg class="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                                </div>
+                                <span class="text-[9px] md:text-[10px] font-medium text-gray-400 uppercase tracking-widest">Semua</span>
                             </div>
-                            <div class="text-[9px] md:text-[10px] font-bold text-gray-400 uppercase tracking-widest leading-tight">Belum Lunas</div>
+                            <div class="mt-auto">
+                                <h3 class="text-xl md:text-2xl font-medium text-gray-900 leading-none mb-1">{{ number_format($statusStats['lunas'] + $statusStats['cicilan'] + $statusStats['belum_lunas'], 0, ',', '.') }}</h3>
+                                <p class="text-gray-500 text-[10px] md:text-xs">Total Transaksi</p>
+                            </div>
                         </div>
-                        <div class="text-lg md:text-2xl font-bold text-gray-800">{{ number_format($statusStats['belum_lunas'], 0, ',', '.') }} <span class="text-[10px] md:text-xs font-medium text-gray-400">Transaksi</span></div>
+                    </div>
+
+                    <!-- Belum Lunas -->
+                    <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 relative overflow-hidden group hover:shadow-md hover:-translate-y-1 transition-all duration-300">
+                        <div class="absolute right-0 top-0 w-24 h-24 bg-red-50 rounded-full -mr-12 -mt-12 transition-transform group-hover:scale-110"></div>
+                        <div class="relative z-10 flex flex-col h-full">
+                            <div class="flex items-center gap-2 mb-3">
+                                <div class="p-2 rounded-xl bg-red-500 text-white shadow-md shadow-red-200">
+                                    <svg class="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                </div>
+                                <span class="text-[9px] md:text-[10px] font-medium text-gray-400 uppercase tracking-widest">Belum Lunas</span>
+                            </div>
+                            <div class="mt-auto">
+                                <h3 class="text-xl md:text-2xl font-medium text-gray-900 leading-none mb-1">{{ number_format($statusStats['belum_lunas'], 0, ',', '.') }}</h3>
+                                <p class="text-gray-500 text-[10px] md:text-xs">Invoice Belum Dibayar</p>
+                            </div>
+                        </div>
                     </div>
 
                     <!-- Cicilan -->
-                    <div class="bg-white border border-gray-100 p-3 md:p-4 rounded-xl md:rounded-2xl shadow-sm">
-                        <div class="flex items-center gap-2 md:gap-3 mb-1 md:mb-2">
-                            <div class="p-1.5 md:p-2 bg-orange-500 rounded-lg text-white">
-                                <svg class="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 relative overflow-hidden group hover:shadow-md hover:-translate-y-1 transition-all duration-300">
+                        <div class="absolute right-0 top-0 w-24 h-24 bg-orange-50 rounded-full -mr-12 -mt-12 transition-transform group-hover:scale-110"></div>
+                        <div class="relative z-10 flex flex-col h-full">
+                            <div class="flex items-center gap-2 mb-3">
+                                <div class="p-2 rounded-xl bg-orange-500 text-white shadow-md shadow-orange-200">
+                                    <svg class="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                </div>
+                                <span class="text-[9px] md:text-[10px] font-medium text-gray-400 uppercase tracking-widest">Cicilan</span>
                             </div>
-                            <div class="text-[9px] md:text-[10px] font-bold text-gray-400 uppercase tracking-widest leading-tight">Cicilan</div>
+                            <div class="mt-auto">
+                                <h3 class="text-xl md:text-2xl font-medium text-gray-900 leading-none mb-1">{{ number_format($statusStats['cicilan'], 0, ',', '.') }}</h3>
+                                <p class="text-gray-500 text-[10px] md:text-xs">Berjalan</p>
+                            </div>
                         </div>
-                        <div class="text-lg md:text-2xl font-bold text-gray-800">{{ number_format($statusStats['cicilan'], 0, ',', '.') }} <span class="text-[10px] md:text-xs font-medium text-gray-400">Transaksi</span></div>
                     </div>
 
                     <!-- Lunas -->
-                    <div class="bg-white border border-gray-100 p-3 md:p-4 rounded-xl md:rounded-2xl shadow-sm col-span-2 lg:col-span-1">
-                        <div class="flex items-center gap-2 md:gap-3 mb-1 md:mb-2">
-                            <div class="p-1.5 md:p-2 bg-green-500 rounded-lg text-white">
-                                <svg class="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 relative overflow-hidden group hover:shadow-md hover:-translate-y-1 transition-all duration-300">
+                        <div class="absolute right-0 top-0 w-24 h-24 bg-green-50 rounded-full -mr-12 -mt-12 transition-transform group-hover:scale-110"></div>
+                        <div class="relative z-10 flex flex-col h-full">
+                            <div class="flex items-center gap-2 mb-3">
+                                <div class="p-2 rounded-xl bg-green-500 text-white shadow-md shadow-green-200">
+                                    <svg class="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                </div>
+                                <span class="text-[9px] md:text-[10px] font-medium text-gray-400 uppercase tracking-widest">Lunas</span>
                             </div>
-                            <div class="text-[9px] md:text-[10px] font-bold text-gray-400 uppercase tracking-widest leading-tight">Lunas</div>
+                            <div class="mt-auto">
+                                <h3 class="text-xl md:text-2xl font-medium text-gray-900 leading-none mb-1">{{ number_format($statusStats['lunas'], 0, ',', '.') }}</h3>
+                                <p class="text-gray-500 text-[10px] md:text-xs">Transaksi Selesai</p>
+                            </div>
                         </div>
-                        <div class="text-lg md:text-2xl font-bold text-gray-800">{{ number_format($statusStats['lunas'], 0, ',', '.') }} <span class="text-[10px] md:text-xs font-medium text-gray-400">Transaksi</span></div>
                     </div>
                 </div>
 
@@ -296,17 +331,22 @@
                         
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Nama Customer / Instansi <span class="text-red-500">*</span></label>
-                            <input type="text" name="nama_customer" required class="w-full rounded-lg border-gray-300 border px-3 py-2 text-sm focus:ring-rns-blue focus:border-rns-blue" placeholder="Contoh: PT. Maju Jaya">
+                            <input type="text" name="nama_customer" id="namaCustomerInput" list="customerList" required class="w-full rounded-lg border-gray-300 border px-3 py-2 text-sm focus:ring-rns-blue focus:border-rns-blue" placeholder="Cari atau ketik nama..." oninput="onCustomerSelect(this.value)">
+                            <datalist id="customerList">
+                                @foreach($pastCustomers as $customer)
+                                    <option value="{{ $customer->nama_customer }}">
+                                @endforeach
+                            </datalist>
                         </div>
                         
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">No HP / WhatsApp</label>
-                            <input type="text" name="no_hp_customer" class="w-full rounded-lg border-gray-300 border px-3 py-2 text-sm focus:ring-rns-blue focus:border-rns-blue" placeholder="08123456789">
+                            <input type="text" name="no_hp_customer" id="noHpInput" class="w-full rounded-lg border-gray-300 border px-3 py-2 text-sm focus:ring-rns-blue focus:border-rns-blue" placeholder="08123456789">
                         </div>
                         
                         <div class="md:col-span-2">
                             <label class="block text-sm font-medium text-gray-700 mb-1">Alamat Customer</label>
-                            <textarea name="alamat_customer" rows="2" class="w-full rounded-lg border-gray-300 border px-3 py-2 text-sm focus:ring-rns-blue focus:border-rns-blue" placeholder="Alamat lengkap pengiriman..."></textarea>
+                            <textarea name="alamat_customer" id="alamatInput" rows="2" class="w-full rounded-lg border-gray-300 border px-3 py-2 text-sm focus:ring-rns-blue focus:border-rns-blue" placeholder="Alamat lengkap pengiriman..."></textarea>
                         </div>
                         
                         <div>
@@ -316,36 +356,34 @@
 
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Status Pembayaran Awal <span class="text-red-500">*</span></label>
-                            <select name="status_pembayaran" required class="w-full rounded-lg border-gray-300 border px-3 py-2 text-sm focus:ring-rns-blue focus:border-rns-blue bg-white">
+                            <select name="status_pembayaran" id="statusPembayaranAdd" required onchange="toggleSignatoryAdd()" class="w-full rounded-lg border-gray-300 border px-3 py-2 text-sm focus:ring-rns-blue focus:border-rns-blue bg-white">
                                 <option value="belum lunas" selected>Belum Lunas (Invoice Diberikan)</option>
                                 <option value="cicilan">Cicilan / Termin</option>
                                 <option value="lunas">Lunas</option>
                             </select>
                         </div>
 
-                        <!-- Ongkir Section -->
-                        <div class="md:col-span-2 border-t border-gray-100 pt-5 mt-2">
-                            <label class="flex items-center cursor-pointer mb-4 w-max group">
-                                <input type="checkbox" name="is_ongkir_aktif" id="isOngkirAktif" value="1" class="w-4 h-4 text-rns-blue rounded border-gray-300 focus:ring-rns-blue transition-colors" onchange="toggleOngkir()">
-                                <span class="ml-2 text-sm font-bold text-gray-700 group-hover:text-rns-blue transition-colors">Gunakan Ongkos Kirim (Ongkir)</span>
-                            </label>
-                            
-                            <div id="ongkirFields" class="hidden grid grid-cols-1 md:grid-cols-2 gap-6 bg-indigo-50/50 p-5 rounded-lg border border-indigo-100">
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">Berat Total (Kg) <span class="text-red-500">*</span></label>
-                                    <input type="number" step="0.01" min="0" name="berat_total" id="beratTotal" class="w-full rounded-lg border-gray-300 border px-3 py-2 text-sm bg-gray-100 text-gray-600 focus:ring-rns-blue focus:border-rns-blue shadow-sm cursor-not-allowed" readonly placeholder="Otomatis dihitung">
-                                    <p class="text-[10px] mt-1 text-indigo-600 font-medium">*Dihitung otomatis dari total barang</p>
-                                </div>
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">Harga per Kg (Rp) <span class="text-red-500">*</span></label>
-                                    <input type="number" min="0" name="harga_per_kg" id="hargaPerKg" class="w-full rounded-lg border-gray-300 border px-3 py-2 text-sm focus:ring-rns-blue focus:border-rns-blue bg-white shadow-sm" onchange="calculateGrandTotal()" onkeyup="calculateGrandTotal()" placeholder="Contoh: 5000">
-                                </div>
-                                <div class="md:col-span-2 text-right pt-2 border-t border-indigo-100/60">
-                                    <span class="text-xs text-gray-500 font-medium">Subtotal Ongkos Kirim:</span>
-                                    <div class="font-bold text-indigo-700 text-lg" id="subtotalOngkirDisplay">Rp 0</div>
-                                </div>
-                            </div>
+                        <div id="signatoryAddField" class="hidden">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Penandatangan Kwitansi Lunas:</label>
+                            <select name="penandatangan" class="w-full rounded-lg border-gray-300 border px-3 py-2 text-sm focus:ring-rns-blue focus:border-rns-blue bg-white">
+                                <option value="Dewi Sulistiowati">Dewi Sulistiowati</option>
+                                <option value="Heri Pirdaus, S.Tr.Kes Rad (MRI)">Heri Pirdaus</option>
+                            </select>
+                            <p class="text-[10px] text-indigo-600 mt-1">*Wajib diisi jika status Lunas.</p>
                         </div>
+
+                        <script>
+                            function toggleSignatoryAdd() {
+                                const status = document.getElementById('statusPembayaranAdd').value;
+                                const field = document.getElementById('signatoryAddField');
+                                if (status === 'lunas') {
+                                    field.classList.remove('hidden');
+                                } else {
+                                    field.classList.add('hidden');
+                                }
+                            }
+                        </script>
+
                     </div>
 
                     <!-- Items Section -->
@@ -363,6 +401,30 @@
 
                         <div id="itemsContainer" class="space-y-4">
                             <!-- JS Will Populate First Row Here -->
+                        </div>
+
+                        <!-- Ongkir Section -->
+                        <div class="mt-8 border-t border-gray-100 pt-6">
+                            <label class="flex items-center cursor-pointer mb-4 w-max group">
+                                <input type="checkbox" name="is_ongkir_aktif" id="isOngkirAktif" value="1" class="w-4 h-4 text-rns-blue rounded border-gray-300 focus:ring-rns-blue transition-colors" onchange="toggleOngkir()">
+                                <span class="ml-2 text-sm font-bold text-gray-700 group-hover:text-rns-blue transition-colors">Gunakan Ongkos Kirim (Ongkir)</span>
+                            </label>
+                            
+                            <div id="ongkirFields" class="hidden grid grid-cols-1 md:grid-cols-2 gap-6 bg-indigo-50/50 p-5 rounded-lg border border-indigo-100">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Berat Total (Kg) <span class="text-red-500">*</span></label>
+                                    <input type="number" step="0.01" min="0" name="berat_total" id="beratTotal" class="w-full rounded-lg border-gray-300 border px-3 py-2 text-sm bg-gray-100 text-gray-600 focus:ring-rns-blue focus:border-rns-blue shadow-sm cursor-not-allowed" readonly placeholder="Otomatis dihitung">
+                                    <p class="text-[10px] mt-1 text-indigo-600 font-medium">*Dihitung otomatis dari berat barang di atas</p>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Harga per Kg (Rp) <span class="text-red-500">*</span></label>
+                                    <input type="number" min="0" name="harga_per_kg" id="hargaPerKg" class="w-full rounded-lg border-gray-300 border px-3 py-2 text-sm focus:ring-rns-blue focus:border-rns-blue bg-white shadow-sm" onchange="calculateGrandTotal()" onkeyup="calculateGrandTotal()" placeholder="Contoh: 5000">
+                                </div>
+                                <div class="md:col-span-2 text-right pt-2 border-t border-indigo-100/60">
+                                    <span class="text-xs text-gray-500 font-medium">Subtotal Ongkos Kirim:</span>
+                                    <div class="font-bold text-indigo-700 text-lg" id="subtotalOngkirDisplay">Rp 0</div>
+                                </div>
+                            </div>
                         </div>
                         
                         <div class="mt-6 border-t pt-4 flex justify-end">
@@ -386,7 +448,16 @@
     <!-- Barang Data for JS -->
     <script>
         const barangsData = @json($barangs);
+        const customersData = @json($pastCustomers);
         let rowCount = 0;
+
+        function onCustomerSelect(value) {
+            const customer = customersData.find(c => c.nama_customer === value);
+            if (customer) {
+                document.getElementById('noHpInput').value = customer.no_hp_customer || '';
+                document.getElementById('alamatInput').value = customer.alamat_customer || '';
+            }
+        }
 
         function openModal(modalId) {
             document.getElementById(modalId).classList.remove('hidden');

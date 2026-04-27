@@ -75,13 +75,13 @@ class SuratPenawaranController
 
         DB::beginTransaction();
         try {
-            // Generate No SPH: XX/SPH/RNS/[Month-In-Roman]/[Year]
+            // Generate No SPH: XX/SPH/RNS-[Month-In-Roman]/[Year]
             $year = date('Y', strtotime($request->tanggal_sph));
             $month = date('n', strtotime($request->tanggal_sph));
             $romanMonths = ['', 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII'];
             
             $count = SuratPenawaran::whereYear('tanggal_sph', $year)->count() + 1;
-            $no_sph = str_pad($count, 3, '0', STR_PAD_LEFT) . '/SPH/XRAY/RNS/' . $romanMonths[$month] . '/' . $year;
+            $no_sph = str_pad($count, 2, '0', STR_PAD_LEFT) . '/SPH/RNS-' . $romanMonths[$month] . '/' . $year;
 
             $surat = SuratPenawaran::create([
                 'no_sph' => $no_sph,

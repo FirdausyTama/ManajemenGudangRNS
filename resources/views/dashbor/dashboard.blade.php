@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Dashboard | Ranay Nusantara Sejahtera</title>
+    <title>Dashboard | Rand Nusantara Sejahtera</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -59,7 +59,7 @@
                                 <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
                             </span>
                         </div> -->
-                        <h1 class="text-2xl md:text-3xl font-medium tracking-tight mb-2">PT. Ranay Nusantara Sejahtera</h1>
+                        <h1 class="text-2xl md:text-3xl font-medium tracking-tight mb-2">PT. Rand Nusantara Sejahtera</h1>
                         <p class="text-blue-100 text-xs md:text-sm font-normal opacity-90 leading-relaxed max-w-xl">Selamat Datang, {{ Auth::user()->name }}!</p>
                     </div>
 
@@ -200,7 +200,7 @@
                                         </div>
                                         <div class="flex-1 min-w-0">
                                             <h5 class="text-xs font-medium text-gray-900 truncate uppercase">{{ $in->barang->name }}</h5>
-                                            <p class="text-[10px] font-normal text-gray-400 uppercase tracking-widest">{{ $in->incoming_date->format('d M Y') }}</p>
+                                            <p class="text-[10px] font-normal text-gray-400 uppercase tracking-widest">{{ $in->incoming_date->translatedFormat('d M Y') }}</p>
                                         </div>
                                         <div class="text-right shrink-0">
                                             <div class="text-sm font-medium text-gray-800">+{{ $in->quantity }}</div>
@@ -224,7 +224,7 @@
                                         </div>
                                         <div class="flex-1 min-w-0">
                                             <h5 class="text-xs font-medium text-gray-900 truncate">{{ $tx->nama_customer }}</h5>
-                                            <p class="text-[10px] font-normal text-gray-400 uppercase tracking-widest">{{ $tx->tanggal_transaksi->format('d M Y') }}</p>
+                                            <p class="text-[10px] font-normal text-gray-400 uppercase tracking-widest">{{ $tx->tanggal_transaksi->translatedFormat('d M Y') }}</p>
                                         </div>
                                         <div class="text-right shrink-0">
                                             <div class="text-sm font-medium text-gray-900">Rp{{ number_format($tx->total_keseluruhan / 1000, 0) }}k</div>

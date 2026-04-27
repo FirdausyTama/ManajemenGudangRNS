@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Pengaturan Landing Page | Ranay Nusantara Sejathera</title>
+    <title>Pengaturan Landing Page | Rand Nusantara Sejahtera</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -231,6 +231,57 @@
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Peta Lokasi Google Maps (Kode Embed iframe)</label>
                                 <textarea name="contact_map" rows="3" class="w-full rounded-lg border-gray-300 border px-4 py-2 focus:ring-2 focus:ring-rns-blue focus:border-rns-blue font-mono text-xs">{{ setting('contact_map', '<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3967.0370422558197!2d106.14371711430932!3d-6.125717695564887!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e418b1a32a67edf%3A0x6bba31d0411ed026!2sKepuren%2C%20Kec.%20Walantaka%2C%20Kota%20Serang%2C%20Banten!5e0!3m2!1sid!2sid!4v1710000000000!5m2!1sid!2sid" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>') }}</textarea>
                                 <p class="text-xs text-gray-500 mt-1">Buka Google Maps > Bagikan > Sematkan Peta > Salin HTML `<iframe...>`</p>
+                            </div>
+                            
+                            <!-- Footer Desc -->
+                            <div class="pt-2 border-t border-gray-100">
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Deskripsi Singkat di Footer (Bawah Kiri)</label>
+                                <textarea name="footer_desc" rows="2" class="w-full rounded-lg border-gray-300 border px-4 py-2 focus:ring-2 focus:ring-rns-blue focus:border-rns-blue">{{ setting('footer_desc', 'Mitra terpercaya dalam penyediaan alat kesehatan radiologi berkualitas untuk menunjang pelayanan kesehatan Indonesia.') }}</textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- KELOMPOK: TOMBOL WHATSAPP MENGAMBANG -->
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+                        <div class="bg-gray-50/50 border-b border-gray-100 px-6 py-4">
+                            <h3 class="text-lg font-semibold text-gray-800 flex items-center gap-2">
+                                <svg class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z"></path></svg>
+                                Tombol WhatsApp Mengambang (Pojok Kanan Bawah)
+                            </h3>
+                        </div>
+                        <div class="p-6 space-y-6">
+                            <!-- Tombol 1 -->
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pb-5 border-b border-gray-100">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Label Tombol 1</label>
+                                    <input type="text" name="wa_order_label" value="{{ setting('wa_order_label', 'Order Alkes') }}" class="w-full rounded-lg border-gray-300 border px-4 py-2 focus:ring-2 focus:ring-rns-blue focus:border-rns-blue">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Pesan Otomatis (Saat diklik)</label>
+                                    <textarea name="wa_order_text" rows="2" class="w-full rounded-lg border-gray-300 border px-4 py-2 focus:ring-2 focus:ring-rns-blue focus:border-rns-blue">{{ setting('wa_order_text', 'Halo RNS, saya ingin melakukan Pemesanan Alat...') }}</textarea>
+                                </div>
+                            </div>
+                            <!-- Tombol 2 -->
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pb-5 border-b border-gray-100">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Label Tombol 2</label>
+                                    <input type="text" name="wa_maint_label" value="{{ setting('wa_maint_label', 'Maintenance') }}" class="w-full rounded-lg border-gray-300 border px-4 py-2 focus:ring-2 focus:ring-rns-blue focus:border-rns-blue">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Pesan Otomatis (Saat diklik)</label>
+                                    <textarea name="wa_maint_text" rows="2" class="w-full rounded-lg border-gray-300 border px-4 py-2 focus:ring-2 focus:ring-rns-blue focus:border-rns-blue">{{ setting('wa_maint_text', 'Halo RNS, saya butuh layanan Maintenance/Perbaikan...') }}</textarea>
+                                </div>
+                            </div>
+                            <!-- Tombol 3 -->
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Label Tombol 3</label>
+                                    <input type="text" name="wa_cs_label" value="{{ setting('wa_cs_label', 'Hubungi CS') }}" class="w-full rounded-lg border-gray-300 border px-4 py-2 focus:ring-2 focus:ring-rns-blue focus:border-rns-blue">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Pesan Otomatis (Saat diklik)</label>
+                                    <textarea name="wa_cs_text" rows="2" class="w-full rounded-lg border-gray-300 border px-4 py-2 focus:ring-2 focus:ring-rns-blue focus:border-rns-blue">{{ setting('wa_cs_text', 'Halo RNS, saya ingin berkonsultasi dengan Customer Service...') }}</textarea>
+                                </div>
                             </div>
                         </div>
                     </div>

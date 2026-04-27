@@ -97,7 +97,16 @@ class PenjualanController
             return $nextDueDate->between($today, $sevenDaysLater);
         })->take(5);
 
-        return view('admin.penjualan.index', compact('penjualans', 'barangs', 'statusStats', 'reminders'));
+        // Fetch Unique Customers for lookup/datalist
+        $pastCustomers = Penjualan::select('nama_customer', 'alamat_customer', 'no_hp_customer')
+            ->union(
+                \App\Models\SuratPenawaran::select('nama_customer', 'alamat_customer', 'no_hp_customer')
+            )
+            ->get()
+            ->unique('nama_customer')
+            ->values();
+
+        return view('admin.penjualan.index', compact('penjualans', 'barangs', 'statusStats', 'reminders', 'pastCustomers'));
     }
 
     public function show(Penjualan $penjualan)
@@ -128,15 +137,18 @@ class PenjualanController
             'items.*.barang_id' => 'required|exists:barangs,id',
             'items.*.kuantitas' => 'required|integer|min:1',
             'items.*.harga_satuan' => 'required|numeric|min:0',
+            'penandatangan' => 'required_if:status_pembayaran,lunas'
         ]);
 
         DB::beginTransaction();
         try {
-            // Generate No Transaksi
-            $year = date('Y');
-            $latestTrx = Penjualan::whereYear('created_at', $year)->latest('id')->first();
-            $nextId = $latestTrx ? $latestTrx->id + 1 : 1;
-            $no_transaksi = 'TRX-' . $year . '-' . str_pad($nextId, 4, '0', STR_PAD_LEFT);
+            // Generate No Transaksi: XX/TRX/RNS-[Month]/[Year]
+            $year = date('Y', strtotime($request->tanggal_transaksi));
+            $month = date('n', strtotime($request->tanggal_transaksi));
+            $romanMonths = ['', 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII'];
+            
+            $count = Penjualan::whereYear('tanggal_transaksi', $year)->count() + 1;
+            $no_transaksi = str_pad($count, 2, '0', STR_PAD_LEFT) . '/TRX/RNS-' . $romanMonths[$month] . '/' . $year;
 
             // Hitung ongkir
             $isOngkirAktif = $request->boolean('is_ongkir_aktif');
@@ -187,7 +199,7 @@ class PenjualanController
             $penjualan->update(['total_keseluruhan' => $total_keseluruhan]);
 
             if ($request->status_pembayaran === 'lunas') {
-                $this->autoCreateKwitansiLunas($penjualan);
+                $this->autoCreateKwitansiLunas($penjualan, $request->penandatangan);
             }
 
             DB::commit();
@@ -207,7 +219,10 @@ class PenjualanController
         ]);
 
         if ($request->status_pembayaran === 'lunas' && $penjualan->status_pembayaran !== 'lunas') {
-            $this->autoCreateKwitansiLunas($penjualan);
+            $request->validate([
+                'penandatangan' => 'required'
+            ]);
+            $this->autoCreateKwitansiLunas($penjualan, $request->penandatangan);
         }
 
         $penjualan->update([
@@ -255,7 +270,8 @@ class PenjualanController
     {
         $request->validate([
             'tenor_bulan' => 'required|integer|min:1|max:60',
-            'dp_nominal' => 'nullable|numeric|min:0'
+            'dp_nominal' => 'nullable|numeric|min:0',
+            'penandatangan_dp' => 'nullable|string'
         ]);
 
         $penjualan->update([
@@ -278,7 +294,7 @@ class PenjualanController
                 'total_bilangan' => ucwords($bilangan),
                 'keterangan' => 'Pembayaran Uang Muka (DP)',
                 'total_pembayaran' => $request->dp_nominal,
-                'penandatangan' => auth()->user()->name ?? 'Dewi Sulistiowati',
+                'penandatangan' => $request->penandatangan_dp ?? 'Dewi Sulistiowati',
                 'user_id' => auth()->id(),
             ]);
 
@@ -296,7 +312,8 @@ class PenjualanController
         $request->validate([
             'total_pembayaran' => 'required|numeric|min:1',
             'tanggal_kwitansi' => 'required|date',
-            'keterangan' => 'nullable|string'
+            'keterangan' => 'nullable|string',
+            'penandatangan' => 'nullable|string',
         ]);
 
         DB::beginTransaction();
@@ -320,7 +337,7 @@ class PenjualanController
                 'total_bilangan' => $terbilang,
                 'total_pembayaran' => $request->total_pembayaran,
                 'keterangan' => $request->keterangan ?? "Pembayaran Cicilan ke-{$cicilanKe} untuk Transaksi {$penjualan->no_transaksi}",
-                'penandatangan' => auth()->user()->name,
+                'penandatangan' => $request->filled('penandatangan') ? $request->penandatangan : (auth()->user()->name ?? 'Dewi Sulistiowati'),
                 'user_id' => auth()->id()
             ]);
 
@@ -344,7 +361,7 @@ class PenjualanController
         }
     }
 
-    private function autoCreateKwitansiLunas(Penjualan $penjualan)
+    private function autoCreateKwitansiLunas(Penjualan $penjualan, $penandatangan = null)
     {
         $exists = \App\Models\Kwitansi::where('penjualan_id', $penjualan->id)
             ->where('keterangan', 'like', '%Lunas%')
@@ -367,7 +384,7 @@ class PenjualanController
             'total_bilangan' => ucwords($terbilang),
             'keterangan' => 'Pembayaran Lunas untuk Transaksi ' . $penjualan->no_transaksi,
             'total_pembayaran' => $penjualan->total_keseluruhan,
-            'penandatangan' => auth()->user()->name ?? 'Admin',
+            'penandatangan' => $penandatangan ?? (auth()->user()->name ?? 'Dewi Sulistiowati'),
             'user_id' => auth()->id()
         ]);
     }

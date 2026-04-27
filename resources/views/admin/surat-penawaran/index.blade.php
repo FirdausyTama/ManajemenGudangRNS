@@ -13,6 +13,7 @@
   <link rel="manifest" href="{{ asset('manifest.json') }}">
   <meta name="theme-color" content="#1e40af">
   <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script>
     tailwind.config = {
         theme: {
@@ -136,9 +137,9 @@
                                       <a href="{{ route('surat-penawaran.print', $s->id) }}" target="_blank" class="p-1.5 text-blue-600 hover:bg-blue-50 rounded" title="Cetak SPH">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
                                       </a>
-                                      <form action="{{ route('surat-penawaran.destroy', $s->id) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus SPH ini?');" class="inline">
+                                      <form action="{{ route('surat-penawaran.destroy', $s->id) }}" method="POST" id="delete-form-{{ $s->id }}" class="inline">
                                           @csrf @method('DELETE')
-                                          <button type="submit" class="p-1.5 text-red-600 hover:bg-red-50 rounded" title="Hapus SPH">
+                                          <button type="button" onclick="confirmDelete('{{ $s->id }}')" class="p-1.5 text-red-600 hover:bg-red-50 rounded" title="Hapus SPH">
                                               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
                                           </button>
                                       </form>
@@ -188,6 +189,23 @@
     function closeModal(modalId) {
         document.getElementById(modalId).classList.add('hidden');
         document.body.classList.remove('modal-open');
+    }
+
+    function confirmDelete(id) {
+        Swal.fire({
+            title: 'Hapus SPH?',
+            text: 'Yakin ingin menghapus SPH ini?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#ef4444',
+            cancelButtonColor: '#9ca3af',
+            confirmButtonText: 'Ya, Hapus!',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById('delete-form-' + id).submit();
+            }
+        });
     }
 
     // Edit logic is handled in modals.blade.php

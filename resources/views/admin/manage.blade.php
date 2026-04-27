@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Kelola Admin | Ranay Nusantara Sejathera</title>
+    <title>Kelola Admin | Rand Nusantara Sejahtera</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -12,6 +12,7 @@
 
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         tailwind.config = {
             theme: {
@@ -183,25 +184,25 @@
                                         <div class="flex items-center justify-end gap-2">
                                             @if($admin->status === 'pending')
                                                 <!-- Approve Form -->
-                                                <form action="{{ route('admin.approve', $admin->id) }}" method="POST" onsubmit="return confirm('Setujui akun admin ini?');">
+                                                <form action="{{ route('admin.approve', $admin->id) }}" method="POST" id="approve-form-{{ $admin->id }}">
                                                     @csrf
-                                                    <button type="submit" class="px-3 py-1.5 bg-rns-blue hover:bg-blue-800 text-white rounded-md text-sm font-medium transition-colors shadow-sm">
+                                                    <button type="button" onclick="confirmApprove('{{ $admin->id }}')" class="px-3 py-1.5 bg-rns-blue hover:bg-blue-800 text-white rounded-md text-sm font-medium transition-colors shadow-sm">
                                                         Terima
                                                     </button>
                                                 </form>
                                                 
                                                 <!-- Reject Form -->
-                                                <form action="{{ route('admin.reject', $admin->id) }}" method="POST" onsubmit="return confirm('Tolak dan hapus data admin ini?');">
+                                                <form action="{{ route('admin.reject', $admin->id) }}" method="POST" id="reject-form-{{ $admin->id }}">
                                                     @csrf
-                                                    <button type="submit" class="px-3 py-1.5 bg-white border border-red-200 text-red-600 hover:bg-red-50 rounded-md text-sm font-medium transition-colors">
+                                                    <button type="button" onclick="confirmReject('{{ $admin->id }}')" class="px-3 py-1.5 bg-white border border-red-200 text-red-600 hover:bg-red-50 rounded-md text-sm font-medium transition-colors">
                                                         Tolak
                                                     </button>
                                                 </form>
                                             @else
                                                 <!-- Delete Active Form -->
-                                                <form action="{{ route('admin.reject', $admin->id) }}" method="POST" onsubmit="return confirm('Hapus permanen akses admin ini dari sistem?');">
+                                                <form action="{{ route('admin.reject', $admin->id) }}" method="POST" id="delete-form-{{ $admin->id }}">
                                                     @csrf
-                                                    <button type="submit" class="p-1.5 text-red-400 hover:text-red-700 hover:bg-red-50 rounded-md transition-colors" title="Cabut Akses (Hapus)">
+                                                    <button type="button" onclick="confirmDelete('{{ $admin->id }}')" class="p-1.5 text-red-400 hover:text-red-700 hover:bg-red-50 rounded-md transition-colors" title="Cabut Akses (Hapus)">
                                                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
                                                     </button>
                                                 </form>
@@ -226,5 +227,57 @@
         </div>
     </main>
 
+    <script>
+        function confirmApprove(id) {
+            Swal.fire({
+                title: 'Setujui Admin?',
+                text: 'Setujui akun admin ini untuk mengakses sistem?',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#1e3a8a',
+                cancelButtonColor: '#9ca3af',
+                confirmButtonText: 'Ya, Setujui',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById('approve-form-' + id).submit();
+                }
+            });
+        }
+
+        function confirmReject(id) {
+            Swal.fire({
+                title: 'Tolak akses admin?',
+                text: 'Tolak dan hapus data admin ini?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#ef4444',
+                cancelButtonColor: '#9ca3af',
+                confirmButtonText: 'Ya, Tolak',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById('reject-form-' + id).submit();
+                }
+            });
+        }
+
+        function confirmDelete(id) {
+            Swal.fire({
+                title: 'Cabut akses admin?',
+                text: 'Hapus permanen akses admin ini dari sistem?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#ef4444',
+                cancelButtonColor: '#9ca3af',
+                confirmButtonText: 'Ya, Hapus',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById('delete-form-' + id).submit();
+                }
+            });
+        }
+    </script>
 </body>
 </html>

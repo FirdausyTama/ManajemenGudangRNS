@@ -10,6 +10,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         tailwind.config = {
             theme: {
@@ -54,9 +55,9 @@
                         <p class="text-gray-500 text-sm md:ml-10">Informasi lengkap transaksi <span class="font-mono text-rns-blue font-semibold">{{ $penjualan->no_transaksi }}</span></p>
                     </div>
                     
-                    <form action="{{ route('penjualan.destroy', $penjualan->id) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus data penjualan INI? Stok barang akan dikembalikan utuh ke dalam sistem.');">
+                    <form action="{{ route('penjualan.destroy', $penjualan->id) }}" method="POST" id="delete-penjualan-form-{{ $penjualan->id }}">
                         @csrf @method('DELETE')
-                        <button type="submit" class="px-4 py-2 bg-red-50 text-red-600 hover:bg-red-100 rounded-lg font-medium text-sm transition-colors border border-red-200 shadow-sm flex items-center gap-1.5">
+                        <button type="button" onclick="confirmDeletePenjualan('{{ $penjualan->id }}')" class="px-4 py-2 bg-red-50 text-red-600 hover:bg-red-100 rounded-lg font-medium text-sm transition-colors border border-red-200 shadow-sm flex items-center gap-1.5">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
                             Hapus Data
                         </button>
@@ -178,11 +179,19 @@
                                     <!-- Form Atur Tenor -->
                                     <form action="{{ route('penjualan.setTenor', $penjualan->id) }}" method="POST" class="mb-4">
                                         @csrf
-                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                                             <div>
                                                 <label class="block text-sm font-medium text-gray-700 mb-2">Uang Muka (DP) Rp:</label>
                                                 <input type="number" name="dp_nominal" min="0" placeholder="0 (Opsional)" class="w-full rounded-lg border-gray-300 border px-3 py-2 text-sm focus:ring-amber-500 focus:border-amber-500 bg-white">
                                                 <p class="text-[10px] text-gray-500 mt-1">Isi jika pelanggan langsung membayar DP.</p>
+                                            </div>
+                                            <div>
+                                                <label class="block text-sm font-medium text-gray-700 mb-2">Penandatangan DP:</label>
+                                                <select name="penandatangan_dp" class="w-full rounded-lg border-gray-300 border px-3 py-2 text-sm bg-white">
+                                                    <option value="Dewi Sulistiowati">Dewi Sulistiowati</option>
+                                                    <option value="Heri Pirdaus, S.Tr.Kes Rad (MRI)">Heri Pirdaus</option>
+                                                </select>
+                                                <p class="text-[10px] text-gray-500 mt-1">Siapa yang menandatangani kwitansi Uang Muka.</p>
                                             </div>
                                             <div>
                                                 <label class="block text-sm font-medium text-gray-700 mb-2">Jangka Waktu (Bulan):</label>
@@ -324,12 +333,16 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <form action="{{ route('penjualan.storeCicilan', $penjualan->id) }}" method="POST" onsubmit="return confirm('Proses pembayaran tagihan ke-{{ $i + 1 }} senilai Rp {{ number_format($nominalBulanIni, 0, ',', '.') }}?');">
+                                                    <form action="{{ route('penjualan.storeCicilan', $penjualan->id) }}" method="POST" id="bayar-cicilan-form-{{ $i }}" class="flex gap-1.5 items-center">
                                                         @csrf
                                                         <input type="hidden" name="tanggal_kwitansi" value="{{ date('Y-m-d') }}">
                                                         <input type="hidden" name="total_pembayaran" value="{{ $nominalBulanIni }}">
                                                         <input type="hidden" name="keterangan" value="Pembayaran Cicilan Ke-{{ $i + 1 }}">
-                                                        <button type="submit" class="text-xs bg-amber-500 hover:bg-amber-600 text-white font-bold py-1.5 px-3 rounded shadow-sm transition-colors">
+                                                        <select name="penandatangan" class="w-28 bg-white rounded border-gray-200 border px-2 py-1 text-[11px] focus:ring-amber-500 focus:border-amber-500" required>
+                                                            <option value="Dewi Sulistiowati">Dewi S.</option>
+                                                            <option value="Heri Pirdaus, S.Tr.Kes Rad (MRI)">Heri P.</option>
+                                                        </select>
+                                                        <button type="button" onclick="confirmBayarCicilan('{{ $i }}', '{{ $i + 1 }}', 'Rp {{ number_format($nominalBulanIni, 0, ',', '.') }}')" class="text-xs bg-amber-500 hover:bg-amber-600 text-white font-bold py-1 px-3 rounded shadow-sm transition-colors cursor-pointer">
                                                             Bayar
                                                         </button>
                                                     </form>
@@ -378,15 +391,39 @@
                                     @csrf
                                     @method('PATCH')
                                     <label class="block text-sm font-medium text-gray-700 mb-2">Update Status Baru:</label>
-                                    <select name="status_pembayaran" class="w-full rounded-lg border-gray-300 border px-3 py-2 text-sm focus:ring-rns-blue focus:border-rns-blue bg-white mb-3">
+                                    <select name="status_pembayaran" id="statusPembayaranUpdate" onchange="toggleSignatoryUpdate()" class="w-full rounded-lg border-gray-300 border px-3 py-2 text-sm focus:ring-rns-blue focus:border-rns-blue bg-white mb-3">
                                         <option value="belum lunas" {{ $penjualan->status_pembayaran == 'belum lunas' ? 'selected' : '' }}>Belum Lunas</option>
                                         <option value="cicilan" {{ $penjualan->status_pembayaran == 'cicilan' ? 'selected' : '' }}>Cicilan / Termin</option>
                                         <option value="lunas" {{ $penjualan->status_pembayaran == 'lunas' ? 'selected' : '' }}>Lunas</option>
                                     </select>
+
+                                    <div id="signatoryUpdateField" class="hidden mb-3">
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">Penandatangan Kwitansi Lunas:</label>
+                                        <select name="penandatangan" class="w-full rounded-lg border-gray-300 border px-3 py-2 text-sm focus:ring-rns-blue focus:border-rns-blue bg-white">
+                                            <option value="Dewi Sulistiowati">Dewi Sulistiowati</option>
+                                            <option value="Heri Pirdaus, S.Tr.Kes Rad (MRI)">Heri Pirdaus</option>
+                                        </select>
+                                        <p class="text-[10px] text-indigo-600 mt-1">*Kwitansi lunas akan dibuat otomatis saat status disimpan.</p>
+                                    </div>
+
                                     <button type="submit" class="w-full py-2 bg-gray-800 text-white rounded-lg hover:bg-black font-medium text-sm transition-colors shadow-sm">
                                         Simpan Perubahan
                                     </button>
                                 </form>
+
+                                <script>
+                                    function toggleSignatoryUpdate() {
+                                        const status = document.getElementById('statusPembayaranUpdate').value;
+                                        const field = document.getElementById('signatoryUpdateField');
+                                        if (status === 'lunas') {
+                                            field.classList.remove('hidden');
+                                        } else {
+                                            field.classList.add('hidden');
+                                        }
+                                    }
+                                    // Run on load
+                                    document.addEventListener('DOMContentLoaded', toggleSignatoryUpdate);
+                                </script>
                                 @endif
                             </div>
                         </div>
@@ -405,6 +442,12 @@
                                     <input type="hidden" name="penjualan_id" value="{{ $penjualan->id }}">
                                     <input type="hidden" name="tanggal_invoice" value="{{ date('Y-m-d') }}">
                                     
+                                    <div class="mb-2">
+                                        <textarea name="keterangan" rows="2" class="w-full rounded-lg border-indigo-200 border px-3 py-2 text-sm focus:ring-indigo-500 focus:border-indigo-500 bg-white" placeholder="Keterangan / Catatan Bank...">Pembayaran Bisa Di Tranfer Melalui Rek Bank BSI (BANK SYARIAH INDONESIA) :
+No Rek : 1101198975
+Atas Nama : PT RANAY NUSANTARA SEJAHTERA
+Kode bank : 451</textarea>
+                                    </div>
                                     <div class="flex gap-2">
                                         <select name="penandatangan" class="w-full rounded-lg border-indigo-200 border px-3 py-2 text-sm focus:ring-indigo-500 focus:border-indigo-500 bg-white">
                                             <option value="Dewi Sulistiowati">Dewi Sulistiowati</option>
@@ -441,7 +484,7 @@
                                     @csrf
                                     <input type="hidden" name="penjualan_id" value="{{ $penjualan->id }}">
                                     <input type="hidden" name="tanggal_surat_jalan" value="{{ date('Y-m-d') }}">
-                                    <input type="hidden" name="nama_pengirim" value="PT Ranay Nusantara Sejahtera">
+                                    <input type="hidden" name="nama_pengirim" value="PT Rand Nusantara Sejahtera">
                                     <input type="hidden" name="nama_penerima" value="{{ $penjualan->nama_customer }}">
                                     <input type="hidden" name="telp_penerima" value="{{ $penjualan->no_hp_customer ?? '-' }}">
                                     <input type="hidden" name="alamat_penerima" value="{{ $penjualan->alamat_customer }}">
@@ -480,9 +523,9 @@
                                         <a href="{{ route('invoice.print', $inv->id) }}" target="_blank" class="p-1.5 text-blue-600 hover:bg-blue-100 rounded" title="Cetak PDF">
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
                                         </a>
-                                        <form action="{{ route('invoice.destroy', $inv->id) }}" method="POST" onsubmit="return confirm('Hapus record invoice ini?');" class="inline">
+                                        <form action="{{ route('invoice.destroy', $inv->id) }}" method="POST" id="delete-invoice-form-{{ $inv->id }}" class="inline">
                                             @csrf @method('DELETE')
-                                            <button type="submit" class="p-1.5 text-red-600 hover:bg-red-100 rounded" title="Hapus">
+                                            <button type="button" onclick="confirmDeleteDoc('invoice', '{{ $inv->id }}')" class="p-1.5 text-red-600 hover:bg-red-100 rounded" title="Hapus">
                                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
                                             </button>
                                         </form>
@@ -502,9 +545,9 @@
                                         <a href="{{ route('kwitansi.print', $kwt->id) }}" target="_blank" class="p-1.5 text-blue-600 hover:bg-blue-100 rounded" title="Cetak PDF">
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
                                         </a>
-                                        <form action="{{ route('kwitansi.destroy', $kwt->id) }}" method="POST" onsubmit="return confirm('Hapus record kwitansi ini?');" class="inline">
+                                        <form action="{{ route('kwitansi.destroy', $kwt->id) }}" method="POST" id="delete-kwitansi-form-{{ $kwt->id }}" class="inline">
                                             @csrf @method('DELETE')
-                                            <button type="submit" class="p-1.5 text-red-600 hover:bg-red-100 rounded" title="Hapus">
+                                            <button type="button" onclick="confirmDeleteDoc('kwitansi', '{{ $kwt->id }}')" class="p-1.5 text-red-600 hover:bg-red-100 rounded" title="Hapus">
                                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
                                             </button>
                                         </form>
@@ -524,9 +567,9 @@
                                         <a href="{{ route('surat-jalan.print', $sj->id) }}" target="_blank" class="p-1.5 text-blue-600 hover:bg-blue-100 rounded" title="Cetak PDF">
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
                                         </a>
-                                        <form action="{{ route('surat-jalan.destroy', $sj->id) }}" method="POST" onsubmit="return confirm('Hapus record surat jalan ini?');" class="inline">
+                                        <form action="{{ route('surat-jalan.destroy', $sj->id) }}" method="POST" id="delete-surat-jalan-form-{{ $sj->id }}" class="inline">
                                             @csrf @method('DELETE')
-                                            <button type="submit" class="p-1.5 text-red-600 hover:bg-red-100 rounded" title="Hapus">
+                                            <button type="button" onclick="confirmDeleteDoc('surat-jalan', '{{ $sj->id }}')" class="p-1.5 text-red-600 hover:bg-red-100 rounded" title="Hapus">
                                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
                                             </button>
                                         </form>
@@ -575,6 +618,13 @@
                                         <input type="date" name="tanggal_kwitansi" value="{{ date('Y-m-d') }}" required class="w-full rounded-lg border-gray-300 border px-3 py-2 text-sm focus:ring-amber-500 focus:border-amber-500 bg-white">
                                     </div>
                                     <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">Penandatangan Kwitansi <span class="text-red-500">*</span></label>
+                                        <select name="penandatangan" class="w-full rounded-lg border-gray-300 border px-3 py-2 text-sm focus:ring-amber-500 focus:border-amber-500 bg-white" required>
+                                            <option value="Dewi Sulistiowati">Dewi Sulistiowati</option>
+                                            <option value="Heri Pirdaus, S.Tr.Kes Rad (MRI)">Heri Pirdaus</option>
+                                        </select>
+                                    </div>
+                                    <div>
                                         <label class="block text-sm font-medium text-gray-700 mb-1">Nominal Pembayaran (Rp) <span class="text-red-500">*</span></label>
                                         <input type="number" name="total_pembayaran" min="1" required placeholder="0" class="w-full rounded-lg border-gray-300 border px-3 py-2 text-sm focus:ring-amber-500 focus:border-amber-500 bg-white">
                                         @php
@@ -606,7 +656,61 @@
     @endif
 
     <script>
+        function confirmDeletePenjualan(id) {
+            Swal.fire({
+                title: 'Hapus Data Penjualan?',
+                text: 'Yakin ingin menghapus data penjualan INI? Stok barang akan dikembalikan utuh ke dalam sistem.',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#ef4444',
+                cancelButtonColor: '#9ca3af',
+                confirmButtonText: 'Ya, Hapus Data',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById('delete-penjualan-form-' + id).submit();
+                }
+            });
+        }
 
+        function confirmBayarCicilan(index, ke, nominal) {
+            Swal.fire({
+                title: 'Konfirmasi Pembayaran',
+                text: `Proses pembayaran tagihan ke-${ke} senilai ${nominal}?`,
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#f59e0b',
+                cancelButtonColor: '#9ca3af',
+                confirmButtonText: 'Ya, Bayar',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById('bayar-cicilan-form-' + index).submit();
+                }
+            });
+        }
+
+        function confirmDeleteDoc(type, id) {
+            let label = '';
+            if (type === 'invoice') label = 'invoice';
+            else if (type === 'kwitansi') label = 'kwitansi';
+            else if (type === 'surat-jalan') label = 'surat jalan';
+
+            Swal.fire({
+                title: `Hapus record ${label}?`,
+                text: `Tindakan ini akan menghapus dokumen ${label} terkait.`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#ef4444',
+                cancelButtonColor: '#9ca3af',
+                confirmButtonText: 'Ya, Hapus',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById(`delete-${type}-form-` + id).submit();
+                }
+            });
+        }
     </script>
 </body>
 </html>

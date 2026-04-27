@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PT Ranay Nusantara Sejahtera - Penyedia Alat Kesehatan Terpercaya</title>
+    <title>PT Rand Nusantara Sejahtera - Penyedia Alat Kesehatan Terpercaya</title>
     <link rel="icon" href="{{ asset('assets/images/favicon.ico?v=2') }}" type="image/x-icon">
     <!-- PWA -->
-    <link rel="manifest" href="{{ asset('manifest.json') }}">
+    <link rel="manifest" href="{{ asset('manifest.json?v=2') }}">
     <meta name="theme-color" content="#1e40af">
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -27,15 +27,17 @@
             --border-light: #e5e7eb;
         }
 
-        * {
+        html, body {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            width: 100%;
+            overflow-x: hidden; /* Prevent horizontal scroll */
+            position: relative; /* Fixed overflow issues on some mobile browsers */
         }
 
         body {
             font-family: 'Inter', sans-serif;
-            overflow-x: hidden;
             color: var(--text-dark);
             line-height: 1.6;
         }
@@ -386,6 +388,12 @@
             margin-top: 1rem;
         }
 
+        .map-embed-container iframe {
+            width: 100% !important;
+            height: 100% !important;
+            min-height: 400px;
+        }
+
         /* Footer */
         .footer {
             background: linear-gradient(135deg, #1e3a8a, #1e40af);
@@ -446,17 +454,24 @@
             }
 
             .btn-login, .btn-install {
-                padding: 0.45rem 1rem;
+                padding: 0.6rem 1.2rem;
                 font-size: 0.85rem;
             }
-
+            
             .navbar .ms-auto {
                 display: flex;
                 align-items: center;
-                gap: 0.3rem !important;
+                gap: 0.5rem !important;
             }
-
-            .hero-section {
+            .navbar .container {
+                display: flex !important;
+                flex-wrap: nowrap !important;
+                justify-content: space-between !important;
+            }
+            .navbar-brand img {
+                height: 55px; /* Diperbesar maksimal sesuai permintaan */
+                transition: transform 0.3s ease;
+            }.hero-section {
                 padding: 100px 0 60px;
             }
 
@@ -499,6 +514,17 @@
 
             .stat-label {
                 font-size: 0.9rem;
+            }
+
+            .navbar-brand {
+                padding: 0 !important;
+                margin-right: 0.25rem !important;
+            }
+
+            .navbar-brand img {
+                height: 24px; /* Lebih kecil lagi */
+                max-width: 90px; /* Batasi lebih ketat */
+                object-fit: contain;
             }
 
             .feature-card {
@@ -805,7 +831,7 @@
             </a>
             <div class="ms-auto d-flex align-items-center gap-2">
                 <button id="btnInstallPwa" class="btn btn-install" style="display: none;">
-                    <i class="bi bi-download me-1"></i> Install App
+                    <i class="bi bi-download me-1"></i> <span class="d-none d-md-inline">Install </span>App
                 </button>
                 <a href="{{ route('login') }}" class="btn btn-login">
                     <i class="bi bi-box-arrow-in-right me-2"></i>Login
@@ -856,16 +882,19 @@
                         <div class="carousel-inner">
                             @php
                                 $hero_images = [];
-                                if (setting('hero_image_1')) $hero_images[] = setting('hero_image_1');
-                                if (setting('hero_image_2')) $hero_images[] = setting('hero_image_2');
-                                if (setting('hero_image_3')) $hero_images[] = setting('hero_image_3');
+                                if (setting('hero_image_1'))
+                                    $hero_images[] = setting('hero_image_1');
+                                if (setting('hero_image_2'))
+                                    $hero_images[] = setting('hero_image_2');
+                                if (setting('hero_image_3'))
+                                    $hero_images[] = setting('hero_image_3');
                             @endphp
 
                             @if(count($hero_images) > 0)
                                 @foreach($hero_images as $index => $img)
-                                <div class="carousel-item {{ $index === 0 ? 'active' : '' }}">
-                                    <img src="{{ Storage::url($img) }}" class="d-block w-100 img-fluid" alt="Hero Image {{ $index + 1 }}" style="border-radius: 16px;">
-                                </div>
+                                    <div class="carousel-item {{ $index === 0 ? 'active' : '' }}">
+                                        <img src="{{ Storage::url($img) }}" class="d-block w-100 img-fluid" alt="Hero Image {{ $index + 1 }}" style="border-radius: 16px;">
+                                    </div>
                                 @endforeach
                             @else
                                 <div class="carousel-item active">
@@ -986,7 +1015,7 @@
                             $wa_raw = setting('contact_wa', '0852-8000-2289');
                             $wa_clean = preg_replace('/[^0-9]/', '', $wa_raw);
                             // Ubah 0 jadi 62 jika depan adalah 0
-                            if(str_starts_with($wa_clean, '0')) {
+                            if (str_starts_with($wa_clean, '0')) {
                                 $wa_clean = '62' . substr($wa_clean, 1);
                             }
                         @endphp
@@ -999,7 +1028,7 @@
                             </div>
                         </a>
                         
-                        @php $email = setting('company_email', 'ranaysejahtera@gmail.com'); @endphp
+                        @php $email = setting('company_email', 'rand.sejahtera25@gmail.com'); @endphp
                         <a href="mailto:{{ $email }}" class="text-decoration-none h-100">
                             <div class="contact-card h-100 d-flex flex-column justify-content-center align-items-center">
                                 <i class="bi bi-envelope contact-icon text-primary"></i>
@@ -1013,8 +1042,8 @@
 
                 <!-- Google Maps Embed -->
                 <div class="col-lg-7">
-                    <div class="contact-card p-0 overflow-hidden h-100" style="min-height: 400px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.08);">
-                        {!! setting('contact_map', '<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d6671.844028397217!2d106.22508504933977!3d-6.116943585888045!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e41f5b1331602eb%3A0xa9a901928822a606!2sPerumahan%20Kepuren%20Residence!5e0!3m2!1sid!2sid!4v1773079955926!5m2!1sid!2sid" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>') !!}
+                    <div class="contact-card p-0 overflow-hidden h-100 map-embed-container" style="min-height: 400px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.08);">
+                        {!! setting('contact_map', '<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d294.85188397023!2d106.2361296994999!3d-6.12555160450554!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e41f5004d9468f5%3A0xdf1342efde753632!2sPT%20Rand%20Nusantara%20Sejahtera!5e0!3m2!1sid!2sid!4v1776351251076!5m2!1sid!2sid" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>') !!}
                     </div>
                 </div>
             </div>
@@ -1028,10 +1057,10 @@
                 <div class="col-lg-4 col-12 footer-logo-section">
                     <div class="d-flex align-items-center mb-3">
                         <img src="{{ asset('assets/images/hp-logo.png') }}" alt="Logo RNS" height="45" class="me-3 bg-white rounded p-2">
-                        <h5 class="mb-0 fw-bold">PT. Ranay Nusantara Sejahtera</h5>
+                        <h5 class="mb-0 fw-bold">PT. Rand Nusantara Sejahtera</h5>
                     </div>
                     <p style="color: rgba(255, 255, 255, 0.8); line-height: 1.8;">
-                        Mitra terpercaya dalam penyediaan alat kesehatan radiologi berkualitas untuk menunjang pelayanan kesehatan Indonesia.
+                        {{ setting('footer_desc', 'Mitra terpercaya dalam penyediaan alat kesehatan radiologi berkualitas untuk menunjang pelayanan kesehatan Indonesia.') }}
                     </p>
                 </div>
                 <div class="col-lg-2 offset-lg-1 col-4">
@@ -1052,15 +1081,18 @@
                     </ul>
                 </div>
                 <div class="col-lg-3 col-4">
-                    <h6>Alamat</h6>
-                    <p class="footer-address" style="color: rgba(255, 255, 255, 0.8); line-height: 1.8;">
+                    <h6>Alamat & Kontak</h6>
+                    <p class="footer-address" style="color: rgba(255, 255, 255, 0.8); line-height: 1.8; font-size: 0.85rem;">
                         {!! nl2br(e(setting('company_address', "Jl. Raya Serang - Jakarta Km. 6,5\nKepuren Residence, Kota Serang\nBanten - 42183"))) !!}
+                    </p>
+                    <p class="mt-3 mb-0" style="color: rgba(255, 255, 255, 0.8); font-size: 0.85rem;">
+                        <i class="bi bi-envelope me-2"></i> {{ setting('company_email', 'rand.sejahtera25@gmail.com') }}
                     </p>
                 </div>
             </div>
             <hr style="border-color: rgba(255, 255, 255, 0.2); margin: 3rem 0 2rem;">
             <div class="text-center" style="color: rgba(255, 255, 255, 0.7);">
-                <small>&copy; {{ date('Y') }} PT. Ranay Nusantara Sejahtera. All rights reserved.</small>
+                <small>&copy; {{ date('Y') }} PT. Rand Nusantara Sejahtera. All rights reserved.</small>
             </div>
         </div>
     </footer>
@@ -1072,7 +1104,7 @@
     @php
         $wa_raw_float = setting('contact_wa', '0852-8000-2289');
         $wa_clean_float = preg_replace('/[^0-9]/', '', $wa_raw_float);
-        if(str_starts_with($wa_clean_float, '0')) {
+        if (str_starts_with($wa_clean_float, '0')) {
             $wa_clean_float = '62' . substr($wa_clean_float, 1);
         }
     @endphp
@@ -1080,22 +1112,34 @@
     <div class="wa-menu-container" id="waMenu">
         <div class="wa-options">
             <!-- Order -->
-            <a href="https://wa.me/{{ $wa_clean_float }}?text=Halo%20RNS,%20saya%20ingin%20melakukan%20Pemesanan%20Alat..." target="_blank" class="wa-option-item">
-                <span class="wa-label">Order Alkes</span>
+            @php 
+                                $wa_order_label = setting('wa_order_label', 'Order Alkes');
+                $wa_order_text = rawurlencode(setting('wa_order_text', 'Halo RNS, saya ingin melakukan Pemesanan Alat...'));
+            @endphp
+            <a href="https://wa.me/{{ $wa_clean_float }}?text={{ $wa_order_text }}" target="_blank" class="wa-option-item">
+                <span class="wa-label">{{ $wa_order_label }}</span>
                 <div class="wa-icon-btn bg-order">
                     <i class="bi bi-cart-plus"></i>
                 </div>
             </a>
             <!-- Maintenance -->
-            <a href="https://wa.me/{{ $wa_clean_float }}?text=Halo%20RNS,%20saya%20butuh%20layanan%20Maintenance/Perbaikan..." target="_blank" class="wa-option-item">
-                <span class="wa-label">Maintenance</span>
+            @php 
+                                $wa_maint_label = setting('wa_maint_label', 'Maintenance');
+                $wa_maint_text = rawurlencode(setting('wa_maint_text', 'Halo RNS, saya butuh layanan Maintenance/Perbaikan...'));
+            @endphp
+            <a href="https://wa.me/{{ $wa_clean_float }}?text={{ $wa_maint_text }}" target="_blank" class="wa-option-item">
+                <span class="wa-label">{{ $wa_maint_label }}</span>
                 <div class="wa-icon-btn bg-maint">
                     <i class="bi bi-tools"></i>
                 </div>
             </a>
             <!-- CS -->
-            <a href="https://wa.me/{{ $wa_clean_float }}?text=Halo%20RNS,%20saya%20ingin%20berkonsultasi%20dengan%20Customer%20Service..." target="_blank" class="wa-option-item">
-                <span class="wa-label">Hubungi CS</span>
+            @php 
+                                $wa_cs_label = setting('wa_cs_label', 'Hubungi CS');
+                $wa_cs_text = rawurlencode(setting('wa_cs_text', 'Halo RNS, saya ingin berkonsultasi dengan Customer Service...'));
+            @endphp
+            <a href="https://wa.me/{{ $wa_clean_float }}?text={{ $wa_cs_text }}" target="_blank" class="wa-option-item">
+                <span class="wa-label">{{ $wa_cs_label }}</span>
                 <div class="wa-icon-btn bg-cs">
                     <i class="bi bi-headset"></i>
                 </div>

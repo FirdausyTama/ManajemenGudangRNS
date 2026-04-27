@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Laporan Keuntungan | Ranay Nusantara Sejathera</title>
+    <title>Laporan Keuntungan | Rand Nusantara Sejahtera</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -129,7 +129,7 @@
                 <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
                     <div class="p-4 border-b-2 border-gray-100 flex items-center justify-between bg-gray-50/50">
                         <h3 class="font-bold text-gray-800 uppercase tracking-tight">Rincian Barang Keluar & Keuntungan</h3>
-                        <div class="text-xs text-gray-500 font-bold">Menampilkan {{ count($reportData) }} Baris Data</div>
+                        <div class="text-xs text-gray-500 font-bold">Menampilkan {{ $reportData->firstItem() ?? 0 }} - {{ $reportData->lastItem() ?? 0 }} dari total {{ $reportData->total() }} data</div>
                     </div>
                     
                     <!-- Mobile Card View -->
@@ -226,7 +226,7 @@
                                 </tr>
                                 @endforelse
                             </tbody>
-                            @if(count($reportData) > 0)
+                            @if($reportData->total() > 0)
                             <tfoot class="bg-gray-50 border-t-2 border-gray-100">
                                 <tr class="font-bold text-gray-800">
                                     <td colspan="3" class="py-4 px-4 text-right">TOTAL KESELURUHAN:</td>
@@ -244,6 +244,11 @@
                             @endif
                         </table>
                     </div>
+                    @if($reportData->hasPages())
+                    <div class="p-4 border-t border-gray-100 bg-white">
+                        {{ $reportData->links('vendor.pagination.custom') }}
+                    </div>
+                    @endif
                 </div>
 
             </div>

@@ -11,9 +11,11 @@ class Kwitansi extends Model
     public static function generateNumber($date)
     {
         $year = date('Y', strtotime($date));
-        $latest = self::whereYear('tanggal_kwitansi', $year)->latest('id')->first();
-        $nextId = $latest ? $latest->id + 1 : 1;
-        return 'KWT/' . str_pad($nextId, 3, '0', STR_PAD_LEFT) . '/RNS/' . $year;
+        $month = date('n', strtotime($date));
+        $romanMonths = ['', 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII'];
+        
+        $count = self::whereYear('tanggal_kwitansi', $year)->count() + 1;
+        return str_pad($count, 2, '0', STR_PAD_LEFT) . '/KWT/RNS-' . $romanMonths[$month] . '/' . $year;
     }
 
     public function penjualan()

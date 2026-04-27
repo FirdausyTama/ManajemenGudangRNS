@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login | PT. Ranay Nusantara Sejahtera</title>
+  <title>Login | PT. Rand Nusantara Sejahtera</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
   <link rel="shortcut icon" href="{{ asset('assets/images/favicon.ico?v=2') }}">
@@ -132,7 +132,7 @@
   <div class="right-side">
     <div class="login-box">
       <h3 class="text-center">Login</h3>
-      <p class="text-center">PT. Ranay Nusantara Sejahtera</p>
+      <p class="text-center">PT. Rand Nusantara Sejahtera</p>
 
       @if(session('success'))
         <div class="alert alert-success alert-dismissible fade show" role="alert">

@@ -93,6 +93,24 @@ class LaporanKeuntunganController
         // Optional: Grouping for display if filter is selected
         // We can pass the raw reportData and let the view handle specific display items
 
-        return view('admin.laporan-keuntungan.index', compact('reportData', 'summary', 'filter', 'startDate', 'endDate', 'barangs', 'barangId'));
+        $perPage = 10;
+        $page = $request->input('page', 1);
+        $paginatedReportData = new \Illuminate\Pagination\LengthAwarePaginator(
+            $reportData->forPage($page, $perPage)->values(),
+            $reportData->count(),
+            $perPage,
+            $page,
+            ['path' => $request->url(), 'query' => $request->query()]
+        );
+
+        return view('admin.laporan-keuntungan.index', [
+            'reportData' => $paginatedReportData,
+            'summary' => $summary,
+            'filter' => $filter,
+            'startDate' => $startDate,
+            'endDate' => $endDate,
+            'barangs' => $barangs,
+            'barangId' => $barangId
+        ]);
     }
 }

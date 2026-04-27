@@ -23,7 +23,6 @@
 
         .header {
             text-align: center;
-            border-bottom: 2px solid #1e3a8a;
             padding-bottom: 20px;
             margin-bottom: 30px;
         }
@@ -213,14 +212,49 @@
             fill: currentColor;
         }
 
+        .btn-back {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background-color: white;
+            color: #1e3a8a;
+            padding: 10px 20px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+            cursor: pointer;
+            border: 1px solid #e2e8f0;
+            z-index: 9999;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.2s;
+            pointer-events: auto !important;
+        }
+
+        .btn-back:hover {
+            background-color: #f8fafc;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+            color: #1e3a8a;
+        }
+
         @media print {
             body { font-size: 12px; }
             .invoice-container { padding: 0; max-width: 100%; }
-            .btn-floating-print { display: none !important; }
+            .btn-floating-print, .btn-back { display: none !important; }
         }
     </style>
 </head>
 <body onload="window.print()">
+    <button onclick="window.close(); window.history.back();" class="btn-back" title="Kembali / Tutup Halaman">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/>
+        </svg>
+        <span>Kembali / Tutup</span>
+    </button>
 
     <button onclick="window.print()" class="btn-floating-print" title="Cetak Invoice">
         <svg viewBox="0 0 24 24"><path d="M19 8H5V3H19V8ZM16 5H8V6H16V5ZM22 13.5C22 14.33 21.33 15 20.5 15C19.67 15 19 14.33 19 13.5C19 12.67 19.67 12 20.5 12C21.33 12 22 12.67 22 13.5ZM18 19H6V15H18V19ZM19 22H5V17H2.99C1.89 17 1 16.1 1 15V11C1 9.34 2.34 8 4 8H20C21.66 8 23 9.34 23 11V15C23 16.1 22.11 17 21.01 17H19V22Z"/></svg>
@@ -246,23 +280,6 @@
                 <p style="font-weight: 700; font-size: 15px; color: #1e3a8a;">{{ $penjualan->nama_customer }}</p>
                 <p>{{ $penjualan->alamat_customer ?? '-' }}</p>
                 <p>Telp: {{ $penjualan->no_hp_customer ?? '-' }}</p>
-            </div>
-            <div class="invoice-details">
-                <h3>Detail Transaksi:</h3>
-                <table>
-                    <tr>
-                        <td>No. Invoice:</td>
-                        <td>{{ $penjualan->no_transaksi }}</td>
-                    </tr>
-                    <tr>
-                        <td>Tanggal Tagihan:</td>
-                        <td>{{ $penjualan->tanggal_transaksi->format('d F Y') }}</td>
-                    </tr>
-                    <tr>
-                        <td>Dikeluarkan Oleh:</td>
-                        <td>{{ collect(explode(' ', $penjualan->user->name ?? 'System'))->first() }}</td>
-                    </tr>
-                </table>
             </div>
         </div>
 
@@ -312,15 +329,20 @@
             <div class="notes">
                 <h4 style="margin:0 0 5px 0; color:#1e3a8a;">Keterangan / Catatan:</h4>
                 <p style="margin:0; font-size:12px; color:#666; width: 350px; line-height:1.5;">
-                    Mohon lakukan pembayaran sesuai tagihan ke rekening berikut:<br>
-                    <strong>Bank Nasional - 123456789 (PT Ranay Nusantara Sejahtera)</strong><br>
-                    Terima kasih atas kerja sama dan kepercayaan Anda.
+                    @if(!empty($keterangan))
+                        {!! nl2br(e($keterangan)) !!}
+                    @else
+                        Pembayaran Bisa Di Tranfer Melalui Rek Bank BSI (BANK SYARIAH INDONESIA) :<br>
+                        <strong>No Rek : 1101198975</strong><br>
+                        <strong>Atas Nama : PT RANAY NUSANTARA SEJAHTERA</strong><br>
+                        <strong>Kode bank : 451</strong>
+                    @endif
                 </p>
             </div>
             <div class="signature">
-                <p style="margin:0 0 10px 0; color:#333; font-size:12px;">Serang, {{ $penjualan->tanggal_transaksi->translatedFormat('d F Y') }}</p>
+                <p style="margin:0 0 10px 0; color:#333; font-size:12px;">Serang, {{ \Carbon\Carbon::parse($tanggal_invoice)->translatedFormat('d F Y') }}</p>
                 <p style="margin:0; color:#666; font-size:12px;">Hormat Kami,</p>
-                <p style="margin:5px 0 0 0; font-weight:600; color:#1e3a8a; font-size:13px;">PT Ranay Nusantara Sejahtera</p>
+                <p style="margin:5px 0 0 0; font-weight:600; color:#1e3a8a; font-size:13px;">PT Rand Nusantara Sejahtera</p>
                 
                 @if(isset($penandatangan) && trim($penandatangan) == 'Dewi Sulistiowati')
                     <img src="{{ asset('assets/images/ttdDewi.png') }}" alt="Tanda Tangan Dewi" class="img-ttd">

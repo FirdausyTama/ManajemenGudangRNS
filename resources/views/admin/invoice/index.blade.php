@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="utf-8" />
-  <title>Invoice | RNS - Ranay Nusantara Sejahtera</title>
+  <title>Invoice | RNS - Rand Nusantara Sejahtera</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="Halaman daftar dan pengelolaan surat invoice RNS." />
   <meta name="author" content="Zoyothemes" />
@@ -14,6 +14,7 @@
   <meta name="theme-color" content="#1e40af">
 
   <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script>
     tailwind.config = {
         theme: {
@@ -142,9 +143,9 @@
                                       <a href="{{ route('invoice.print', $inv->id) }}" target="_blank" class="p-1.5 text-blue-600 hover:bg-blue-50 rounded" title="Cetak Invoice">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
                                       </a>
-                                      <form action="{{ route('invoice.destroy', $inv->id) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus invoice ini? Data penjualan aslinya TIDAK akan terhapus.');" class="inline">
+                                      <form action="{{ route('invoice.destroy', $inv->id) }}" method="POST" id="delete-form-{{ $inv->id }}" class="inline">
                                           @csrf @method('DELETE')
-                                          <button type="submit" class="p-1.5 text-red-600 hover:bg-red-50 rounded" title="Hapus Invoice">
+                                          <button type="button" onclick="confirmDelete('{{ $inv->id }}')" class="p-1.5 text-red-600 hover:bg-red-50 rounded" title="Hapus Invoice">
                                               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
                                           </button>
                                       </form>
@@ -253,6 +254,18 @@
                         </select>
                     </div>
                 </div>
+
+                <div class="bg-indigo-50 p-5 rounded-lg border border-indigo-100 shadow-sm mt-6">
+                    <h4 class="font-bold text-indigo-900 mb-4 flex items-center gap-2">
+                        Keterangan / Catatan Tambahan (Opsional)
+                    </h4>
+                    <div>
+                        <textarea name="keterangan" rows="4" class="w-full rounded-lg border-indigo-200 border px-4 py-2 text-sm focus:ring-indigo-500 focus:border-indigo-500 bg-white">Pembayaran Bisa Di Tranfer Melalui Rek Bank BSI (BANK SYARIAH INDONESIA) :
+No Rek : 1101198975
+Atas Nama : PT RANAY NUSANTARA SEJAHTERA
+Kode bank : 451</textarea>
+                    </div>
+                </div>
             </form>
         </div>
 
@@ -294,6 +307,23 @@
         totalField.value = new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(total);
     }
 
+
+    function confirmDelete(id) {
+        Swal.fire({
+            title: 'Hapus Invoice?',
+            text: 'Yakin ingin menghapus invoice ini? Data penjualan aslinya TIDAK akan terhapus.',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#ef4444',
+            cancelButtonColor: '#9ca3af',
+            confirmButtonText: 'Ya, Hapus!',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById('delete-form-' + id).submit();
+            }
+        });
+    }
 
   </script>
 </body>

@@ -232,13 +232,49 @@
             z-index: 1000;
         }
 
+        .btn-back {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background-color: white;
+            color: #1e3a8a;
+            padding: 10px 20px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+            cursor: pointer;
+            border: 1px solid #e2e8f0;
+            z-index: 9999;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.2s;
+            pointer-events: auto !important;
+        }
+
+        .btn-back:hover {
+            background-color: #f8fafc;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+            color: #1e3a8a;
+        }
+
         @media print {
-            .btn-floating-print { display: none !important; }
+            .btn-floating-print, .btn-back { display: none !important; }
             .container { padding: 5mm 15mm; width: 100%; }
         }
     </style>
 </head>
 <body onload="window.print()">
+
+    <button onclick="window.close(); window.history.back();" class="btn-back" title="Kembali / Tutup Halaman">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/>
+        </svg>
+        <span>Kembali / Tutup</span>
+    </button>
 
     <button onclick="window.print()" class="btn-floating-print" title="Cetak SPH">
         <svg viewBox="0 0 24 24" style="width:24px; height:24px; fill:currentColor;"><path d="M19 8H5V3H19V8ZM16 5H8V6H16V5ZM22 13.5C22 14.33 21.33 15 20.5 15C19.67 15 19 14.33 19 13.5C19 12.67 19.67 12 20.5 12C21.33 12 22 12.67 22 13.5ZM18 19H6V15H18V19ZM19 22H5V17H2.99C1.89 17 1 16.1 1 15V11C1 9.34 2.34 8 4 8H20C21.66 8 23 9.34 23 11V15C23 16.1 22.11 17 21.01 17H19V22Z"/></svg>
@@ -351,7 +387,7 @@
         <div class="footer">
             <div class="signature">
                 <p style="margin: 0 0 2px 0;">Hormat kami</p>
-                <p class="font-bold uppercase" style="margin: 0 0 5px 0; font-size: 11px;">PT. RANAY NUSANTARA SEJAHTERA</p>
+                <p class="font-bold uppercase" style="margin: 0 0 5px 0; font-size: 11px;">PT. Rand NUSANTARA SEJAHTERA</p>
                 
                 @if($surat_penawaran->penandatangan == 'Dewi Sulistiowati')
                     <img src="{{ asset('assets/images/ttdDewi.png') }}" alt="TTD Dewi" class="img-ttd">

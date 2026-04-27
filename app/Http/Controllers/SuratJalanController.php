@@ -62,10 +62,13 @@ class SuratJalanController
             'keterangan' => 'nullable|string',
         ]);
 
+        // Generate Nomor Surat Jalan: XX/SJ/RNS-[Month]/[Year]
         $year = date('Y', strtotime($request->tanggal_surat_jalan));
-        $latest = SuratJalan::whereYear('tanggal_surat_jalan', $year)->latest('id')->first();
-        $nextId = $latest ? $latest->id + 1 : 1;
-        $nomor = 'SJ/' . str_pad($nextId, 3, '0', STR_PAD_LEFT) . '/RNS/' . $year;
+        $month = date('n', strtotime($request->tanggal_surat_jalan));
+        $romanMonths = ['', 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII'];
+        
+        $count = SuratJalan::whereYear('tanggal_surat_jalan', $year)->count() + 1;
+        $nomor = str_pad($count, 2, '0', STR_PAD_LEFT) . '/SJ/RNS-' . $romanMonths[$month] . '/' . $year;
 
         SuratJalan::create([
             'nomor_surat_jalan' => $nomor,

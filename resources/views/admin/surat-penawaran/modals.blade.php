@@ -27,7 +27,7 @@
             if (row.is(':first-child')) {
                 const instansi = $('input[name="nama_customer"]').val() || '[Nama Instansi]';
                 const product = data.name;
-                const introTemplate = `Dengan Hormt,\nPerihal Penawaran Harga, Bersama ini kami sampaikan penawaran harga **${product}** di ${instansi} sebagai berikut :`;
+                const introTemplate = `Dengan Hormat,\nPerihal Penawaran Harga, Bersama ini kami sampaikan penawaran harga **${product}** di ${instansi} sebagai berikut :`;
                 $('textarea[name="salam_pembuka"]').val(introTemplate);
             }
         } else {
@@ -90,7 +90,7 @@
 
                         <!-- Intro Text -->
                         <div class="mb-4">
-                            <textarea name="salam_pembuka" rows="3" class="w-full border border-dashed border-gray-200 p-2 rounded focus:border-rns-blue outline-none bg-blue-50/20 text-sm leading-relaxed">Dengan Hormt,&#10;Perihal Penawaran Harga, Bersama ini kami sampaikan penawaran harga produk di instansi Bapak/Ibu sebagai berikut :</textarea>
+                            <textarea name="salam_pembuka" rows="3" class="w-full border border-dashed border-gray-200 p-2 rounded focus:border-rns-blue outline-none bg-blue-50/20 text-sm leading-relaxed">Dengan Hormat,&#10;Perihal Penawaran Harga, Bersama ini kami sampaikan penawaran harga produk di instansi Bapak/Ibu sebagai berikut :</textarea>
                         </div>
 
                         <!-- Items Table -->
@@ -170,7 +170,7 @@
                             <div>
                                 <h4 class="font-bold underline mb-0.5 text-xs">Cara pembayaran:</h4>
                                 <textarea name="keterangan_pembayaran" rows="5" class="w-full border-0 focus:ring-0 outline-none bg-blue-50/20 p-2 text-[11px] leading-tight border-l-2 border-blue-200">
-Pembayaran Pertama DP 50% Setelah PO atau SPK kami terima&#10;Pembayaran Ke Dua 50% Setelah Alat terinstal dengan baik Pelunasan.&#10;&#10;Pembayaran Bisa Di Tranfer Melalui **Rek Bank BSI (BANK SYARIAH INDONESIA) :&#10;No Rek : 1101198975&#10;Atas Nama : PT RANAY NUSANTARA SEJAHTERA&#10;Kode bank : 451**
+Pembayaran Pertama DP 50% Setelah PO atau SPK kami terima&#10;Pembayaran Ke Dua 50% Setelah Alat terinstal dengan baik Pelunasan.&#10;&#10;Pembayaran Bisa Di Tranfer Melalui **Rek Bank BSI (BANK SYARIAH INDONESIA) :&#10;No Rek : 1101198975&#10;Atas Nama : PT Rand NUSANTARA SEJAHTERA&#10;Kode bank : 451**
                                 </textarea>
                             </div>
                         </div>
@@ -184,7 +184,7 @@ Pembayaran Pertama DP 50% Setelah PO atau SPK kami terima&#10;Pembayaran Ke Dua 
                         <div class="flex justify-end pr-4">
                             <div class="w-64 text-center">
                                 <p class="mb-0.5 text-xs">Hormat kami</p>
-                                <p class="font-bold uppercase text-[10px] mb-1">PT. RANAY NUSANTARA SEJAHTERA</p>
+                                <p class="font-bold uppercase text-[10px] mb-1">PT. Rand NUSANTARA SEJAHTERA</p>
                                 <div class="h-16 flex items-center justify-center italic text-gray-300 border border-dashed border-gray-100 mb-1 text-[10px]">
                                     [Tanda Tangan]
                                 </div>
