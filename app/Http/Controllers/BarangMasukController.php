@@ -73,17 +73,17 @@ class BarangMasukController
     {
         $request->validate([
             'incoming_date' => 'required|date',
-            'quantity' => 'required|integer|min:1',
+            'quantity' => 'required|integer|min:1|max:100000',
             'is_new_barang' => 'required|boolean',
             // Validasi jika barang baru
-            'sku' => 'required_if:is_new_barang,1|unique:barangs,sku|nullable|string',
-            'name' => 'required_if:is_new_barang,1|unique:barangs,name|nullable|string',
-            'factory' => 'nullable|string',
-            'merek' => 'nullable|string',
+            'sku' => 'required_if:is_new_barang,1|unique:barangs,sku|nullable|string|max:50',
+            'name' => 'required_if:is_new_barang,1|unique:barangs,name|nullable|string|max:100',
+            'factory' => 'nullable|string|max:100',
+            'merek' => 'nullable|string|max:100',
             'unit' => 'required_if:is_new_barang,1|nullable|string',
-            'berat_barang' => 'required_if:is_new_barang,1|nullable|numeric|min:0',
-            'purchase_price' => 'required_if:is_new_barang,1|nullable|numeric',
-            'selling_price' => 'required_if:is_new_barang,1|nullable|numeric',
+            'berat_barang' => 'required_if:is_new_barang,1|nullable|numeric|min:0|max:10000',
+            'purchase_price' => 'required_if:is_new_barang,1|nullable|numeric|min:1000|max:999000000',
+            'selling_price' => 'required_if:is_new_barang,1|nullable|numeric|min:1000|max:999000000',
             'images.*' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
             // Validasi jika barang lama
             'barang_id' => 'required_if:is_new_barang,0|nullable|exists:barangs,id',
@@ -92,6 +92,24 @@ class BarangMasukController
         ], [
             'name.unique' => 'nama barang yang sama sudah ada sebelumnya',
             'sku.unique' => 'SKU / Kode barang sudah ada sebelumnya',
+            'sku.max' => 'Kode barang maksimal 50 karakter.',
+            'name.max' => 'Nama barang maksimal 100 karakter.',
+            'factory.max' => 'Asal pabrik maksimal 100 karakter.',
+            'merek.max' => 'Merk maksimal 100 karakter.',
+            'quantity.max' => 'Jumlah stok masuk maksimal 100.000.',
+            'berat_barang.max' => 'Berat barang maksimal 10.000.',
+            'purchase_price.min' => 'Harga modal minimal Rp 1.000.',
+            'purchase_price.max' => 'Harga modal maksimal Rp 999.000.000.',
+            'selling_price.min' => 'Harga jual minimal Rp 1.000.',
+            'selling_price.max' => 'Harga jual maksimal Rp 999.000.000.',
+            'incoming_date.required' => 'Tanggal masuk wajib diisi.',
+            'quantity.required' => 'Jumlah stok masuk wajib diisi.',
+            'is_new_barang.required' => 'Status barang wajib dipilih.',
+            'sku.required_if' => 'Kode barang wajib diisi.',
+            'name.required_if' => 'Nama barang wajib diisi.',
+            'berat_barang.required_if' => 'Berat barang wajib diisi.',
+            'purchase_price.required_if' => 'Harga modal wajib diisi.',
+            'selling_price.required_if' => 'Harga jual wajib diisi.',
         ]);
 
         $barangId = $request->barang_id;
@@ -186,18 +204,30 @@ class BarangMasukController
     {
         $request->validate([
             'incoming_date' => 'required|date',
-            'quantity' => 'required|integer|min:1',
+            'quantity' => 'required|integer|min:1|max:100000',
             'images.*' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
             'deleted_old_images' => 'nullable|array',
             'deleted_old_images.*' => 'string',
             // Master data opsional (hanya diisi untuk input pertama)
-            'name' => 'nullable|string',
-            'factory' => 'nullable|string',
-            'merek' => 'nullable|string',
+            'name' => 'nullable|string|max:100',
+            'factory' => 'nullable|string|max:100',
+            'merek' => 'nullable|string|max:100',
             'unit' => 'nullable|string',
-            'berat_barang' => 'nullable|numeric|min:0',
-            'purchase_price' => 'nullable|numeric',
-            'selling_price' => 'nullable|numeric',
+            'berat_barang' => 'nullable|numeric|min:0|max:10000',
+            'purchase_price' => 'nullable|numeric|min:1000|max:999000000',
+            'selling_price' => 'nullable|numeric|min:1000|max:999000000',
+        ], [
+            'name.max' => 'Nama barang maksimal 100 karakter.',
+            'factory.max' => 'Asal pabrik maksimal 100 karakter.',
+            'merek.max' => 'Merk maksimal 100 karakter.',
+            'quantity.max' => 'Jumlah stok masuk maksimal 100.000.',
+            'berat_barang.max' => 'Berat barang maksimal 10.000.',
+            'purchase_price.min' => 'Harga modal minimal Rp 1.000.',
+            'purchase_price.max' => 'Harga modal maksimal Rp 999.000.000.',
+            'selling_price.min' => 'Harga jual minimal Rp 1.000.',
+            'selling_price.max' => 'Harga jual maksimal Rp 999.000.000.',
+            'incoming_date.required' => 'Tanggal masuk wajib diisi.',
+            'quantity.required' => 'Jumlah stok masuk wajib diisi.',
         ]);
 
         // Update master data jika ada

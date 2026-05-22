@@ -217,14 +217,13 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div class="md:col-span-2">
                             <label class="block text-sm font-medium text-gray-700 mb-1">Pilih Transaksi Pembelian <span class="text-red-500">*</span></label>
-                            <select name="penjualan_id" id="penjualanId" required class="w-full rounded-lg border-gray-300 border px-4 py-2 text-sm focus:ring-rns-blue focus:border-rns-blue bg-white" onchange="loadPenjualanData(this.value)">
-                                <option value="">-- Pilih Transaksi Pembelian --</option>
+                            <input type="text" id="searchPenjualan" list="penjualanList" class="w-full rounded-lg border-gray-300 border px-4 py-2 text-sm focus:ring-rns-blue focus:border-rns-blue bg-white" placeholder="Ketik No Transaksi atau Nama Customer..." oninput="onPenjualanSelect(this.value)" required>
+                            <datalist id="penjualanList">
                                 @foreach($penjualans as $p)
-                                    <option value="{{ $p->id }}" data-customer="{{ $p->nama_customer }}" data-total="{{ $p->total_keseluruhan }}">
-                                        {{ $p->no_transaksi }} - {{ $p->nama_customer }} (Rp {{ number_format($p->total_keseluruhan, 0, ',', '.') }})
-                                    </option>
+                                    <option value="{{ $p->no_transaksi }} - {{ $p->nama_customer }} (Rp {{ number_format($p->total_keseluruhan, 0, ',', '.') }})">
                                 @endforeach
-                            </select>
+                            </datalist>
+                            <input type="hidden" name="penjualan_id" id="penjualanId" required>
                             <p class="text-[11px] text-gray-500 mt-1">Invoice dapat dicetak kapanpun (termasuk status Belum Lunas).</p>
                         </div>
                         
@@ -289,21 +288,23 @@ Kode bank : 451</textarea>
         document.getElementById(modalId).classList.add('hidden');
     }
 
-    function loadPenjualanData(id) {
-        const select = document.getElementById('penjualanId');
+    const penjualansData = @json($penjualans);
+    function onPenjualanSelect(value) {
         const customerField = document.getElementById('previewCustomer');
         const totalField = document.getElementById('previewTotal');
+        const p = penjualansData.find(item => value.startsWith(item.no_transaksi));
 
-        if (!id) {
+        if (!p) {
+            document.getElementById('penjualanId').value = '';
             customerField.value = '';
             totalField.value = '';
             return;
         }
 
-        const selectedOption = select.options[select.selectedIndex];
-        customerField.value = selectedOption.getAttribute('data-customer');
+        document.getElementById('penjualanId').value = p.id;
+        customerField.value = p.nama_customer || '';
         
-        const total = parseFloat(selectedOption.getAttribute('data-total'));
+        const total = parseFloat(p.total_keseluruhan || 0);
         totalField.value = new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(total);
     }
 

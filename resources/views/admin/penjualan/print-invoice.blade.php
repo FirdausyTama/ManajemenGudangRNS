@@ -2,10 +2,15 @@
 <html lang="id">
 <head>
     <meta charset="utf-8">
-    <title>Invoice - {{ $penjualan->no_transaksi }}</title>
+    <title>INVOICE_{{ $penjualan->nama_customer }}_{{ \Carbon\Carbon::parse($tanggal_invoice)->format('d_m_Y') }}</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
         
+        @page {
+            margin: 0;
+            size: A4;
+        }
+
         body {
             font-family: 'Inter', sans-serif;
             color: #333;
@@ -16,9 +21,12 @@
         }
 
         .invoice-container {
-            max-width: 800px;
+            width: 210mm;
+            min-height: 297mm;
             margin: 0 auto;
-            padding: 40px;
+            padding: 10mm 15mm;
+            position: relative;
+            box-sizing: border-box;
         }
 
         .header {
@@ -182,6 +190,21 @@
             display: none;
         }
 
+        .footer-image-container {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            line-height: 0;
+        }
+
+        .footer-image {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
         .btn-floating-print {
             position: fixed;
             bottom: 30px;
@@ -243,7 +266,7 @@
 
         @media print {
             body { font-size: 12px; }
-            .invoice-container { padding: 0; max-width: 100%; }
+            .invoice-container { padding: 5mm 15mm; width: 100%; max-width: 100%; }
             .btn-floating-print, .btn-back { display: none !important; }
         }
     </style>
@@ -354,6 +377,10 @@
                 
                 <p class="name">{{ $penandatangan ?? 'Admin RNS' }}</p>
             </div>
+        </div>
+
+        <div class="footer-image-container">
+            <img src="{{ asset('assets/images/footerrns.png') }}" alt="Footer RNS" class="footer-image">
         </div>
 
     </div>

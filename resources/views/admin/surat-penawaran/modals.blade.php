@@ -22,6 +22,7 @@
             row.find('textarea[name*="[spesifikasi]"]').val(data.spec);
             row.find('input[name*="[satuan]"]').val(data.unit);
             row.find('input[name*="[harga_satuan]"]').val(data.price);
+            row.find('input[name*="[kuantitas]"]').val(1);
             
             // Auto update intro text if it's the first item
             if (row.is(':first-child')) {
@@ -29,6 +30,10 @@
                 const product = data.name;
                 const introTemplate = `Dengan Hormat,\nPerihal Penawaran Harga, Bersama ini kami sampaikan penawaran harga **${product}** di ${instansi} sebagai berikut :`;
                 $('textarea[name="salam_pembuka"]').val(introTemplate);
+            }
+
+            if (typeof calculateTotal === 'function') {
+                calculateTotal();
             }
         } else {
             // If manual input is selected, clear barang_id
@@ -126,7 +131,7 @@
                                         </td>
                                         <td class="border border-gray-800 px-2 py-1 align-top pt-2">
                                             <div class="flex items-center gap-1">
-                                                <input type="number" name="items[0][kuantitas]" value="1" step="0.01" required class="w-full text-center outline-none bg-transparent font-medium border-b border-gray-100 text-sm">
+                                                <input type="number" name="items[0][kuantitas]" value="0" step="1" min="1" required class="w-full text-center outline-none bg-transparent font-medium border-b border-gray-100 text-sm">
                                                 <input type="text" name="items[0][satuan]" value="Unit" required class="w-12 text-center outline-none bg-transparent text-xs border-b border-gray-100">
                                             </div>
                                         </td>
@@ -209,4 +214,112 @@ Pembayaran Pertama DP 50% Setelah PO atau SPK kami terima&#10;Pembayaran Ke Dua 
     </div>
 </div>
 
+<script>
+    function terbilang(a) {
+        var bil = ["", "Satu", "Dua", "Tiga", "Empat", "Lima", "Enam", "Tujuh", "Delapan", "Sembilan", "Sepuluh", "Sebelas"];
+        var hasil = "";
+        a = Math.abs(a);
+        if (a < 12) {
+            hasil = " " + bil[a];
+        } else if (a < 20) {
+            hasil = terbilang(a - 10) + " Belas";
+        } else if (a < 100) {
+            hasil = terbilang(Math.floor(a / 10)) + " Puluh" + terbilang(a % 10);
+        } else if (a < 200) {
+            hasil = " Seratus" + terbilang(a - 100);
+        } else if (a < 1000) {
+            hasil = terbilang(Math.floor(a / 100)) + " Ratus" + terbilang(a % 100);
+        } else if (a < 2000) {
+            hasil = " Seribu" + terbilang(a - 1000);
+        } else if (a < 1000000) {
+            hasil = terbilang(Math.floor(a / 1000)) + " Ribu" + terbilang(a % 1000);
+        } else if (a < 1000000000) {
+            hasil = terbilang(Math.floor(a / 1000000)) + " Juta" + terbilang(a % 1000000);
+        } else if (a < 1000000000000) {
+            hasil = terbilang(Math.floor(a / 1000000000)) + " Milyar" + terbilang(a % 1000000000);
+        } else if (a < 1000000000000000) {
+            hasil = terbilang(Math.floor(a / 1000000000000)) + " Triliun" + terbilang(a % 1000000000000);
+        }
+        return hasil;
+    }
+
+    function calculateTotal() {
+        let total = 0;
+        $('#add-items-tbody .item-row').each(function() {
+            const qty = parseFloat($(this).find('input[name*="[kuantitas]"]').val()) || 0;
+            const price = parseFloat($(this).find('input[name*="[harga_satuan]"]').val()) || 0;
+            total += qty * price;
+        });
+        
+        $('#add-total-display').text('Rp ' + new Intl.NumberFormat('id-ID').format(total));
+        if (total > 0) {
+            $('#add-terbilang-display').text(terbilang(total) + " Rupiah");
+        } else {
+            $('#add-terbilang-display').text('[Terbilang Rupiah]');
+        }
+    }
+
+    $(document).ready(function() {
+        // Calculate initially
+        calculateTotal();
+
+        // Listen for input changes to recalculate
+        $(document).on('input', '#add-items-tbody input[name*="[kuantitas]"], #add-items-tbody input[name*="[harga_satuan]"]', function() {
+            calculateTotal();
+        });
+
+        let itemIndex = 1;
+        $('#add-row-btn').click(function() {
+            const template = `
+            <tr class="item-row">
+                <td class="border border-gray-800 px-2 py-1 text-center align-top pt-2 row-number">${$('#add-items-tbody .item-row').length + 1}</td>
+                <td class="border border-gray-800 px-2 py-1 align-top">
+                    <select name="items[${itemIndex}][barang_id]" onchange="updateItemData(this)" class="w-full border border-blue-200 rounded px-2 py-0.5 mb-1 text-xs focus:ring-1 focus:ring-rns-blue outline-none bg-blue-50/50">
+                        <option value="">-- Pilih dari Stok --</option>
+                        @foreach($barangs as $b)
+                            <option value="{{ $b->id }}">{{ $b->name }} ({{ $b->factory }})</option>
+                        @endforeach
+                        <option value="">-- Input Manual --</option>
+                    </select>
+                    <input type="text" name="items[${itemIndex}][nama_barang]" required class="w-full font-bold outline-none mb-1 border-b border-gray-100 text-sm" placeholder="Nama Barang">
+                    <textarea name="items[${itemIndex}][spesifikasi]" rows="2" class="w-full text-xs text-gray-600 outline-none bg-transparent resize-none border-b border-gray-50 mb-1" placeholder="Spesifikasi detail..."></textarea>
+                    <div class="mt-1">
+                        <label class="block text-[9px] uppercase font-bold text-gray-400 mb-0.5">Upload Foto Produk (Opsional)</label>
+                        <input type="file" name="items[${itemIndex}][images][]" multiple accept="image/*" class="w-full text-[10px] text-gray-500 file:mr-2 file:py-0.5 file:px-2 file:rounded file:border-0 file:text-[10px] file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+                    </div>
+                </td>
+                <td class="border border-gray-800 px-2 py-1 align-top pt-2">
+                    <div class="flex items-center gap-1">
+                        <input type="number" name="items[${itemIndex}][kuantitas]" value="0" step="1" min="1" required class="w-full text-center outline-none bg-transparent font-medium border-b border-gray-100 text-sm">
+                        <input type="text" name="items[${itemIndex}][satuan]" value="Unit" required class="w-12 text-center outline-none bg-transparent text-xs border-b border-gray-100">
+                    </div>
+                </td>
+                <td class="border border-gray-800 px-2 py-1 align-top text-right pt-2">
+                    <input type="number" name="items[${itemIndex}][harga_satuan]" required class="w-full text-right outline-none bg-transparent font-bold border-b border-gray-100 text-sm" placeholder="0">
+                </td>
+                <td class="border border-gray-800 px-1 py-1 text-center align-top pt-2">
+                    <button type="button" class="text-red-500 hover:text-red-700 remove-item">
+                        <svg class="w-4 h-4 mx-auto" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd"></path></svg>
+                    </button>
+                </td>
+            </tr>
+            `;
+            $('#add-items-tbody').append(template);
+            itemIndex++;
+            updateRowNumbers();
+            calculateTotal();
+        });
+
+        $(document).on('click', '.remove-item', function() {
+            $(this).closest('tr').remove();
+            updateRowNumbers();
+            calculateTotal();
+        });
+
+        function updateRowNumbers() {
+            $('#add-items-tbody .item-row').each(function(index) {
+                $(this).find('.row-number').text(index + 1);
+            });
+        }
+    });
 </script>

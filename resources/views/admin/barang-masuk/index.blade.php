@@ -55,19 +55,39 @@
 
                 <!-- Alerts -->
                 @if(session('success'))
-                <div class="bg-green-50 border-l-4 border-green-500 p-4 rounded shadow-sm">
-                    <p class="text-green-700 font-medium">{{ session('success') }}</p>
+                <div id="success-alert" class="bg-green-50 border-l-4 border-green-500 p-4 rounded shadow-sm flex justify-between items-start transition-opacity duration-500 relative overflow-hidden">
+                    <div>
+                        <p class="text-green-700 font-medium">{{ session('success') }}</p>
+                    </div>
+                    <button onclick="closeAlert('success-alert')" class="text-green-500 hover:text-green-800 text-lg leading-none font-bold focus:outline-none">&times;</button>
                 </div>
                 @endif
                 @if($errors->any())
-                <div class="bg-red-50 border-l-4 border-red-500 p-4 rounded shadow-sm">
-                    <ul class="list-disc list-inside text-red-700 text-sm">
-                        @foreach($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
+                <div id="error-alert" class="bg-red-50 border-l-4 border-red-500 p-4 rounded shadow-sm flex justify-between items-start transition-opacity duration-500 relative overflow-hidden">
+                    <div>
+                        <p class="text-red-700 font-bold mb-1">Terdapat Kesalahan:</p>
+                        <ul class="list-disc list-inside text-red-700 text-sm">
+                            @foreach($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                    <button onclick="closeAlert('error-alert')" class="text-red-500 hover:text-red-800 text-lg leading-none font-bold focus:outline-none">&times;</button>
                 </div>
                 @endif
+
+                <script>
+                    function closeAlert(id) {
+                        let el = document.getElementById(id);
+                        if(el) {
+                            el.style.opacity = '0';
+                            setTimeout(() => el.style.display = 'none', 500);
+                        }
+                    }
+                    // Auto hide after 8 seconds
+                    setTimeout(() => closeAlert('success-alert'), 8000);
+                    setTimeout(() => closeAlert('error-alert'), 8000);
+                </script>
 
                 <!-- Search Form -->
                 <form action="{{ route('barang-masuk.index') }}" method="GET" class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex flex-col md:flex-row items-center gap-4 mb-6">

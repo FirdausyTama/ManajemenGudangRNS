@@ -35,7 +35,7 @@ class MonitoringStokController
             }
         }
 
-        $barangs = $query->paginate(12)->withQueryString();
+        $barangs = $query->paginate(8)->withQueryString();
 
         // Calculate Global Statistics
         $stats = [

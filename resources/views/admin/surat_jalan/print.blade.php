@@ -2,11 +2,11 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Surat Jalan - {{ $surat_jalan->nomor_surat_jalan }}</title>
+    <title>SURAT_JALAN_{{ $surat_jalan->nama_penerima }}_{{ \Carbon\Carbon::parse($surat_jalan->tanggal_surat_jalan)->format('d_m_Y') }}</title>
     <style>
         @page {
-            size: A4 portrait;
-            margin: 1.5cm;
+            margin: 0;
+            size: A4;
         }
         body {
             font-family: Arial, sans-serif;
@@ -17,13 +17,15 @@
             font-size: 13px;
         }
         .container {
-            width: 100%;
-            max-width: 800px;
+            width: 210mm;
+            min-height: 297mm;
             margin: 0 auto;
+            position: relative;
+            box-sizing: border-box;
+            padding: 10mm 15mm;
         }
         .header {
             text-align: center;
-            border-bottom: 2px solid #1e3a8a;
             padding-bottom: 10px;
             margin-bottom: 20px;
         }
@@ -54,7 +56,7 @@
             margin-bottom: 25px;
         }
         .info-box {
-            width: 45%;
+            width: 100%;
         }
         .info-box h4 {
             margin: 0 0 10px 0;
@@ -100,6 +102,20 @@
         .sig-name {
             font-weight: bold;
             text-decoration: underline;
+        }
+
+        .footer-image-container {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            line-height: 0;
+        }
+        .footer-image {
+            width: 100%;
+            height: auto;
+            display: block;
         }
 
         .btn-floating-print {
@@ -165,6 +181,10 @@
             .btn-floating-print, .btn-back {
                 display: none !important;
             }
+            .container {
+                padding: 5mm 15mm;
+                width: 100%;
+            }
         }
     </style>
 </head>
@@ -192,14 +212,8 @@
 
         <div class="info-section">
             <div class="info-box">
-                <h4>PENGIRIM</h4>
-                <div><strong>{{ $surat_jalan->nama_pengirim }}</strong></div>
-                <div>Serang, Banten</div>
-            </div>
-            
-            <div class="info-box">
                 <h4>PENERIMA</h4>
-                <div><strong>{{ $surat_jalan->nama_penerima }}</strong></div>
+                <div style="font-weight: bold;">{{ strtoupper($surat_jalan->nama_penerima) }}</div>
                 <div>{{ $surat_jalan->alamat_penerima }}</div>
                 <div>Telp: {{ $surat_jalan->telp_penerima }}</div>
             </div>
@@ -212,24 +226,37 @@
         <table class="data-table">
             <thead>
                 <tr>
-                    <th style="width: 5%;">No</th>
-                    <th style="width: 55%;">Nama Barang / Jasa</th>
-                    <th class="center" style="width: 15%;">QTY</th>
-                    <th class="right" style="width: 25%;">Total Harga / Nilai (Rp)</th>
+                    <th class="center" style="width: 50px;">No</th>
+                    <th>Nama Barang / Jasa</th>
+                    <th class="center" style="width: 100px;">Jumlah</th>
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td class="center">1</td>
-                    <td>
-                        <strong>{{ $surat_jalan->nama_barang_jasa }}</strong>
-                        @if($surat_jalan->keterangan)
-                            <div style="font-size: 12px; color: #666; margin-top: 5px;">Catatan: {{ $surat_jalan->keterangan }}</div>
-                        @endif
-                    </td>
-                    <td class="center font-bold">{{ $surat_jalan->qty }}</td>
-                    <td class="right">Rp {{ number_format($surat_jalan->jumlah, 0, ',', '.') }}</td>
-                </tr>
+                @if($surat_jalan->penjualan && $surat_jalan->penjualan->items->count() > 0)
+                    @foreach($surat_jalan->penjualan->items as $idx => $item)
+                        <tr>
+                            <td class="center">{{ $idx + 1 }}</td>
+                            <td>
+                                <strong>{{ $item->barang ? $item->barang->name : 'Barang' }}</strong>
+                                @if($idx == 0 && $surat_jalan->keterangan && $surat_jalan->keterangan !== '-')
+                                    <div style="font-size: 12px; color: #666; margin-top: 5px;">Catatan SJ: {{ $surat_jalan->keterangan }}</div>
+                                @endif
+                            </td>
+                            <td class="center">{{ $item->kuantitas }} {{ $item->barang ? $item->barang->unit : '' }}</td>
+                        </tr>
+                    @endforeach
+                @else
+                    <tr>
+                        <td class="center">1</td>
+                        <td>
+                            <strong>{{ $surat_jalan->nama_barang_jasa }}</strong>
+                            @if($surat_jalan->keterangan && $surat_jalan->keterangan !== '-')
+                                <div style="font-size: 12px; color: #666; margin-top: 5px;">Catatan: {{ $surat_jalan->keterangan }}</div>
+                            @endif
+                        </td>
+                        <td class="center">{{ $surat_jalan->qty }}</td>
+                    </tr>
+                @endif
             </tbody>
         </table>
 
@@ -256,6 +283,10 @@
                 <div class="sig-name">( &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; )</div>
                 <div style="font-size: 11px; margin-top: 5px;">Tanda tangan & Nama Jelas</div>
             </div>
+        </div>
+
+        <div class="footer-image-container">
+            <img src="{{ asset('assets/images/footerrns.png') }}" alt="Footer RNS" class="footer-image">
         </div>
     </div>
 </body>

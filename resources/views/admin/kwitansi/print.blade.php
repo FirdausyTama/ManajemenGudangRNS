@@ -2,28 +2,30 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Kwitansi - {{ $kwitansi->nomor_kwitansi }}</title>
+    <title>KWITANSI_{{ $kwitansi->nama_penerima }}_{{ \Carbon\Carbon::parse($kwitansi->tanggal_kwitansi)->format('d_m_Y') }}</title>
     <style>
         @page {
-            size: A4 portrait;
-            margin: 1.5cm;
+            margin: 0;
+            size: A4;
         }
         body {
-            font-family: Arial, sans-serif;
-            color: #333;
+            font-family: 'Times New Roman', Times, serif;
+            color: #000;
             line-height: 1.6;
             margin: 0;
             padding: 0;
             font-size: 14px;
         }
         .container {
-            width: 100%;
-            max-width: 800px;
+            width: 210mm;
+            min-height: 297mm;
             margin: 0 auto;
+            position: relative;
+            box-sizing: border-box;
+            padding: 10mm 15mm;
         }
         .header {
             text-align: center;
-            border-bottom: 2px solid #1e3a8a;
             padding-bottom: 15px;
             margin-bottom: 25px;
         }
@@ -112,6 +114,19 @@
             height: auto;
             margin: 10px 0;
         }
+        .footer-image-container {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            line-height: 0;
+        }
+        .footer-image {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
         .btn-floating-print {
             position: fixed;
             bottom: 30px;
@@ -178,6 +193,10 @@
             body {
                 background: white;
             }
+            .container {
+                padding: 5mm 15mm;
+                width: 100%;
+            }
         }
     </style>
 </head>
@@ -198,57 +217,89 @@
             <img src="{{ asset('assets/images/kopsurat.png') }}" alt="Kop Surat RNS" class="logo-kopsurat" onerror="this.src=''">
         </div>
 
-        <div class="title-box">
-            <div class="title">Kwitansi Dokumen</div>
-            <div class="nomor">No. {{ $kwitansi->nomor_kwitansi }}</div>
+        <!-- TOP SECTION -->
+        <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
+            <!-- Left side KWITANSI TO -->
+            <table style="width: 48%; border-collapse: collapse; border: 1px solid #000;">
+                <tr>
+                    <td style="background-color: #93c5fd; text-align: center; font-weight: bold; border-bottom: 1px solid #000; padding: 4px; font-size: 13px;">KWITANSI TO</td>
+                </tr>
+                <tr>
+                    <td style="background-color: #dbeafe; padding: 10px; height: 85px; vertical-align: top;">
+                        <div style="font-weight: bold; font-size: 14px;">{{ strtoupper($kwitansi->nama_penerima) }}</div>
+                        <div style="margin-top: 5px; font-size: 13px;">{{ $kwitansi->alamat_penerima }}</div>
+                    </td>
+                </tr>
+            </table>
+
+            <!-- Right side No Kwitansi & Tanggal -->
+            <div style="width: 45%; display: flex; align-items: flex-start; justify-content: flex-end;">
+                <table style="width: 100%; border-collapse: collapse; border: 1px solid #000; font-size: 13px;">
+                    <tr>
+                        <td style="background-color: #93c5fd; padding: 4px 8px; border: 1px solid #000; width: 40%;">No Kwitansi</td>
+                        <td style="background-color: #dbeafe; padding: 4px 8px; border: 1px solid #000; font-weight: bold;">{{ $kwitansi->nomor_kwitansi }}</td>
+                    </tr>
+                    <tr>
+                        <td style="background-color: #93c5fd; padding: 4px 8px; border: 1px solid #000;">Tanggal</td>
+                        <td style="background-color: #dbeafe; padding: 4px 8px; border: 1px solid #000;">{{ \Carbon\Carbon::parse($kwitansi->tanggal_kwitansi)->format('d/m/Y') }}</td>
+                    </tr>
+                </table>
+            </div>
         </div>
 
-        <table class="content-table">
+        <!-- RECEIPT TITLE -->
+        <div style="text-align: center; margin-bottom: 25px;">
+            <div style="font-size: 18px; font-weight: bold; letter-spacing: 5px; text-decoration: underline; margin-bottom: 3px;">R E C E I P T</div>
+            <div style="font-size: 15px; font-weight: bold; letter-spacing: 2px;">KWITANSI</div>
+        </div>
+
+        <!-- FORM CONTENT -->
+        <table style="width: 100%; border-collapse: separate; border-spacing: 0 15px; font-size: 14px;">
             <tr>
-                <td class="label-col">
-                    <div class="label-primary">Received From</div>
-                    <div class="label-secondary">Sudah Terima Dari</div>
+                <td style="width: 20%; vertical-align: middle;">
+                    <div style="border-bottom: 1px solid #000; padding-bottom: 2px;">Received From</div>
+                    <div style="padding-top: 2px;">Sudah Terima Dari</div>
                 </td>
-                <td class="colon-col">:</td>
-                <td class="value-col">
-                    <div class="value-box value-box-strong">
-                        {{ $kwitansi->nama_penerima }}
+                <td style="width: 3%; text-align: center; vertical-align: middle;">:</td>
+                <td style="width: 77%;">
+                    <div style="background-color: #dbeafe; border: 1px solid #000; padding: 6px 10px; font-weight: bold; color: #1e3a8a;">
+                        {{ strtoupper($kwitansi->nama_penerima) }}
                     </div>
                 </td>
             </tr>
             <tr>
-                <td class="label-col">
-                    <div class="label-primary">Amount in Words</div>
-                    <div class="label-secondary">Banyaknya Uang</div>
+                <td style="vertical-align: middle;">
+                    <div style="border-bottom: 1px solid #000; padding-bottom: 2px;">Amount in Words</div>
+                    <div style="padding-top: 2px;">Banyaknya Uang</div>
                 </td>
-                <td class="colon-col">:</td>
-                <td class="value-col">
-                    <div class="value-box value-box-italic">
-                        {{ $kwitansi->total_bilangan }}
+                <td style="text-align: center; vertical-align: middle;">:</td>
+                <td>
+                    <div style="background-color: #dbeafe; border: 1px solid #000; padding: 6px 10px; font-style: italic; color: #1e3a8a;">
+                        {{ ucwords(strtolower($kwitansi->total_bilangan)) }} Rupiah
                     </div>
                 </td>
             </tr>
             <tr>
-                <td class="label-col">
-                    <div class="label-primary">For Payment of</div>
-                    <div class="label-secondary">Untuk Pembayaran</div>
+                <td style="vertical-align: middle;">
+                    <div style="border-bottom: 1px solid #000; padding-bottom: 2px;">For Payment of</div>
+                    <div style="padding-top: 2px;">Untuk Pembayaran</div>
                 </td>
-                <td class="colon-col">:</td>
-                <td class="value-col">
-                    <div class="value-box">
+                <td style="text-align: center; vertical-align: middle;">:</td>
+                <td>
+                    <div style="background-color: #dbeafe; border: 1px solid #000; padding: 6px 10px; color: #1e3a8a;">
                         {{ $kwitansi->keterangan }}
                     </div>
                 </td>
             </tr>
             <tr>
-                <td class="label-col" style="padding-top: 20px;">
-                    <div class="label-primary">Total</div>
-                    <div class="label-secondary">Jumlah</div>
+                <td style="vertical-align: middle;">
+                    <div style="border-bottom: 1px solid #000; padding-bottom: 2px;">Total</div>
+                    <div style="padding-top: 2px;">Jumlah</div>
                 </td>
-                <td class="colon-col" style="padding-top: 35px !important;"></td>
-                <td class="value-col" style="padding-top: 20px;">
-                    <div class="value-box value-box-strong" style="max-width: 250px;">
-                        Rp {{ number_format($kwitansi->total_pembayaran, 0, ',', '.') }},-
+                <td style="text-align: center; vertical-align: middle;">:</td>
+                <td style="vertical-align: middle;">
+                    <div style="background-color: #dbeafe; border: 1px solid #000; padding: 6px 10px; display: inline-block; font-weight: bold; color: #1e3a8a; min-width: 150px;">
+                        Rp. {{ number_format($kwitansi->total_pembayaran, 0, ',', '.') }},-
                     </div>
                 </td>
             </tr>
@@ -270,6 +321,10 @@
                 <div style="font-weight: bold; text-decoration: underline;">{{ $kwitansi->penandatangan }}</div>
                 <div style="font-size: 12px; color: #666;">PT. Rand Nusantara Sejahtera</div>
             </div>
+        </div>
+        
+        <div class="footer-image-container">
+            <img src="{{ asset('assets/images/footerrns.png') }}" alt="Footer RNS" class="footer-image">
         </div>
     </div>
 </body>

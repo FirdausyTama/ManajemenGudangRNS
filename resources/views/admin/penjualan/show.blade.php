@@ -488,7 +488,7 @@ Kode bank : 451</textarea>
                                     <input type="hidden" name="nama_penerima" value="{{ $penjualan->nama_customer }}">
                                     <input type="hidden" name="telp_penerima" value="{{ $penjualan->no_hp_customer ?? '-' }}">
                                     <input type="hidden" name="alamat_penerima" value="{{ $penjualan->alamat_customer }}">
-                                    <input type="hidden" name="nama_barang_jasa" value="Barang/Jasa Sesuai Pesanan">
+                                    <input type="hidden" name="nama_barang_jasa" value="{{ $penjualan->items->map(function($i) { return $i->barang ? $i->barang->name : ''; })->filter()->join(', ') }}">
                                     <input type="hidden" name="qty" value="{{ $penjualan->items->sum('kuantitas') }}">
                                     <input type="hidden" name="jumlah" value="{{ $penjualan->total_keseluruhan }}">
                                     <input type="hidden" name="keterangan" value="-">

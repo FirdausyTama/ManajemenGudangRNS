@@ -216,19 +216,16 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div class="md:col-span-2">
                             <label class="block text-sm font-medium text-gray-700 mb-1">Pilih Transaksi Pembelian <span class="text-red-500">*</span></label>
-                            <select name="penjualan_id" id="penjualanId" required class="w-full rounded-lg border-gray-300 border px-4 py-2 text-sm focus:ring-rns-blue focus:border-rns-blue bg-white" onchange="loadPenjualanData(this)">
+                            <input type="text" id="searchPenjualan" list="penjualanList" class="w-full rounded-lg border-gray-300 border px-4 py-2 text-sm focus:ring-rns-blue focus:border-rns-blue bg-white" placeholder="Ketik No Transaksi atau Nama Customer..." oninput="onPenjualanSelect(this.value)" required>
+                            <datalist id="penjualanList">
                                 <option value="">-- Manual / Kosongkan --</option>
                                 @foreach($penjualans as $p)
                                     @if($p->status_pembayaran !== 'belum lunas')
-                                    <option value="{{ $p->id }}" 
-                                        data-customer="{{ $p->nama_customer }}" 
-                                        data-alamat="{{ $p->alamat_customer }}"
-                                        data-total="{{ $p->total_keseluruhan }}">
-                                        {{ $p->no_transaksi }} - {{ $p->nama_customer }} (Rp {{ number_format($p->total_keseluruhan, 0, ',', '.') }})
-                                    </option>
+                                    <option value="{{ $p->no_transaksi }} - {{ $p->nama_customer }} (Rp {{ number_format($p->total_keseluruhan, 0, ',', '.') }})">
                                     @endif
                                 @endforeach
-                            </select>
+                            </datalist>
+                            <input type="hidden" name="penjualan_id" id="penjualanId" required>
                             <p class="text-[11px] text-gray-500 mt-1">Hanya bisa mencetak Kwitansi untuk penjualan yang sudah Cicilan atau Lunas.</p>
                         </div>
                     </div>
@@ -306,16 +303,18 @@
         document.getElementById(modalId).classList.add('hidden');
     }
 
-    function loadPenjualanData(selectElement) {
-        const option = selectElement.options[selectElement.selectedIndex];
-        if(!option.value) return;
-
-        document.getElementById('nama_penerima').value = option.getAttribute('data-customer');
-        document.getElementById('alamat_penerima').value = option.getAttribute('data-alamat') || '';
-        document.getElementById('total_pembayaran').value = option.getAttribute('data-total');
-        document.getElementById('keterangan').value = 'Pembayaran untuk transaksi pembelian nomor ' + option.text.split(' - ')[0];
-
-        // Basic auto terbilang wrapper helper logic if user wants to use js (optional, user can fill manually for clarity)
+    const penjualansData = @json($penjualans);
+    function onPenjualanSelect(value) {
+        const p = penjualansData.find(item => value.startsWith(item.no_transaksi));
+        if(p) {
+            document.getElementById('penjualanId').value = p.id;
+            document.getElementById('nama_penerima').value = p.nama_customer || '';
+            document.getElementById('alamat_penerima').value = p.alamat_customer || '';
+            document.getElementById('total_pembayaran').value = p.total_keseluruhan || 0;
+            document.getElementById('keterangan').value = 'Pembayaran untuk transaksi pembelian nomor ' + p.no_transaksi;
+        } else {
+            document.getElementById('penjualanId').value = '';
+        }
     }
 
 

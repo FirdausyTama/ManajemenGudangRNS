@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rules\Password;
 use App\Models\User;
 
 class AuthController
@@ -14,15 +15,30 @@ class AuthController
     public function register(Request $request)
     {
         $validated = $request->validate([
-            'name'     => 'required|string|max:255',
+            'name'     => 'required|string|min:4|max:50',
             'email'    => 'required|email|unique:users,email',
-            'password' => 'required|min:6|confirmed',
+            'password' => [
+                'required',
+                'confirmed',
+                Password::min(8)
+                    ->letters()
+                    ->numbers()
+                    ->symbols(),
+                'max:32'
+            ],
         ], [
             'email.unique' => 'Email sudah terpakai, silakan gunakan email lain.',
             'email.required' => 'Email wajib diisi.',
             'password.required' => 'Password wajib diisi.',
             'password.confirmed' => 'Konfirmasi password tidak cocok.',
+            'password.min' => 'Password minimal 8 karakter.',
+            'password.max' => 'Password maksimal 32 karakter.',
+            'password.letters' => 'Password harus mengandung setidaknya satu huruf.',
+            'password.numbers' => 'Password harus mengandung setidaknya satu angka.',
+            'password.symbols' => 'Password harus mengandung setidaknya satu simbol.',
             'name.required' => 'Nama wajib diisi.',
+            'name.min' => 'Username minimal 4 karakter.',
+            'name.max' => 'Username maksimal 50 karakter.',
         ]);
 
         $user = User::create([

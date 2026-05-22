@@ -288,7 +288,7 @@
                 <!-- Pagination -->
                 @if($barangs->hasPages())
                 <div class="p-4 bg-white rounded-xl border border-gray-100 mt-6">
-                    {{ $barangs->links() }}
+                    {{ $barangs->links('vendor.pagination.custom') }}
                 </div>
                 @endif
             </div>

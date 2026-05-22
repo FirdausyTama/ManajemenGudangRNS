@@ -331,7 +331,7 @@
                         
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Nama Customer / Instansi <span class="text-red-500">*</span></label>
-                            <input type="text" name="nama_customer" id="namaCustomerInput" list="customerList" required class="w-full rounded-lg border-gray-300 border px-3 py-2 text-sm focus:ring-rns-blue focus:border-rns-blue" placeholder="Cari atau ketik nama..." oninput="onCustomerSelect(this.value)">
+                            <input type="text" name="nama_customer" id="namaCustomerInput" list="customerList" required maxlength="100" class="w-full rounded-lg border-gray-300 border px-3 py-2 text-sm focus:ring-rns-blue focus:border-rns-blue" placeholder="Cari atau ketik nama..." oninput="onCustomerSelect(this.value)">
                             <datalist id="customerList">
                                 @foreach($pastCustomers as $customer)
                                     <option value="{{ $customer->nama_customer }}">
@@ -341,12 +341,12 @@
                         
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">No HP / WhatsApp</label>
-                            <input type="text" name="no_hp_customer" id="noHpInput" class="w-full rounded-lg border-gray-300 border px-3 py-2 text-sm focus:ring-rns-blue focus:border-rns-blue" placeholder="08123456789">
+                            <input type="text" name="no_hp_customer" id="noHpInput" maxlength="20" pattern="[0-9]*" class="w-full rounded-lg border-gray-300 border px-3 py-2 text-sm focus:ring-rns-blue focus:border-rns-blue" placeholder="08123456789" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
                         </div>
                         
                         <div class="md:col-span-2">
                             <label class="block text-sm font-medium text-gray-700 mb-1">Alamat Customer</label>
-                            <textarea name="alamat_customer" id="alamatInput" rows="2" class="w-full rounded-lg border-gray-300 border px-3 py-2 text-sm focus:ring-rns-blue focus:border-rns-blue" placeholder="Alamat lengkap pengiriman..."></textarea>
+                            <textarea name="alamat_customer" id="alamatInput" rows="2" maxlength="255" class="w-full rounded-lg border-gray-300 border px-3 py-2 text-sm focus:ring-rns-blue focus:border-rns-blue" placeholder="Alamat lengkap pengiriman..."></textarea>
                         </div>
                         
                         <div>
@@ -418,7 +418,8 @@
                                 </div>
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 mb-1">Harga per Kg (Rp) <span class="text-red-500">*</span></label>
-                                    <input type="number" min="0" name="harga_per_kg" id="hargaPerKg" class="w-full rounded-lg border-gray-300 border px-3 py-2 text-sm focus:ring-rns-blue focus:border-rns-blue bg-white shadow-sm" onchange="calculateGrandTotal()" onkeyup="calculateGrandTotal()" placeholder="Contoh: 5000">
+                                    <input type="text" id="dispHargaPerKg" class="w-full rounded-lg border-gray-300 border px-3 py-2 text-sm focus:ring-rns-blue focus:border-rns-blue bg-white shadow-sm" onkeyup="formatCurrency(this, 'hargaPerKg'); calculateGrandTotal();" onchange="calculateGrandTotal();" placeholder="Contoh: 5000">
+                                    <input type="hidden" name="harga_per_kg" id="hargaPerKg">
                                 </div>
                                 <div class="md:col-span-2 text-right pt-2 border-t border-indigo-100/60">
                                     <span class="text-xs text-gray-500 font-medium">Subtotal Ongkos Kirim:</span>
@@ -471,27 +472,37 @@
         }
 
 
-
         function formatRupiah(number) {
             return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(number);
+        }
+
+        // Currency formatter
+        function formatCurrency(element, hiddenId) {
+            let value = element.value.replace(/[^0-9]/g, '');
+            if(hiddenId) {
+                document.getElementById(hiddenId).value = value;
+            }
+            element.value = value ? parseInt(value, 10).toLocaleString('id-ID') : '';
         }
 
         function toggleOngkir() {
             const isChecked = document.getElementById('isOngkirAktif').checked;
             const fields = document.getElementById('ongkirFields');
             const beratInput = document.getElementById('beratTotal');
-            const hargaInput = document.getElementById('hargaPerKg');
+            const hargaInputHidden = document.getElementById('hargaPerKg');
+            const hargaInputDisplay = document.getElementById('dispHargaPerKg');
             
             if (isChecked) {
                 fields.classList.remove('hidden');
                 beratInput.required = true;
-                hargaInput.required = true;
+                hargaInputDisplay.required = true;
             } else {
                 fields.classList.add('hidden');
                 beratInput.required = false;
-                hargaInput.required = false;
+                hargaInputDisplay.required = false;
                 beratInput.value = '';
-                hargaInput.value = '';
+                hargaInputDisplay.value = '';
+                hargaInputHidden.value = '';
             }
             calculateGrandTotal();
         }

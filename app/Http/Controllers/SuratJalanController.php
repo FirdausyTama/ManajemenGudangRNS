@@ -42,7 +42,7 @@ class SuratJalanController
         }
 
         $suratJalans = $query->paginate(10)->withQueryString();
-        $penjualans = Penjualan::latest()->get();
+        $penjualans = Penjualan::with('items.barang')->latest()->get();
 
         return view('admin.surat_jalan.index', compact('suratJalans', 'penjualans'));
     }
@@ -50,7 +50,7 @@ class SuratJalanController
     public function store(Request $request)
     {
         $request->validate([
-            'penjualan_id' => 'required|exists:penjualans,id',
+            'penjualan_id' => 'nullable|exists:penjualans,id',
             'tanggal_surat_jalan' => 'required|date',
             'nama_pengirim' => 'required|string',
             'nama_penerima' => 'required|string',
@@ -58,7 +58,6 @@ class SuratJalanController
             'alamat_penerima' => 'required|string',
             'nama_barang_jasa' => 'required|string',
             'qty' => 'required|numeric',
-            'jumlah' => 'required|numeric',
             'keterangan' => 'nullable|string',
         ]);
 
@@ -80,7 +79,7 @@ class SuratJalanController
             'alamat_penerima' => $request->alamat_penerima,
             'nama_barang_jasa' => $request->nama_barang_jasa,
             'qty' => $request->qty,
-            'jumlah' => $request->jumlah,
+            'jumlah' => $request->jumlah ?? 0,
             'keterangan' => $request->keterangan,
             'user_id' => Auth::id(),
         ]);

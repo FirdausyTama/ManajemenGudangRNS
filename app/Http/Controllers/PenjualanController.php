@@ -125,9 +125,9 @@ class PenjualanController
     public function store(Request $request)
     {
         $request->validate([
-            'nama_customer' => 'required|string',
-            'alamat_customer' => 'nullable|string',
-            'no_hp_customer' => 'nullable|string',
+            'nama_customer' => 'required|string|max:100',
+            'alamat_customer' => 'nullable|string|max:255',
+            'no_hp_customer' => 'nullable|string|regex:/^[0-9]+$/|max:20',
             'tanggal_transaksi' => 'required|date',
             'status_pembayaran' => 'required|in:lunas,belum lunas,cicilan',
             'is_ongkir_aktif' => 'nullable|boolean',
@@ -138,6 +138,11 @@ class PenjualanController
             'items.*.kuantitas' => 'required|integer|min:1',
             'items.*.harga_satuan' => 'required|numeric|min:0',
             'penandatangan' => 'required_if:status_pembayaran,lunas'
+        ], [
+            'nama_customer.max' => 'Nama customer maksimal 100 karakter.',
+            'alamat_customer.max' => 'Alamat customer maksimal 255 karakter.',
+            'no_hp_customer.regex' => 'Nomor HP tidak boleh mengandung huruf atau karakter spesial.',
+            'no_hp_customer.max' => 'Nomor HP maksimal 20 karakter.',
         ]);
 
         DB::beginTransaction();

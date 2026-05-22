@@ -91,11 +91,13 @@
             left: 0;
             width: 100%;
             text-align: center;
+            line-height: 0;
         }
 
         .footer-image {
             width: 100%;
             height: auto;
+            display: block;
         }
 
         .intro {

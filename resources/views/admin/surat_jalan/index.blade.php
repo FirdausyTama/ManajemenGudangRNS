@@ -216,17 +216,13 @@
                     <div class="grid grid-cols-1 gap-4">
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Pilih Transaksi Pembelian <span class="text-red-500">*</span></label>
-                            <select name="penjualan_id" id="penjualanId" required class="w-full rounded-lg border-gray-300 border px-4 py-2 text-sm focus:ring-rns-blue focus:border-rns-blue bg-white" onchange="loadPenjualanData(this)">
-                                <option value="">-- Manual / Kosongkan --</option>
+                            <input type="text" id="searchPenjualan" list="penjualanList" class="w-full rounded-lg border-gray-300 border px-4 py-2 text-sm focus:ring-rns-blue focus:border-rns-blue bg-white" placeholder="Ketik No Transaksi atau Nama Customer..." oninput="onPenjualanSelect(this.value)">
+                            <datalist id="penjualanList">
                                 @foreach($penjualans as $p)
-                                    <option value="{{ $p->id }}" 
-                                        data-customer="{{ $p->nama_customer }}" 
-                                        data-telp="{{ $p->no_hp_customer }}" 
-                                        data-alamat="{{ $p->alamat_customer }}">
-                                        {{ $p->no_transaksi }} - {{ $p->nama_customer }}
-                                    </option>
+                                    <option value="{{ $p->no_transaksi }} - {{ $p->nama_customer }}">
                                 @endforeach
-                            </select>
+                            </datalist>
+                            <input type="hidden" name="penjualan_id" id="penjualanId">
                         </div>
                     </div>
                 </div>
@@ -267,10 +263,7 @@
                             <input type="number" id="qty" name="qty" required class="w-full rounded-lg border-gray-300 border px-4 py-2 text-sm focus:ring-rns-blue" placeholder="Jumlah barang">
                         </div>
 
-                        <div class="md:col-span-1">
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Nilai Tagihan / Harga Total <span class="text-red-500">*</span></label>
-                            <input type="number" id="jumlah" name="jumlah" required class="w-full rounded-lg border-gray-300 border px-4 py-2 text-sm focus:ring-rns-blue" placeholder="Total harga terkait">
-                        </div>
+
                         
                         <div class="md:col-span-2">
                             <label class="block text-sm font-medium text-gray-700 mb-1">Keterangan Tambahan</label>
@@ -301,13 +294,30 @@
         document.getElementById(modalId).classList.add('hidden');
     }
 
-    function loadPenjualanData(selectElement) {
-        const option = selectElement.options[selectElement.selectedIndex];
-        if(!option.value) return;
-
-        document.getElementById('nama_penerima').value = option.getAttribute('data-customer');
-        document.getElementById('telp_penerima').value = option.getAttribute('data-telp') || '';
-        document.getElementById('alamat_penerima').value = option.getAttribute('data-alamat') || '';
+    const penjualansData = @json($penjualans);
+    function onPenjualanSelect(value) {
+        const p = penjualansData.find(item => `${item.no_transaksi} - ${item.nama_customer}` === value);
+        if(p) {
+            document.getElementById('penjualanId').value = p.id;
+            document.getElementById('nama_penerima').value = p.nama_customer || '';
+            document.getElementById('telp_penerima').value = p.no_hp_customer || '';
+            document.getElementById('alamat_penerima').value = p.alamat_customer || '';
+            
+            if (p.items && p.items.length > 0) {
+                const itemNames = p.items.map(i => i.barang ? i.barang.name : 'Barang').filter(n => n).join(', ');
+                document.getElementById('nama_barang_jasa').value = itemNames;
+                
+                const totalQty = p.items.reduce((sum, item) => sum + (parseFloat(item.kuantitas) || 0), 0);
+                document.getElementById('qty').value = totalQty;
+            } else {
+                document.getElementById('nama_barang_jasa').value = '';
+                document.getElementById('qty').value = '';
+            }
+        } else {
+            document.getElementById('penjualanId').value = '';
+            document.getElementById('nama_barang_jasa').value = '';
+            document.getElementById('qty').value = '';
+        }
     }
 
 
