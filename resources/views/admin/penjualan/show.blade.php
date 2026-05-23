@@ -181,9 +181,10 @@
                                         @csrf
                                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                                             <div>
-                                                <label class="block text-sm font-medium text-gray-700 mb-2">Uang Muka (DP) Rp:</label>
-                                                <input type="number" name="dp_nominal" min="0" placeholder="0 (Opsional)" class="w-full rounded-lg border-gray-300 border px-3 py-2 text-sm focus:ring-amber-500 focus:border-amber-500 bg-white">
-                                                <p class="text-[10px] text-gray-500 mt-1">Isi jika pelanggan langsung membayar DP.</p>
+                                                <label class="block text-sm font-medium text-gray-700 mb-2">Uang Muka (DP) Rp: <span class="text-red-500">*</span></label>
+                                                <input type="text" id="disp_dp_nominal" placeholder="0" required class="w-full rounded-lg border-gray-300 border px-3 py-2 text-sm focus:ring-amber-500 focus:border-amber-500 bg-white" onkeyup="formatCurrency(this, 'real_dp_nominal')">
+                                                <input type="hidden" name="dp_nominal" id="real_dp_nominal">
+                                                <p class="text-[10px] text-gray-500 mt-1">Wajib diisi sesuai kesepakatan DP awal.</p>
                                             </div>
                                             <div>
                                                 <label class="block text-sm font-medium text-gray-700 mb-2">Penandatangan DP:</label>
@@ -274,6 +275,7 @@
                                                 // Keep track of how much of the (total - DP) is still "unallocated" across the loop
                                                 $sisaPokokAlokasi = $penjualan->total_keseluruhan - $dp;
                                                 $akumulasiAlokasiLalu = 0;
+                                                $firstUnpaidFound = false;
                                             @endphp
                                             @for($i = 0; $i < $penjualan->tenor_bulan; $i++)
                                                 @php
@@ -301,6 +303,12 @@
                                                     $nominalBulanIni = $alokasiBulanIni;
                                                     if ($isPaid) {
                                                         $nominalBulanIni = $kwitansi->total_pembayaran;
+                                                    }
+                                                    
+                                                    $canPay = false;
+                                                    if (!$isPaid && !$isLunas && !$firstUnpaidFound) {
+                                                        $canPay = true;
+                                                        $firstUnpaidFound = true;
                                                     }
                                                 @endphp
                                                 
@@ -338,13 +346,19 @@
                                                         <input type="hidden" name="tanggal_kwitansi" value="{{ date('Y-m-d') }}">
                                                         <input type="hidden" name="total_pembayaran" value="{{ $nominalBulanIni }}">
                                                         <input type="hidden" name="keterangan" value="Pembayaran Cicilan Ke-{{ $i + 1 }}">
-                                                        <select name="penandatangan" class="w-28 bg-white rounded border-gray-200 border px-2 py-1 text-[11px] focus:ring-amber-500 focus:border-amber-500" required>
+                                                        <select name="penandatangan" class="w-28 bg-white rounded border-gray-200 border px-2 py-1 text-[11px] focus:ring-amber-500 focus:border-amber-500" {{ !$canPay ? 'disabled' : 'required' }}>
                                                             <option value="Dewi Sulistiowati">Dewi S.</option>
                                                             <option value="Heri Pirdaus, S.Tr.Kes Rad (MRI)">Heri P.</option>
                                                         </select>
+                                                        @if($canPay)
                                                         <button type="button" onclick="confirmBayarCicilan('{{ $i }}', '{{ $i + 1 }}', 'Rp {{ number_format($nominalBulanIni, 0, ',', '.') }}')" class="text-xs bg-amber-500 hover:bg-amber-600 text-white font-bold py-1 px-3 rounded shadow-sm transition-colors cursor-pointer">
                                                             Bayar
                                                         </button>
+                                                        @else
+                                                        <button type="button" disabled class="text-xs bg-gray-300 text-gray-500 font-bold py-1 px-3 rounded shadow-sm cursor-not-allowed" title="Harap lunasi cicilan bulan sebelumnya">
+                                                            Bayar
+                                                        </button>
+                                                        @endif
                                                     </form>
                                                 </div>
                                                 @elseif(!$isPaid && $isLunas)
@@ -423,6 +437,28 @@
                                     }
                                     // Run on load
                                     document.addEventListener('DOMContentLoaded', toggleSignatoryUpdate);
+
+                                    // Format Rupiah function
+                                    function formatCurrency(input, hiddenId) {
+                                        let value = input.value.replace(/[^,\d]/g, '');
+                                        let split = value.split(',');
+                                        let sisa = split[0].length % 3;
+                                        let rupiah = split[0].substr(0, sisa);
+                                        let ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+
+                                        if (ribuan) {
+                                            let separator = sisa ? '.' : '';
+                                            rupiah += separator + ribuan.join('.');
+                                        }
+
+                                        rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
+                                        input.value = rupiah;
+                                        
+                                        // Set hidden input value to raw number
+                                        let rawValue = value.replace(/\./g, '');
+                                        if (rawValue === '') rawValue = '0';
+                                        document.getElementById(hiddenId).value = rawValue;
+                                    }
                                 </script>
                                 @endif
                             </div>

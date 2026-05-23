@@ -324,6 +324,7 @@
                                     <option value="unit">Unit</option>
                                     <option value="box">Box</option>
                                     <option value="set">Set</option>
+                                    <option value="roll">Roll</option>
                                 </select>
                             </div>
                             <div>
@@ -418,6 +419,7 @@
                                     <option value="unit">Unit</option>
                                     <option value="box">Box</option>
                                     <option value="set">Set</option>
+                                    <option value="roll">Roll</option>
                                 </select>
                             </div>
                             <div>

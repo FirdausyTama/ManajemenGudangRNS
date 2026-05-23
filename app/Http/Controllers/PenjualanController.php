@@ -139,10 +139,21 @@ class PenjualanController
             'items.*.harga_satuan' => 'required|numeric|min:0',
             'penandatangan' => 'required_if:status_pembayaran,lunas'
         ], [
+            'nama_customer.required' => 'Mohon maaf, Nama Customer / Instansi wajib diisi.',
             'nama_customer.max' => 'Nama customer maksimal 100 karakter.',
             'alamat_customer.max' => 'Alamat customer maksimal 255 karakter.',
             'no_hp_customer.regex' => 'Nomor HP tidak boleh mengandung huruf atau karakter spesial.',
             'no_hp_customer.max' => 'Nomor HP maksimal 20 karakter.',
+            'tanggal_transaksi.required' => 'Tanggal transaksi wajib dipilih.',
+            'status_pembayaran.required' => 'Status pembayaran wajib ditentukan.',
+            'items.required' => 'Keranjang belanja kosong! Mohon tambah minimal 1 barang.',
+            'items.min' => 'Keranjang belanja harus berisi minimal 1 barang.',
+            'items.*.barang_id.required' => 'Anda belum memilih Produk/Barang pada baris keranjang.',
+            'items.*.kuantitas.required' => 'Kuantitas (Qty) barang wajib diisi.',
+            'items.*.kuantitas.min' => 'Kuantitas barang tidak boleh nol (minimal 1).',
+            'items.*.harga_satuan.required' => 'Harga satuan barang wajib diisi.',
+            'items.*.harga_satuan.min' => 'Harga satuan barang tidak boleh bernilai negatif (minus).',
+            'penandatangan.required_if' => 'Mohon pilih siapa yang menandatangani kwitansi karena statusnya Lunas.',
         ]);
 
         DB::beginTransaction();
@@ -275,8 +286,11 @@ class PenjualanController
     {
         $request->validate([
             'tenor_bulan' => 'required|integer|min:1|max:60',
-            'dp_nominal' => 'nullable|numeric|min:0',
-            'penandatangan_dp' => 'nullable|string'
+            'dp_nominal' => 'required|numeric|min:0',
+            'penandatangan_dp' => 'required|string'
+        ], [
+            'dp_nominal.required' => 'Nominal DP awal wajib diisi (isi 0 jika tidak ada DP).',
+            'penandatangan_dp.required' => 'Penandatangan DP wajib dipilih.'
         ]);
 
         $penjualan->update([

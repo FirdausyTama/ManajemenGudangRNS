@@ -22,28 +22,34 @@ class DashboardController
         // 1. Total Stok Keseluruhan
         $totalStok = (int)Barang::sum('stock');
 
-        // 2. Keuntungan Per Bulan (Income - Expense for items sold this month)
-        // Profit = (selling_price - purchase_price) * qty
-        $monthlyProfitData = PenjualanItem::whereHas('penjualan', function($q) use ($thisMonthStart, $thisMonthEnd) {
-                $q->whereBetween('tanggal_transaksi', [$thisMonthStart, $thisMonthEnd]);
+        // 2. Keuntungan dan Pendapatan Per Bulan (berdasarkan item, tidak termasuk ongkir, dan hanya Lunas/Cicilan)
+        $monthlyItemsData = PenjualanItem::whereHas('penjualan', function($q) use ($thisMonthStart, $thisMonthEnd) {
+                $q->whereBetween('tanggal_transaksi', [$thisMonthStart, $thisMonthEnd])
+                  ->whereIn('status_pembayaran', ['lunas', 'cicilan']);
             })
             ->with('barang')
             ->get();
 
         $monthlyProfit = 0;
-        foreach ($monthlyProfitData as $item) {
+        $monthlyRevenue = 0;
+        foreach ($monthlyItemsData as $item) {
             $cost = (float)($item->barang->purchase_price ?? 0);
             $sell = (float)$item->harga_satuan;
             $qty = (int)$item->kuantitas;
-            $monthlyProfit += ($sell - $cost) * $qty;
+            
+            $monthlyRevenue += ($sell * $qty);
+            $monthlyProfit += (($sell - $cost) * $qty);
         }
 
-        // 3. Total Piutang (Grand Total - Total Paid across all transactions)
-        $allPenjualans = Penjualan::with('kwitansis')->get();
+        // 3. Total Piutang (Grand Total - Total Paid for unpaid/installment transactions)
+        $unpaidPenjualans = Penjualan::where('status_pembayaran', '!=', 'lunas')->with('kwitansis')->get();
         $totalReceivable = 0;
-        foreach ($allPenjualans as $p) {
+        foreach ($unpaidPenjualans as $p) {
             $paid = (float)$p->kwitansis->sum('total_pembayaran');
-            $totalReceivable += ((float)$p->total_keseluruhan - $paid);
+            $sisa = (float)$p->total_keseluruhan - $paid;
+            if ($sisa > 0) {
+                $totalReceivable += $sisa;
+            }
         }
 
         // 4. Peringatan Jatuh Tempo (Logic from PenjualanController)
@@ -91,7 +97,7 @@ class DashboardController
         $totalAssetValue = (float)Barang::select(DB::raw('SUM(stock * purchase_price) as total'))->first()->total;
 
         // 10. Total Revenue Month
-        $monthlyRevenue = (float)Penjualan::whereBetween('tanggal_transaksi', [$thisMonthStart, $thisMonthEnd])->sum('total_keseluruhan');
+        // (Sudah dihitung di atas bersamaan dengan Profit)
 
         // 11. Recent Stock In
         $recentStockIn = BarangMasuk::with('barang')->latest()->take(5)->get();

@@ -232,10 +232,10 @@
                         Rincian Surat Jalan
                     </h4>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div class="md:col-span-1">
+                        <!-- <div class="md:col-span-1">
                             <label class="block text-sm font-medium text-gray-700 mb-1">Nama Pengirim <span class="text-red-500">*</span></label>
                             <input type="text" id="nama_pengirim" name="nama_pengirim" required class="w-full rounded-lg border-gray-300 border px-4 py-2 text-sm focus:ring-rns-blue" value="PT Rand Nusantara Sejahtera">
-                        </div>
+                        </div> -->
                         <div class="md:col-span-1">
                             <label class="block text-sm font-medium text-gray-700 mb-1">Nama Penerima <span class="text-red-500">*</span></label>
                             <input type="text" id="nama_penerima" name="nama_penerima" required class="w-full rounded-lg border-gray-300 border px-4 py-2 text-sm focus:ring-rns-blue" placeholder="Nama instansi/RS...">

@@ -63,13 +63,31 @@
                 </div>
                 @endif
                 @if($errors->any())
-                <div class="bg-red-50 border-l-4 border-red-500 p-4 rounded shadow-sm">
-                    <ul class="list-disc list-inside text-red-700 text-sm">
-                        @foreach($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
+                <div id="errorAlert" class="bg-red-50 border-l-4 border-red-500 p-4 rounded shadow-sm mb-4 flex justify-between items-start transition-opacity duration-500">
+                    <div>
+                        <div class="flex items-center gap-2 mb-1 text-red-800 font-bold text-sm">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            Penyimpanan Gagal! Mohon periksa kembali form Anda:
+                        </div>
+                        <ul class="list-disc list-inside text-red-700 text-sm">
+                            @foreach($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                    <button type="button" onclick="document.getElementById('errorAlert').style.display='none'" class="text-red-400 hover:text-red-600 transition-colors p-1">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                    </button>
                 </div>
+                <script>
+                    setTimeout(() => {
+                        const alert = document.getElementById('errorAlert');
+                        if(alert) {
+                            alert.style.opacity = '0';
+                            setTimeout(() => alert.style.display = 'none', 500);
+                        }
+                    }, 5000);
+                </script>
                 @endif
                 <!-- Summary Cards -->
                 <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 mb-6 md:mb-8">
