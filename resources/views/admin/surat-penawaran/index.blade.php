@@ -11,7 +11,10 @@
 
   <link rel="shortcut icon" href="{{ asset('assets/images/favicon.ico?v=2') }}" />
   <link rel="manifest" href="{{ asset('manifest.json') }}">
-  <meta name="theme-color" content="#1e40af">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script>

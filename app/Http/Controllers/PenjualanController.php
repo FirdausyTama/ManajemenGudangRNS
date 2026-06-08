@@ -262,7 +262,14 @@ class PenjualanController
             }
 
             $statusText = $penjualan->status_pembayaran;
-            $penjualan->delete(); // automatically cascades deletes to items based on DB migration
+            
+            // Hapus dokumen terkait secara eksplisit agar tidak ada data yatim piatu
+            $penjualan->kwitansis()->delete();
+            $penjualan->invoices()->delete();
+            $penjualan->suratJalans()->delete();
+            $penjualan->items()->delete();
+            
+            $penjualan->delete(); 
 
             DB::commit();
 

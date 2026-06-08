@@ -62,7 +62,9 @@ class AuthController
             'password' => 'required|string',
         ]);
 
-        if (Auth::attempt($credentials)) {
+        $remember = $request->boolean('remember');
+
+        if (Auth::attempt($credentials, $remember)) {
             $request->session()->regenerate();
 
             if (Auth::user()->status !== 'active') {

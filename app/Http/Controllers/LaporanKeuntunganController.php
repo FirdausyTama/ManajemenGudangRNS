@@ -19,7 +19,7 @@ class LaporanKeuntunganController
 
         $barangs = \App\Models\Barang::all();
 
-        $query = PenjualanItem::with(['barang', 'penjualan'])
+        $query = PenjualanItem::with(['barang', 'penjualan.kwitansis'])
             ->whereHas('penjualan', function ($q) {
             $q->whereIn('status_pembayaran', ['lunas', 'cicilan']);
         });
@@ -68,13 +68,41 @@ class LaporanKeuntunganController
             $qty = $item->kuantitas;
 
             $modalTotal = $purchasePrice * $qty;
-            $pendapatanTotal = $sellingPrice * $qty;
+            $sellingTotal = $sellingPrice * $qty; // Harga Jual Full
+
+            // Hitung Uang Masuk Riil (Cash Basis - Opsi 1)
+            $penjualan = $item->penjualan;
+            $totalKeseluruhan = $penjualan->total_keseluruhan > 0 ? (float) $penjualan->total_keseluruhan : 1;
+            
+            if ($penjualan->status_pembayaran === 'lunas') {
+                $paidAmount = $totalKeseluruhan;
+            } else {
+                $paidAmount = (float) $penjualan->kwitansis->sum('total_pembayaran');
+            }
+
+            if ($paidAmount > $totalKeseluruhan) {
+                $paidAmount = $totalKeseluruhan;
+            }
+
+            $paidPercentage = $paidAmount / $totalKeseluruhan;
+
+            // Pendapatan dicatat hanya sebesar persentase uang riil yang sudah dibayar (DP)
+            $pendapatanTotal = $sellingTotal * $paidPercentage;
+            
+            // Sisa tagihan (kekurangan) untuk item ini
+            $sisaTagihanTotal = $sellingTotal - $pendapatanTotal;
+            
+            // Keuntungan = Uang masuk riil - Modal Utuh
             $keuntunganTotal = $pendapatanTotal - $modalTotal;
 
             $summary['total_items_sold'] += $qty;
             $summary['total_modal'] += $modalTotal;
             $summary['total_pendapatan'] += $pendapatanTotal;
-            $summary['total_keuntungan'] += $keuntunganTotal;
+            
+            // Jika minus, jangan dihitung ke total keuntungan
+            if ($keuntunganTotal > 0) {
+                $summary['total_keuntungan'] += $keuntunganTotal;
+            }
 
             return [
             'tanggal' => $item->penjualan->tanggal_transaksi->format('Y-m-d'),
@@ -87,6 +115,7 @@ class LaporanKeuntunganController
             'modal_total' => $modalTotal,
             'pendapatan_total' => $pendapatanTotal,
             'keuntungan_total' => $keuntunganTotal,
+            'sisa_tagihan_total' => $sisaTagihanTotal,
             ];
         });
 

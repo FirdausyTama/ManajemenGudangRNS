@@ -149,8 +149,11 @@
                             </div>
                             <div class="grid grid-cols-2 gap-4 pt-2 border-t border-gray-50">
                                 <div>
-                                    <div class="text-[10px] text-gray-400 uppercase font-bold">Total Jual</div>
+                                    <div class="text-[10px] text-gray-400 uppercase font-bold">Uang Riil Masuk</div>
                                     <div class="text-sm font-semibold text-gray-800">Rp {{ number_format($data['pendapatan_total'], 0, ',', '.') }}</div>
+                                    @if($data['sisa_tagihan_total'] > 0)
+                                        <div class="text-[10px] text-red-500 font-bold mt-1 bg-red-50 inline-block px-1 rounded">Sisa: Rp {{ number_format($data['sisa_tagihan_total'], 0, ',', '.') }}</div>
+                                    @endif
                                 </div>
                                 <div class="text-right">
                                     <div class="text-[10px] text-gray-400 uppercase font-bold">Keuntungan</div>
@@ -177,7 +180,7 @@
                                     <th class="py-3 px-4 font-bold">Harga Beli</th>
                                     <th class="py-3 px-4 font-bold">Harga Jual</th>
                                     <th class="py-3 px-4 font-bold">Total Modal</th>
-                                    <th class="py-3 px-4 font-bold">Total Jual</th>
+                                    <th class="py-3 px-4 font-bold">Uang Riil Masuk</th>
                                     <th class="py-3 px-4 font-bold text-right">Keuntungan</th>
                                 </tr>
                             </thead>
@@ -207,7 +210,12 @@
                                         {{ number_format($data['modal_total'], 0, ',', '.') }}
                                     </td>
                                     <td class="py-4 px-4 border-l border-gray-50 text-gray-800 font-medium">
-                                        {{ number_format($data['pendapatan_total'], 0, ',', '.') }}
+                                        <div class="flex flex-col">
+                                            <span>{{ number_format($data['pendapatan_total'], 0, ',', '.') }}</span>
+                                            @if($data['sisa_tagihan_total'] > 0)
+                                                <span class="text-[10px] text-red-500 font-bold mt-1">Sisa Cicilan: Rp {{ number_format($data['sisa_tagihan_total'], 0, ',', '.') }}</span>
+                                            @endif
+                                        </div>
                                     </td>
                                     <td class="py-4 px-4 border-l border-gray-50 text-right">
                                         <span class="inline-flex items-center px-2 py-1 rounded text-xs font-bold {{ $data['keuntungan_total'] >= 0 ? 'bg-emerald-100 text-emerald-800 border border-emerald-200' : 'bg-red-100 text-red-800 border border-red-200' }}">
