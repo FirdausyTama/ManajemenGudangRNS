@@ -86,9 +86,9 @@
                                 <label class="block text-[10px] font-bold text-gray-400 mb-2 uppercase tracking-widest">Rentang Tanggal Kustom</label>
                                 <div class="flex flex-col sm:flex-row items-center gap-3">
                                     <div class="flex items-center gap-1.5 flex-1 w-full sm:w-auto">
-                                        <input type="date" name="start_date" value="{{ $startDate }}" class="flex-1 min-w-0 rounded-lg border-gray-300 border px-2 py-2 text-[11px] font-bold focus:ring-2 focus:ring-rns-blue/10 focus:border-rns-blue transition-all">
+                                        <input type="date" name="start_date" value="{{ $startDate }}" max="{{ date('Y-m-d') }}" class="flex-1 min-w-0 rounded-lg border-gray-300 border px-2 py-2 text-[11px] font-bold focus:ring-2 focus:ring-rns-blue/10 focus:border-rns-blue transition-all">
                                         <span class="text-gray-400 text-[10px] font-black shrink-0">s/d</span>
-                                        <input type="date" name="end_date" value="{{ $endDate }}" class="flex-1 min-w-0 rounded-lg border-gray-300 border px-2 py-2 text-[11px] font-bold focus:ring-2 focus:ring-rns-blue/10 focus:border-rns-blue transition-all">
+                                        <input type="date" name="end_date" value="{{ $endDate }}" max="{{ date('Y-m-d') }}" class="flex-1 min-w-0 rounded-lg border-gray-300 border px-2 py-2 text-[11px] font-bold focus:ring-2 focus:ring-rns-blue/10 focus:border-rns-blue transition-all">
                                     </div>
                                     <button type="submit" class="w-full sm:w-auto px-4 py-2 bg-rns-blue text-white rounded-lg hover:bg-blue-800 transition-all shadow-md shadow-blue-100 flex items-center justify-center gap-2">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>

@@ -213,7 +213,7 @@
 
                     <!-- Date Picker Filter -->
                     <div class="w-full md:w-40">
-                        <input type="date" name="date" value="{{ request('date') }}" onchange="this.form.submit()" class="block w-full py-2 px-3 border border-gray-300 bg-white rounded-lg outline-none focus:ring-2 focus:ring-rns-blue sm:text-sm transition-all text-gray-700">
+                        <input type="date" name="date" value="{{ request('date') }}" max="{{ date('Y-m-d') }}" onchange="this.form.submit()" class="block w-full py-2 px-3 border border-gray-300 bg-white rounded-lg outline-none focus:ring-2 focus:ring-rns-blue sm:text-sm transition-all text-gray-700">
                     </div>
 
                     <!-- Search Input -->
@@ -369,7 +369,7 @@
                         
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Tanggal Transaksi <span class="text-red-500">*</span></label>
-                            <input type="date" name="tanggal_transaksi" required value="{{ date('Y-m-d') }}" class="w-full rounded-lg border-gray-300 border px-3 py-2 text-sm focus:ring-rns-blue focus:border-rns-blue">
+                            <input type="date" name="tanggal_transaksi" required value="{{ date('Y-m-d') }}" max="{{ date('Y-m-d') }}" class="w-full rounded-lg border-gray-300 border px-3 py-2 text-sm focus:ring-rns-blue focus:border-rns-blue">
                         </div>
 
                         <div>

@@ -555,7 +555,7 @@ Kode bank : 451</textarea>
                                         <div class="text-sm font-semibold text-gray-800">{{ $inv->no_invoice }}</div>
                                         <div class="text-[11px] text-gray-500 mt-0.5">Tgl: {{ \Carbon\Carbon::parse($inv->tanggal_invoice)->format('d/m/Y') }}</div>
                                     </div>
-                                    <div class="flex items-center gap-1 opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity">
+                                    <div class="flex items-center gap-1">
                                         <a href="{{ route('invoice.print', $inv->id) }}" target="_blank" class="p-1.5 text-blue-600 hover:bg-blue-100 rounded" title="Cetak PDF">
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
                                         </a>
@@ -577,7 +577,7 @@ Kode bank : 451</textarea>
                                         <div class="text-sm font-semibold text-gray-800">{{ $kwt->nomor_kwitansi }}</div>
                                         <div class="text-[11px] text-gray-500 mt-0.5">Tgl: {{ \Carbon\Carbon::parse($kwt->tanggal_kwitansi)->format('d/m/Y') }}</div>
                                     </div>
-                                    <div class="flex items-center gap-1 opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity">
+                                    <div class="flex items-center gap-1">
                                         <a href="{{ route('kwitansi.print', $kwt->id) }}" target="_blank" class="p-1.5 text-blue-600 hover:bg-blue-100 rounded" title="Cetak PDF">
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
                                         </a>
@@ -599,7 +599,7 @@ Kode bank : 451</textarea>
                                         <div class="text-sm font-semibold text-gray-800">{{ $sj->nomor_surat_jalan }}</div>
                                         <div class="text-[11px] text-gray-500 mt-0.5">Tgl: {{ \Carbon\Carbon::parse($sj->tanggal_surat_jalan)->format('d/m/Y') }}</div>
                                     </div>
-                                    <div class="flex items-center gap-1 opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity">
+                                    <div class="flex items-center gap-1">
                                         <a href="{{ route('surat-jalan.print', $sj->id) }}" target="_blank" class="p-1.5 text-blue-600 hover:bg-blue-100 rounded" title="Cetak PDF">
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
                                         </a>
