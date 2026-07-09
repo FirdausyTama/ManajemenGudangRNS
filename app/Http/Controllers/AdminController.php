@@ -9,6 +9,7 @@ class AdminController
 {
     /**
      * Tampilkan daftar admin
+     * Fungsi ini bertugas memanggil semua user (kecuali owner) untuk ditampilkan di tabel Kelola Admin
      */
     public function index(Request $request)
     {
@@ -52,6 +53,7 @@ class AdminController
     /**
      * Terima/Approve Admin
      */
+    // Fungsi untuk menyetujui akun kasir/admin yang baru mendaftar
     public function approve($id)
     {
         $admin = User::findOrFail($id);
@@ -67,6 +69,7 @@ class AdminController
     /**
      * Tolak/Hapus Admin
      */
+    // Fungsi untuk menolak pendaftaran kasir/admin (akun dihapus)
     public function reject($id)
     {
         $admin = User::findOrFail($id);

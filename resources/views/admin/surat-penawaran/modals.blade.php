@@ -64,7 +64,7 @@
                         <div class="flex justify-end mb-2">
                             <div class="w-48">
                                 <label class="block text-[10px] uppercase tracking-wider text-gray-400 font-bold mb-0 text-right">Serang, Tanggal</label>
-                                <input type="date" name="tanggal_sph" value="{{ date('Y-m-d') }}" class="w-full border-b border-gray-300 focus:border-rns-blue outline-none text-right py-0 bg-transparent px-0 font-medium">
+                                <input type="date" name="tanggal_sph" value="{{ date('Y-m-d') }}" max="{{ date('Y-m-d') }}" class="w-full border-b border-gray-300 focus:border-rns-blue outline-none text-right py-0 bg-transparent px-0 font-medium">
                             </div>
                         </div>
 

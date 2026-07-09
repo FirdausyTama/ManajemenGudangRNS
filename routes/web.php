@@ -4,7 +4,8 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\AuthController;
 
-/* |-------------------------------------------------------------------------- | AUTH ROUTES |-------------------------------------------------------------------------- */
+/* |-------------------------------------------------------------------------- | AUTH ROUTES (Jalur Login & Register) |-------------------------------------------------------------------------- */
+// Halaman pertama saat website dibuka (Landing Page)
 Route::get('/', function () {
     return view('landing');
 });
@@ -38,7 +39,8 @@ use App\Http\Controllers\DashboardController;
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashboardController::class , 'index'])->name('dashboard');
 
-    // Kelola Admin (Owner Only)
+    // ---------------- FITUR PENGATURAN ADMIN ----------------
+    // Fitur ini hanya bisa diakses oleh 'owner' (Pemilik). Mengatur profil admin dan landing page.
     Route::middleware('owner')->group(function () {
             Route::get('/admin/manage', [\App\Http\Controllers\AdminController::class , 'index'])->name('admin.manage');
             Route::post('/admin/approve/{id}', [\App\Http\Controllers\AdminController::class , 'approve'])->name('admin.approve');
@@ -52,7 +54,8 @@ Route::middleware('auth')->group(function () {
         }
         );
 
-        // Barang Masuk
+        // ---------------- FITUR BARANG MASUK ----------------
+        // Alur untuk mencatat barang yang baru masuk ke gudang (menambah stok).
         Route::resource('/admin/barang-masuk', \App\Http\Controllers\BarangMasukController::class)->except(['create', 'show', 'edit'])->names([
             'index' => 'barang-masuk.index',
             'store' => 'barang-masuk.store',
@@ -60,13 +63,15 @@ Route::middleware('auth')->group(function () {
             'destroy' => 'barang-masuk.destroy',
         ]);
 
-        // Monitoring Stok
+        // ---------------- FITUR DATA BARANG (STOK) ----------------
+        // Alur untuk melihat sisa stok, cetak barcode, dan menghapus data barang.
         Route::get('/admin/monitoring-stok', [\App\Http\Controllers\MonitoringStokController::class , 'index'])->name('monitoring-stok.index');
         Route::post('/admin/monitoring-stok/scan', [\App\Http\Controllers\MonitoringStokController::class , 'scan'])->name('monitoring-stok.scan');
         Route::get('/admin/monitoring-stok/{barang}/print-barcode', [\App\Http\Controllers\MonitoringStokController::class , 'printBarcode'])->name('monitoring-stok.print-barcode');
         Route::delete('/admin/monitoring-stok/{id}', [\App\Http\Controllers\MonitoringStokController::class , 'destroy'])->name('monitoring-stok.destroy');
 
-        // Kelola Penjualan
+        // ---------------- FITUR TRANSAKSI PENJUALAN ----------------
+        // Alur utama kasir/admin untuk mencatat barang keluar (terjual), cicilan, dan status pembayaran.
         Route::resource('/admin/penjualan', \App\Http\Controllers\PenjualanController::class)->except(['create', 'edit'])->names([
             'index' => 'penjualan.index',
             'store' => 'penjualan.store',
@@ -76,7 +81,8 @@ Route::middleware('auth')->group(function () {
         Route::patch('/admin/penjualan/{penjualan}/status', [\App\Http\Controllers\PenjualanController::class , 'updateStatus'])->name('penjualan.updateStatus');
         Route::get('/admin/penjualan/{penjualan}/invoice', [\App\Http\Controllers\PenjualanController::class , 'printInvoice'])->name('penjualan.invoice');
 
-        // Surat Invoice
+        // ---------------- FITUR CETAK DOKUMEN INVOICE ----------------
+        // Alur untuk membuat dan mencetak tagihan ke pelanggan.
         Route::get('/admin/invoice', [\App\Http\Controllers\InvoiceController::class , 'index'])->name('invoice.index');
         Route::post('/admin/invoice', [\App\Http\Controllers\InvoiceController::class , 'store'])->name('invoice.store');
         Route::get('/admin/invoice/{invoice}/print', [\App\Http\Controllers\InvoiceController::class , 'print'])->name('invoice.print');
@@ -100,7 +106,8 @@ Route::middleware('auth')->group(function () {
         Route::delete('/admin/surat-jalan/{surat_jalan}', [\App\Http\Controllers\SuratJalanController::class , 'destroy'])->name('surat-jalan.destroy');
         Route::post('/admin/surat-jalan/bulk-destroy', [\App\Http\Controllers\SuratJalanController::class , 'bulkDestroy'])->name('surat-jalan.bulkDestroy');
 
-        // Laporan Keuntungan
+        // ---------------- FITUR LAPORAN KEUNTUNGAN ----------------
+        // Alur untuk melihat grafik atau tabel keuntungan (Harga Jual dikurang Modal) per bulan/tahun.
         Route::get('/admin/laporan-keuntungan', [\App\Http\Controllers\LaporanKeuntunganController::class , 'index'])->name('laporan-keuntungan.index');
 
         // Surat Penawaran Harga (SPH)

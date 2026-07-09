@@ -23,13 +23,13 @@ class BarangMasukController
         $query = BarangMasuk::with(['barang', 'user'])->latest();
 
         if ($showMasterOnly) {
-            $query->whereIn('id', function($q) {
+            $query->whereIn('id', function ($q) {
                 $q->selectRaw('min(id)')
-                  ->from('barang_masuks')
-                  ->groupBy('barang_id');
+                    ->from('barang_masuks')
+                    ->groupBy('barang_id');
             });
         }
-
+        // fitur search nama atau kode atau pabrik
         if ($search) {
             $query->whereHas('barang', function ($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%")
@@ -40,20 +40,16 @@ class BarangMasukController
 
         if ($date) {
             $query->whereDate('incoming_date', $date);
-        }
-        elseif ($period) {
+        } elseif ($period) {
             $now = Carbon::now();
             if ($period === 'today') {
                 $query->whereDate('incoming_date', $now->toDateString());
-            }
-            elseif ($period === 'week') {
+            } elseif ($period === 'week') {
                 $query->whereBetween('incoming_date', [$now->startOfWeek()->toDateString(), $now->endOfWeek()->toDateString()]);
-            }
-            elseif ($period === 'month') {
+            } elseif ($period === 'month') {
                 $query->whereMonth('incoming_date', $now->month)
                     ->whereYear('incoming_date', $now->year);
-            }
-            elseif ($period === 'year') {
+            } elseif ($period === 'year') {
                 $query->whereYear('incoming_date', $now->year);
             }
         }
@@ -66,7 +62,7 @@ class BarangMasukController
 
     public function create()
     {
-    // View create di-handle via modal di index
+        // View create di-handle via modal di index
     }
 
     public function store(Request $request)
@@ -125,6 +121,12 @@ class BarangMasukController
 
         if ($request->is_new_barang) {
             // Generate Barcode SVG
+            /**
+             * [KOMENTAR UNTUK BELAJAR]
+             * Ini adalah baris KODE UTAMA pembuatan gambar Barcode.
+             * Menggunakan library "Picqer/BarcodeGenerator".
+             * Gambar SVG digenerate berdasarkan SKU barang (jenis CODE_128).
+             */
             $generator = new \Picqer\Barcode\BarcodeGeneratorSVG();
             $barcodeSvg = $generator->getBarcode($request->sku, $generator::TYPE_CODE_128);
 
@@ -147,8 +149,7 @@ class BarangMasukController
                 'user_id' => auth()->id(),
             ]);
             $barangId = $barang->id;
-        }
-        else {
+        } else {
             // Update stok barang lama
             $barang = \App\Models\Barang::findOrFail($barangId);
             $barang->increment('stock', $request->quantity);
@@ -192,12 +193,12 @@ class BarangMasukController
 
     public function show(BarangMasuk $barangMasuk)
     {
-    //
+        //
     }
 
     public function edit(BarangMasuk $barangMasuk)
     {
-    // View edit di-handle via modal
+        // View edit di-handle via modal
     }
 
     public function update(Request $request, BarangMasuk $barangMasuk)

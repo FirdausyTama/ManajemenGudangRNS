@@ -207,7 +207,7 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Tanggal Invoice <span class="text-red-500">*</span></label>
-                        <input type="date" name="tanggal_invoice" value="{{ date('Y-m-d') }}" required class="w-full rounded-lg border-gray-300 border px-4 py-2 text-sm focus:ring-rns-blue focus:border-rns-blue bg-white">
+                        <input type="date" name="tanggal_invoice" value="{{ date('Y-m-d') }}" max="{{ date('Y-m-d') }}" required class="w-full rounded-lg border-gray-300 border px-4 py-2 text-sm focus:ring-rns-blue focus:border-rns-blue bg-white">
                     </div>
                 </div>
 

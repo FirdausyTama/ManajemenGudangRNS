@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Storage;
 
 class MonitoringStokController
 {
+    // Fungsi untuk menampilkan data stok barang di gudang (Monitoring Stok)
     public function index(Request $request)
     {
         $search = $request->input('search');
@@ -49,6 +50,7 @@ class MonitoringStokController
         return view('admin.monitoring-stok.index', compact('barangs', 'stats'));
     }
 
+    // Fungsi untuk mencari data barang berdasarkan scan barcode (SKU)
     public function scan(Request $request)
     {
         $sku = $request->input('sku');
@@ -67,12 +69,14 @@ class MonitoringStokController
         ], 404);
     }
 
+    // Fungsi untuk memanggil dan mencetak gambar Barcode barang ke kertas
     public function printBarcode(Request $request, Barang $barang)
     {
         $qty = max(1, min(500, (int) $request->query('qty', 1)));
         return view('admin.monitoring-stok.print-barcode', compact('barang', 'qty'));
     }
 
+    // Fungsi rahasia (Owner Only) untuk menghapus barang dan barcode secara permanen
     public function destroy(Request $request, $id)
     {
         if (auth()->user()->role !== 'owner') {

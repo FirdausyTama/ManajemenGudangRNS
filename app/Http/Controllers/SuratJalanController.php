@@ -10,6 +10,7 @@ use Carbon\Carbon;
 
 class SuratJalanController
 {
+    // Fungsi untuk menampilkan riwayat Surat Jalan (pengiriman) di halaman admin
     public function index(Request $request)
     {
         $period = $request->input('period');
@@ -47,6 +48,7 @@ class SuratJalanController
         return view('admin.surat_jalan.index', compact('suratJalans', 'penjualans'));
     }
 
+    // Fungsi untuk menyimpan data Surat Jalan baru dari proses pengiriman
     public function store(Request $request)
     {
         $request->validate([

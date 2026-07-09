@@ -12,6 +12,7 @@ class AuthController
     /**
      * Register
      */
+    // Fungsi untuk mendaftarkan akun baru (kasir) ke dalam database
     public function register(Request $request)
     {
         $validated = $request->validate([
@@ -55,6 +56,7 @@ class AuthController
     /**
      * Login
      */
+    // Fungsi untuk memproses login pengguna (verifikasi email & password)
     public function login(Request $request)
     {
         $credentials = $request->validate([
@@ -93,6 +95,7 @@ class AuthController
     /**
      * Logout
      */
+    // Fungsi untuk mengeluarkan pengguna dari sistem (logout)
     public function logout(Request $request)
     {
         if (Auth::check()) {

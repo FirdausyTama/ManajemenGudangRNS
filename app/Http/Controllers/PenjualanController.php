@@ -11,6 +11,12 @@ use Carbon\Carbon;
 
 class PenjualanController
 {
+    /**
+     * TAMPILAN HALAMAN UTAMA PENJUALAN
+     * Method ini dipanggil saat membuka menu "Kelola Penjualan".
+     * Tugas utamanya: mengambil data penjualan dari database, filter pencarian,
+     * serta menghitung pengingat jatuh tempo cicilan.
+     */
     public function index(Request $request)
     {
         $search = $request->input('search');
@@ -109,17 +115,25 @@ class PenjualanController
         return view('admin.penjualan.index', compact('penjualans', 'barangs', 'statusStats', 'reminders', 'pastCustomers'));
     }
 
+    /**
+     * HALAMAN DETAIL TRANSAKSI
+     * Menampilkan riwayat pembayaran, dokumen terbit (Invoice, Surat Jalan), dll.
+     */
     public function show(Penjualan $penjualan)
     {
         $penjualan->load(['items.barang', 'user']);
         return view('admin.penjualan.show', compact('penjualan'));
     }
 
+    /**
+     * CETAK INVOICE SEMENTARA/INTERNAL
+     * Dipanggil saat menekan tombol "Print Invoice" dari detail transaksi.
+     */
     public function printInvoice(Request $request, Penjualan $penjualan)
     {
         $penjualan->load(['items.barang', 'user']);
         $penandatangan = $request->query('penandatangan', 'Admin');
-        return view('admin.penjualan.print-invoice', compact('penjualan', 'penandatangan'));
+        return view('admin.invoice.print-invoice', compact('penjualan', 'penandatangan'));
     }
 
     public function store(Request $request)

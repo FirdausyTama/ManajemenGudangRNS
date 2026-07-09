@@ -480,9 +480,9 @@
                                     
                                     <div class="mb-2">
                                         <textarea name="keterangan" rows="2" class="w-full rounded-lg border-indigo-200 border px-3 py-2 text-sm focus:ring-indigo-500 focus:border-indigo-500 bg-white" placeholder="Keterangan / Catatan Bank...">Pembayaran Bisa Di Tranfer Melalui Rek Bank BSI (BANK SYARIAH INDONESIA) :
-No Rek : 1101198975
-Atas Nama : PT RANAY NUSANTARA SEJAHTERA
-Kode bank : 451</textarea>
+                                        No Rek : 1101198975
+                                        Atas Nama : PT RAND NUSANTARA SEJAHTERA
+                                        Kode bank : 451</textarea>
                                     </div>
                                     <div class="flex gap-2">
                                         <select name="penandatangan" class="w-full rounded-lg border-indigo-200 border px-3 py-2 text-sm focus:ring-indigo-500 focus:border-indigo-500 bg-white">
@@ -495,6 +495,13 @@ Kode bank : 451</textarea>
                                     </div>
                                 </form>
 
+                                {{-- 
+                                    [KOMENTAR UNTUK BELAJAR] 
+                                    Di bawah ini adalah form untuk membuat dokumen INVOICE otomatis. 
+                                    Data-data dari transaksi (seperti id, total, nama customer) diisi 
+                                    ke dalam input bertipe "hidden". Ketika tombol submit ditekan, 
+                                    data ini dikirim ke route 'invoice.store' dan disimpan.
+                                --}}
                                 <form action="{{ route('kwitansi.store') }}" method="POST" class="mb-3">
                                     @csrf
                                     <input type="hidden" name="penjualan_id" value="{{ $penjualan->id }}">
@@ -651,7 +658,7 @@ Kode bank : 451</textarea>
                                 <div class="mt-4 space-y-4">
                                     <div>
                                         <label class="block text-sm font-medium text-gray-700 mb-1">Tanggal Pembayaran <span class="text-red-500">*</span></label>
-                                        <input type="date" name="tanggal_kwitansi" value="{{ date('Y-m-d') }}" required class="w-full rounded-lg border-gray-300 border px-3 py-2 text-sm focus:ring-amber-500 focus:border-amber-500 bg-white">
+                                        <input type="date" name="tanggal_kwitansi" value="{{ date('Y-m-d') }}" max="{{ date('Y-m-d') }}" required class="w-full rounded-lg border-gray-300 border px-3 py-2 text-sm focus:ring-amber-500 focus:border-amber-500 bg-white">
                                     </div>
                                     <div>
                                         <label class="block text-sm font-medium text-gray-700 mb-1">Penandatangan Kwitansi <span class="text-red-500">*</span></label>

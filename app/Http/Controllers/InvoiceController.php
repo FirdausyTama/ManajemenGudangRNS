@@ -10,6 +10,7 @@ use Carbon\Carbon;
 
 class InvoiceController
 {
+    // Fungsi untuk menampilkan halaman daftar Invoice (Tabel)
     public function index(Request $request)
     {
         $period = $request->input('period');
@@ -54,6 +55,7 @@ class InvoiceController
         return view('admin.invoice.index', compact('invoices', 'penjualans'));
     }
 
+    // Fungsi untuk menyimpan data Invoice baru ke database
     public function store(Request $request)
     {
         $request->validate([
@@ -85,6 +87,7 @@ class InvoiceController
         return back()->with('success', 'Invoice berhasil dibuat dan disimpan.');
     }
 
+    // Fungsi untuk memproses dan mencetak (print) dokumen Invoice ke kertas
     public function print(Invoice $invoice)
     {
         $invoice->load(['penjualan.items.barang', 'user']);
@@ -94,9 +97,10 @@ class InvoiceController
         $tanggal_invoice = $invoice->tanggal_invoice;
         $keterangan = $invoice->keterangan;
 
-        return view('admin.penjualan.print-invoice', compact('penjualan', 'penandatangan', 'no_invoice', 'tanggal_invoice', 'keterangan'));
+        return view('admin.invoice.print-invoice', compact('penjualan', 'penandatangan', 'no_invoice', 'tanggal_invoice', 'keterangan'));
     }
 
+    // Fungsi untuk menghapus riwayat Invoice dari database
     public function destroy(Invoice $invoice)
     {
         $invoice->delete();

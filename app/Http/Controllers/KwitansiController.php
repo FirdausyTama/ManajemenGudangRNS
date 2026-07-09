@@ -10,6 +10,7 @@ use Carbon\Carbon;
 
 class KwitansiController
 {
+    // Fungsi untuk menampilkan riwayat Kwitansi (pembayaran) di halaman admin
     public function index(Request $request)
     {
         $period = $request->input('period');
@@ -47,6 +48,7 @@ class KwitansiController
         return view('admin.kwitansi.index', compact('kwitansis', 'penjualans'));
     }
 
+    // Fungsi untuk menyimpan data Kwitansi baru dari pembayaran pelanggan
     public function store(Request $request)
     {
         $request->validate([

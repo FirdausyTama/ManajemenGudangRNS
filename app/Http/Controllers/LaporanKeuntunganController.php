@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\DB;
 
 class LaporanKeuntunganController
 {
+    // Fungsi utama untuk mengambil data penjualan, menghitung persentase DP, dan merangkum angka profit bulanan/tahunan
     public function index(Request $request)
     {
         $filter = $request->get('filter', 'day'); // day, week, month, year

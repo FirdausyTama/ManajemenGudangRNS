@@ -237,7 +237,7 @@
                             <div class="absolute top-2 left-2 sm:top-3 sm:left-3 bg-white/90 backdrop-blur-sm shadow-sm text-rns-blue text-[8px] sm:text-xs font-bold px-1.5 py-0.5 sm:px-2.5 sm:py-1 rounded">
                                 {{ $barang->sku }}
                             </div>
-
+                            <!-- warna status card -->
                             <div class="absolute top-2 right-2 sm:top-3 sm:right-3">
                                 @if($barang->stock >= 10)
                                     <span class="flex items-center text-[8px] sm:text-xs font-medium text-green-700 bg-green-100/90 backdrop-blur-sm px-1.5 py-0.5 sm:px-2.5 sm:py-1 rounded shadow-sm">

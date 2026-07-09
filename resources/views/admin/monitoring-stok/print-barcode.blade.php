@@ -110,6 +110,12 @@
     <div class="print-wrapper">
         @for($i = 0; $i < $qty; $i++)
         <div class="barcode-container">
+            {{-- 
+                [KOMENTAR UNTUK BELAJAR]
+                Bagian ini adalah desain stiker barcode. 
+                Sistem melakukan "looping" (@for) sebanyak variabel $qty 
+                agar bisa mencetak banyak barcode sekaligus dalam 1 kertas.
+            --}}
             
             <div class="header">
                 {{ $barang->name }}
@@ -136,6 +142,12 @@
             </div>
 
             <div class="barcode-section">
+                {{-- 
+                    [KOMENTAR UNTUK BELAJAR]
+                    Di sini adalah baris KODE UTAMA pemanggilan Barcode.
+                    Gambar barcode diambil dari kolom 'barcode_path' di database
+                    yang diarahkan ke folder Storage laravel.
+                --}}
                 <img src="{{ Storage::url($barang->barcode_path) }}" class="barcode-img" alt="Barcode {{ $barang->sku }}">
                 <div class="sku">{{ $barang->sku }}</div>
             </div>

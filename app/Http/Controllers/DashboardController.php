@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\DB;
 
 class DashboardController
 {
+    // Fungsi untuk menghitung semua statistik kotak-kotak di halaman awal (Dashboard) setelah login
     public function index()
     {
         $now = Carbon::now();
@@ -79,6 +80,9 @@ class DashboardController
 
         // 7. Grafik Barang Paling Laris
         $topSelling = PenjualanItem::select('barang_id', DB::raw('SUM(kuantitas) as total_qty'))
+            ->whereHas('penjualan', function($q) use ($thisMonthStart, $thisMonthEnd) {
+                $q->whereBetween('tanggal_transaksi', [$thisMonthStart, $thisMonthEnd]);
+            })
             ->groupBy('barang_id')
             ->orderByDesc('total_qty')
             ->with('barang')
