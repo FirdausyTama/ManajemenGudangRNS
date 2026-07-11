@@ -17,6 +17,11 @@ self.addEventListener('install', event => {
 });
 
 self.addEventListener('fetch', event => {
+    // Hanya tangani request GET untuk Cache (POST/PUT/DELETE tidak didukung oleh Cache API)
+    if (event.request.method !== 'GET') {
+        return;
+    }
+
     // For navigation requests (like the landing page '/'), try network first so dynamic settings updates show up
     if (event.request.mode === 'navigate' || event.request.url.endsWith('/')) {
         event.respondWith(

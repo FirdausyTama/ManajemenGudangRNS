@@ -142,12 +142,7 @@
             </div>
 
             <div class="barcode-section">
-                {{-- 
-                    [KOMENTAR UNTUK BELAJAR]
-                    Di sini adalah baris KODE UTAMA pemanggilan Barcode.
-                    Gambar barcode diambil dari kolom 'barcode_path' di database
-                    yang diarahkan ke folder Storage laravel.
-                --}}
+                <!-- barcode -->
                 <img src="{{ Storage::url($barang->barcode_path) }}" class="barcode-img" alt="Barcode {{ $barang->sku }}">
                 <div class="sku">{{ $barang->sku }}</div>
             </div>
