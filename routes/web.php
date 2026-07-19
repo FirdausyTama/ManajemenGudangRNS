@@ -5,9 +5,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 
 /* |-------------------------------------------------------------------------- | AUTH ROUTES (Jalur Login & Register) |-------------------------------------------------------------------------- */
-// Halaman pertama saat website dibuka (Landing Page)
 Route::get('/', function () {
-    return view('landing');
+    $products = \App\Models\Barang::with('barangMasuks')->latest()->limit(6)->get();
+    return view('landing', compact('products'));
 });
 Route::middleware('guest')->group(function () {
     Route::get('/login', function () {
@@ -116,4 +116,11 @@ Route::middleware('auth')->group(function () {
         Route::get('/admin/surat-penawaran/{surat_penawaran}/print', [\App\Http\Controllers\SuratPenawaranController::class , 'print'])->name('surat-penawaran.print');
         Route::delete('/admin/surat-penawaran/{surat_penawaran}', [\App\Http\Controllers\SuratPenawaranController::class , 'destroy'])->name('surat-penawaran.destroy');
         Route::post('/admin/surat-penawaran/bulk-destroy', [\App\Http\Controllers\SuratPenawaranController::class , 'bulkDestroy'])->name('surat-penawaran.bulkDestroy');
+
+        // Purchase Order
+        Route::get('/admin/purchase-order', [\App\Http\Controllers\PurchaseOrderController::class , 'index'])->name('purchase-order.index');
+        Route::post('/admin/purchase-order', [\App\Http\Controllers\PurchaseOrderController::class , 'store'])->name('purchase-order.store');
+        Route::get('/admin/purchase-order/{purchase_order}/print', [\App\Http\Controllers\PurchaseOrderController::class , 'print'])->name('purchase-order.print');
+        Route::delete('/admin/purchase-order/{purchase_order}', [\App\Http\Controllers\PurchaseOrderController::class , 'destroy'])->name('purchase-order.destroy');
+        Route::post('/admin/purchase-order/bulk-destroy', [\App\Http\Controllers\PurchaseOrderController::class , 'bulkDestroy'])->name('purchase-order.bulkDestroy');
     });

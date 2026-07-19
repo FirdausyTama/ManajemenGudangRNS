@@ -16,6 +16,7 @@ class Barang extends Model
         'purchase_price',
         'selling_price',
         'stock',
+        'foto_produk',
         'barcode_path',
         'user_id',
     ];

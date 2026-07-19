@@ -46,27 +46,20 @@
             <div class="max-w-[1600px] mx-auto space-y-6 md:space-y-10 relative z-10">
                 
                 <!-- Hero Banner -->
-                <div class="bg-gradient-to-r from-rns-blue to-rns-light rounded-3xl p-6 md:p-8 text-white shadow-xl shadow-blue-200 relative overflow-hidden flex flex-col md:flex-row md:items-center justify-between gap-6 mb-2">
-                    <div class="absolute right-0 top-0 p-8 transform rotate-12 opacity-10 pointer-events-none">
-                        <svg class="w-64 h-64" fill="currentColor" viewBox="0 0 24 24"><path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,4A8,8 0 0,1 20,12A8,8 0 0,1 12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4M12,6A6,6 0 0,0 6,12A6,6 0 0,0 12,18A6,6 0 0,0 18,12A6,6 0 0,0 12,6M12,8A4,4 0 0,1 16,12A4,4 0 0,1 12,16A4,4 0 0,1 8,12A4,4 0 0,1 12,8Z"/></svg>
-                    </div>
+                <div class="rounded-3xl p-6 md:p-8 text-white shadow-xl shadow-blue-200 relative overflow-hidden flex flex-col md:flex-row md:items-center justify-between gap-6 mb-2 bg-cover bg-center" style="background-image: url('{{ asset('assets/images/background_lp.png') }}');">
+                    <!-- Overlay 50% -->
+                    <div class="absolute inset-0 bg-black/50"></div>
+                    
                     
                     <div class="relative z-10">
-                        <!-- <div class="flex items-center gap-3 mb-2">
-                            <span class="px-3 py-1 bg-white/20 backdrop-blur-md rounded-lg text-[10px] font-medium uppercase tracking-widest border border-white/20">WMS PRO VERSION</span>
-                            <span class="flex h-2 w-2 relative">
-                                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                                <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-                            </span>
-                        </div> -->
                         <h1 class="text-2xl md:text-3xl font-medium tracking-tight mb-2">PT. Rand Nusantara Sejahtera</h1>
-                        <p class="text-blue-100 text-xs md:text-sm font-normal opacity-90 leading-relaxed max-w-xl">Selamat Datang, {{ Auth::user()->name }}!</p>
+                        <p class="text-gray-200 text-xs md:text-sm font-normal opacity-90 leading-relaxed max-w-xl">Selamat Datang, {{ Auth::user()->name }}!</p>
                     </div>
 
                     <div class="relative z-10 flex flex-col md:items-end gap-4 mt-4 md:mt-0">
                         <div class="text-left md:text-right">
-                            <div class="text-3xl md:text-4xl font-medium tracking-tight font-mono" id="realtime-clock">--:--:--</div>
-                            <div class="text-blue-200 text-sm font-medium mt-1">{{ now()->translatedFormat('l, d F Y') }}</div>
+                            <div class="text-3xl md:text-4xl font-medium tracking-tight font-mono text-white" id="realtime-clock">--:--:--</div>
+                            <div class="text-gray-200 text-sm font-medium mt-1">{{ now()->translatedFormat('l, d F Y') }}</div>
                         </div>
                         <div class="flex items-center gap-2">
                             <a href="{{ route('barang-masuk.index') }}" class="px-4 py-2 bg-white text-rns-blue rounded-xl font-medium hover:bg-blue-50 transition-all shadow-sm flex items-center gap-2 text-xs md:text-sm">

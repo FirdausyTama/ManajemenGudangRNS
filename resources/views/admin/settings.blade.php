@@ -72,66 +72,18 @@
                         <div class="p-6 space-y-5">
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Judul Utama (Baris 1)</label>
-                                <input type="text" name="hero_title_1" value="{{ setting('hero_title_1', 'Solusi Profesional') }}" class="w-full rounded-lg border-gray-300 border px-4 py-2 focus:ring-2 focus:ring-rns-blue focus:border-rns-blue transition-colors">
+                                <input type="text" name="hero_title_1" value="{{ setting('hero_title_1', 'Solusi Alat Kesehatan') }}" class="w-full rounded-lg border-gray-300 border px-4 py-2 focus:ring-2 focus:ring-rns-blue focus:border-rns-blue transition-colors">
                             </div>
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Judul Utama (Baris 2 Biru)</label>
-                                <input type="text" name="hero_title_2" value="{{ setting('hero_title_2', 'Alat Kesehatan Radiologi') }}" class="w-full rounded-lg border-gray-300 border px-4 py-2 focus:ring-2 focus:ring-rns-blue focus:border-rns-blue transition-colors">
+                                <input type="text" name="hero_title_2" value="{{ setting('hero_title_2', 'Profesional & Terpercaya') }}" class="w-full rounded-lg border-gray-300 border px-4 py-2 focus:ring-2 focus:ring-rns-blue focus:border-rns-blue transition-colors">
                             </div>
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Sub-Judul (Deskripsi)</label>
-                                <textarea name="hero_subtitle" rows="3" class="w-full rounded-lg border-gray-300 border px-4 py-2 focus:ring-2 focus:ring-rns-blue focus:border-rns-blue transition-colors">{{ setting('hero_subtitle', 'Partner terpercaya untuk kebutuhan peralatan medis radiologi Anda. Kami menyediakan produk berkualitas tinggi dengan layanan konsultasi profesional untuk rumah sakit dan fasilitas kesehatan.') }}</textarea>
+                                <textarea name="hero_subtitle" rows="3" class="w-full rounded-lg border-gray-300 border px-4 py-2 focus:ring-2 focus:ring-rns-blue focus:border-rns-blue transition-colors">{{ setting('hero_subtitle', 'Mitra penyedia peralatan medis berstandar internasional untuk mendukung keunggulan layanan fasilitas kesehatan di seluruh Indonesia.') }}</textarea>
                             </div>
                             
-                            <!-- Upload Banner Slider -->
-                            <div class="pt-3 border-t border-gray-100">
-                                <label class="block text-sm font-medium text-gray-700 mb-3">Slider Gambar Banner (Maks. 3 Foto)</label>
-                                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                    <!-- Foto 1 -->
-                                    <div class="bg-gray-50 p-3 rounded-xl border border-gray-200 relative group">
-                                        <label class="block text-xs font-semibold text-gray-600 mb-2">Foto Pertama</label>
-                                        @if(setting('hero_image_1'))
-                                            <div class="mb-3 relative">
-                                                <img src="{{ Storage::url(setting('hero_image_1')) }}" class="h-24 w-full rounded-lg object-cover border border-gray-200 shadow-sm">
-                                                <button type="button" onclick="if(confirm('Hapus foto ini?')) { document.getElementById('delete-img-hero_image_1').submit(); }" class="absolute -top-2 -right-2 bg-red-500 hover:bg-red-600 text-white rounded-full p-1.5 shadow-md transition-colors" title="Hapus Gambar">
-                                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-                                                </button>
-                                            </div>
-                                        @endif
-                                        <input type="file" name="hero_image_1" accept="image/*" class="w-full text-xs text-gray-500 file:mr-2 file:py-1.5 file:px-3 file:rounded-md file:border-0 file:font-semibold file:bg-blue-100 file:text-rns-blue transition-colors hover:file:bg-blue-200 cursor-pointer">
-                                    </div>
-                                    <!-- Foto 2 -->
-                                    <div class="bg-gray-50 p-3 rounded-xl border border-gray-200 relative group">
-                                        <label class="block text-xs font-semibold text-gray-600 mb-2">Foto Kedua</label>
-                                        @if(setting('hero_image_2'))
-                                            <div class="mb-3 relative">
-                                                <img src="{{ Storage::url(setting('hero_image_2')) }}" class="h-24 w-full rounded-lg object-cover border border-gray-200 shadow-sm">
-                                                <button type="button" onclick="if(confirm('Hapus foto ini?')) { document.getElementById('delete-img-hero_image_2').submit(); }" class="absolute -top-2 -right-2 bg-red-500 hover:bg-red-600 text-white rounded-full p-1.5 shadow-md transition-colors" title="Hapus Gambar">
-                                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-                                                </button>
-                                            </div>
-                                        @endif
-                                        <input type="file" name="hero_image_2" accept="image/*" class="w-full text-xs text-gray-500 file:mr-2 file:py-1.5 file:px-3 file:rounded-md file:border-0 file:font-semibold file:bg-blue-100 file:text-rns-blue transition-colors hover:file:bg-blue-200 cursor-pointer">
-                                    </div>
-                                    <!-- Foto 3 -->
-                                    <div class="bg-gray-50 p-3 rounded-xl border border-gray-200 relative group">
-                                        <label class="block text-xs font-semibold text-gray-600 mb-2">Foto Ketiga</label>
-                                        @if(setting('hero_image_3'))
-                                            <div class="mb-3 relative">
-                                                <img src="{{ Storage::url(setting('hero_image_3')) }}" class="h-24 w-full rounded-lg object-cover border border-gray-200 shadow-sm">
-                                                <button type="button" onclick="if(confirm('Hapus foto ini?')) { document.getElementById('delete-img-hero_image_3').submit(); }" class="absolute -top-2 -right-2 bg-red-500 hover:bg-red-600 text-white rounded-full p-1.5 shadow-md transition-colors" title="Hapus Gambar">
-                                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-                                                </button>
-                                            </div>
-                                        @endif
-                                        <input type="file" name="hero_image_3" accept="image/*" class="w-full text-xs text-gray-500 file:mr-2 file:py-1.5 file:px-3 file:rounded-md file:border-0 file:font-semibold file:bg-blue-100 file:text-rns-blue transition-colors hover:file:bg-blue-200 cursor-pointer">
-                                    </div>
-                                </div>
-                                <p class="text-xs text-gray-500 mt-3 flex items-center gap-1">
-                                    <svg class="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                                    Gambar akan berganti secara otomatis. Biarkan kosong jika tidak ingin mengubah versi saat ini.
-                                </p>
-                            </div>
+                            
                         </div>
                     </div>
 
@@ -143,18 +95,46 @@
                                 Angka Statistik
                             </h3>
                         </div>
-                        <div class="p-6 grid grid-cols-1 md:grid-cols-3 gap-5">
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Tahun Pengalaman</label>
-                                <input type="number" name="stat_years" value="{{ setting('stat_years', '3') }}" class="w-full rounded-lg border-gray-300 border px-4 py-2 focus:ring-2 focus:ring-rns-blue focus:border-rns-blue">
+                        <div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-5">
+                            <div class="flex gap-3">
+                                <div class="w-1/3">
+                                    <label class="block text-xs font-medium text-gray-700 mb-1">Angka 1</label>
+                                    <input type="text" name="stat_1_value" value="{{ setting('stat_1_value', '2.500+') }}" class="w-full rounded-lg border-gray-300 border px-3 py-2 focus:ring-2 focus:ring-rns-blue focus:border-rns-blue text-sm">
+                                </div>
+                                <div class="w-2/3">
+                                    <label class="block text-xs font-medium text-gray-700 mb-1">Label Stat 1</label>
+                                    <input type="text" name="stat_1_label" value="{{ setting('stat_1_label', 'Fasilitas Kesehatan') }}" class="w-full rounded-lg border-gray-300 border px-3 py-2 focus:ring-2 focus:ring-rns-blue focus:border-rns-blue text-sm">
+                                </div>
                             </div>
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Klien Terlayani</label>
-                                <input type="number" name="stat_clients" value="{{ setting('stat_clients', '500') }}" class="w-full rounded-lg border-gray-300 border px-4 py-2 focus:ring-2 focus:ring-rns-blue focus:border-rns-blue">
+                            <div class="flex gap-3">
+                                <div class="w-1/3">
+                                    <label class="block text-xs font-medium text-gray-700 mb-1">Angka 2</label>
+                                    <input type="text" name="stat_2_value" value="{{ setting('stat_2_value', '10.000+') }}" class="w-full rounded-lg border-gray-300 border px-3 py-2 focus:ring-2 focus:ring-rns-blue focus:border-rns-blue text-sm">
+                                </div>
+                                <div class="w-2/3">
+                                    <label class="block text-xs font-medium text-gray-700 mb-1">Label Stat 2</label>
+                                    <input type="text" name="stat_2_label" value="{{ setting('stat_2_label', 'Produk Terjual') }}" class="w-full rounded-lg border-gray-300 border px-3 py-2 focus:ring-2 focus:ring-rns-blue focus:border-rns-blue text-sm">
+                                </div>
                             </div>
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Produk Bergaransi</label>
-                                <input type="number" name="stat_products" value="{{ setting('stat_products', '100') }}" class="w-full rounded-lg border-gray-300 border px-4 py-2 focus:ring-2 focus:ring-rns-blue focus:border-rns-blue">
+                            <div class="flex gap-3">
+                                <div class="w-1/3">
+                                    <label class="block text-xs font-medium text-gray-700 mb-1">Angka 3</label>
+                                    <input type="text" name="stat_3_value" value="{{ setting('stat_3_value', '98%') }}" class="w-full rounded-lg border-gray-300 border px-3 py-2 focus:ring-2 focus:ring-rns-blue focus:border-rns-blue text-sm">
+                                </div>
+                                <div class="w-2/3">
+                                    <label class="block text-xs font-medium text-gray-700 mb-1">Label Stat 3</label>
+                                    <input type="text" name="stat_3_label" value="{{ setting('stat_3_label', 'Kepuasan Pelanggan') }}" class="w-full rounded-lg border-gray-300 border px-3 py-2 focus:ring-2 focus:ring-rns-blue focus:border-rns-blue text-sm">
+                                </div>
+                            </div>
+                            <div class="flex gap-3">
+                                <div class="w-1/3">
+                                    <label class="block text-xs font-medium text-gray-700 mb-1">Angka 4</label>
+                                    <input type="text" name="stat_4_value" value="{{ setting('stat_4_value', '24/7') }}" class="w-full rounded-lg border-gray-300 border px-3 py-2 focus:ring-2 focus:ring-rns-blue focus:border-rns-blue text-sm">
+                                </div>
+                                <div class="w-2/3">
+                                    <label class="block text-xs font-medium text-gray-700 mb-1">Label Stat 4</label>
+                                    <input type="text" name="stat_4_label" value="{{ setting('stat_4_label', 'Layanan Support') }}" class="w-full rounded-lg border-gray-300 border px-3 py-2 focus:ring-2 focus:ring-rns-blue focus:border-rns-blue text-sm">
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -171,34 +151,45 @@
                             <!-- Kartu 1 -->
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pb-5 border-b border-gray-100">
                                 <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">Judul Kartu 1 (Biru)</label>
-                                    <input type="text" name="feature_1_title" value="{{ setting('feature_1_title', 'Peralatan Medis Lengkap') }}" class="w-full rounded-lg border-gray-300 border px-4 py-2 focus:ring-2 focus:ring-rns-blue focus:border-rns-blue">
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Judul Kartu 1</label>
+                                    <input type="text" name="feature_1_title" value="{{ setting('feature_1_title', 'Kualitas Premium') }}" class="w-full rounded-lg border-gray-300 border px-4 py-2 focus:ring-2 focus:ring-rns-blue focus:border-rns-blue">
                                 </div>
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 mb-1">Deskripsi Kartu 1</label>
-                                    <textarea name="feature_1_desc" rows="2" class="w-full rounded-lg border-gray-300 border px-4 py-2 focus:ring-2 focus:ring-rns-blue focus:border-rns-blue">{{ setting('feature_1_desc', 'Menyediakan berbagai jenis alat kesehatan radiologi dan umum dari brand terkemuka dengan teknologi terkini.') }}</textarea>
+                                    <textarea name="feature_1_desc" rows="2" class="w-full rounded-lg border-gray-300 border px-4 py-2 focus:ring-2 focus:ring-rns-blue focus:border-rns-blue">{{ setting('feature_1_desc', 'Produk berkualitas tinggi dengan standar internasional.') }}</textarea>
                                 </div>
                             </div>
                             <!-- Kartu 2 -->
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pb-5 border-b border-gray-100">
                                 <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">Judul Kartu 2 (Hijau)</label>
-                                    <input type="text" name="feature_2_title" value="{{ setting('feature_2_title', 'Terstandarisasi & Berizin') }}" class="w-full rounded-lg border-gray-300 border px-4 py-2 focus:ring-2 focus:ring-rns-blue focus:border-rns-blue">
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Judul Kartu 2</label>
+                                    <input type="text" name="feature_2_title" value="{{ setting('feature_2_title', 'Garansi Resmi') }}" class="w-full rounded-lg border-gray-300 border px-4 py-2 focus:ring-2 focus:ring-rns-blue focus:border-rns-blue">
                                 </div>
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 mb-1">Deskripsi Kartu 2</label>
-                                    <textarea name="feature_2_desc" rows="2" class="w-full rounded-lg border-gray-300 border px-4 py-2 focus:ring-2 focus:ring-rns-blue focus:border-rns-blue">{{ setting('feature_2_desc', 'Seluruh produk memiliki izin edar resmi dan memenuhi standar keselamatan Kementerian Kesehatan RI.') }}</textarea>
+                                    <textarea name="feature_2_desc" rows="2" class="w-full rounded-lg border-gray-300 border px-4 py-2 focus:ring-2 focus:ring-rns-blue focus:border-rns-blue">{{ setting('feature_2_desc', 'Garansi resmi dan layanan purna jual terpercaya.') }}</textarea>
                                 </div>
                             </div>
                             <!-- Kartu 3 -->
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pb-5 border-b border-gray-100">
                                 <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">Judul Kartu 3 (Oranye)</label>
-                                    <input type="text" name="feature_3_title" value="{{ setting('feature_3_title', 'Layanan Purna Jual') }}" class="w-full rounded-lg border-gray-300 border px-4 py-2 focus:ring-2 focus:ring-rns-blue focus:border-rns-blue">
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Judul Kartu 3</label>
+                                    <input type="text" name="feature_3_title" value="{{ setting('feature_3_title', 'Konsultasi Ahli') }}" class="w-full rounded-lg border-gray-300 border px-4 py-2 focus:ring-2 focus:ring-rns-blue focus:border-rns-blue">
                                 </div>
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 mb-1">Deskripsi Kartu 3</label>
-                                    <textarea name="feature_3_desc" rows="2" class="w-full rounded-lg border-gray-300 border px-4 py-2 focus:ring-2 focus:ring-rns-blue focus:border-rns-blue">{{ setting('feature_3_desc', 'Dukungan teknis 24/7, garansi resmi, dan maintenance berkala untuk performa optimal peralatan Anda.') }}</textarea>
+                                    <textarea name="feature_3_desc" rows="2" class="w-full rounded-lg border-gray-300 border px-4 py-2 focus:ring-2 focus:ring-rns-blue focus:border-rns-blue">{{ setting('feature_3_desc', 'Dukungan dari tim profesional berpengalaman.') }}</textarea>
+                                </div>
+                            </div>
+                            <!-- Kartu 4 -->
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Judul Kartu 4</label>
+                                    <input type="text" name="feature_4_title" value="{{ setting('feature_4_title', 'Pengiriman Cepat') }}" class="w-full rounded-lg border-gray-300 border px-4 py-2 focus:ring-2 focus:ring-rns-blue focus:border-rns-blue">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Deskripsi Kartu 4</label>
+                                    <textarea name="feature_4_desc" rows="2" class="w-full rounded-lg border-gray-300 border px-4 py-2 focus:ring-2 focus:ring-rns-blue focus:border-rns-blue">{{ setting('feature_4_desc', 'Pengiriman aman dan cepat ke seluruh Indonesia.') }}</textarea>
                                 </div>
                             </div>
                         </div>
@@ -219,10 +210,6 @@
                                 <p class="text-xs text-gray-500 mt-1">Gunakan format angka, contoh: 0852-8000-2289</p>
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Alamat Lengkap Perusahaan</label>
-                                <textarea name="company_address" rows="3" class="w-full rounded-lg border-gray-300 border px-4 py-2 focus:ring-2 focus:ring-rns-blue focus:border-rns-blue">{{ setting('company_address', 'Jl. Contoh Alamat No. 123, Kelurahan, Kecamatan, Kota Palembang, Kode Pos 30123') }}</textarea>
-                            </div>
-                            <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Email Perusahaan</label>
                                 <input type="email" name="company_email" value="{{ setting('company_email', 'info@rns.co.id') }}" class="w-full rounded-lg border-gray-300 border px-4 py-2 focus:ring-2 focus:ring-rns-blue focus:border-rns-blue">
                             </div>
@@ -233,11 +220,7 @@
                                 <p class="text-xs text-gray-500 mt-1">Buka Google Maps > Bagikan > Sematkan Peta > Salin HTML `<iframe...>`</p>
                             </div>
                             
-                            <!-- Footer Desc -->
-                            <div class="pt-2 border-t border-gray-100">
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Deskripsi Singkat di Footer (Bawah Kiri)</label>
-                                <textarea name="footer_desc" rows="2" class="w-full rounded-lg border-gray-300 border px-4 py-2 focus:ring-2 focus:ring-rns-blue focus:border-rns-blue">{{ setting('footer_desc', 'Mitra terpercaya dalam penyediaan alat kesehatan radiologi berkualitas untuk menunjang pelayanan kesehatan Indonesia.') }}</textarea>
-                            </div>
+                            
                         </div>
                     </div>
 
@@ -304,23 +287,6 @@
                 <form id="reset-form" action="{{ route('settings.reset') }}" method="POST" class="hidden">
                     @csrf
                 </form>
-
-                <!-- Hidden Delete Image Forms -->
-                @if(setting('hero_image_1'))
-                <form id="delete-img-hero_image_1" action="{{ route('settings.deleteImage', 'hero_image_1') }}" method="POST" class="hidden">
-                    @csrf
-                </form>
-                @endif
-                @if(setting('hero_image_2'))
-                <form id="delete-img-hero_image_2" action="{{ route('settings.deleteImage', 'hero_image_2') }}" method="POST" class="hidden">
-                    @csrf
-                </form>
-                @endif
-                @if(setting('hero_image_3'))
-                <form id="delete-img-hero_image_3" action="{{ route('settings.deleteImage', 'hero_image_3') }}" method="POST" class="hidden">
-                    @csrf
-                </form>
-                @endif
             </div>
         </div>
     </main>

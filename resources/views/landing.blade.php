@@ -1,1281 +1,558 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PT Rand Nusantara Sejahtera - Penyedia Alat Kesehatan Terpercaya</title>
-    <link rel="icon" href="{{ asset('assets/images/favicon.ico?v=2') }}" type="image/x-icon">
-    <!-- PWA -->
-    <link rel="manifest" href="{{ asset('manifest.json?v=2') }}">
-    <meta name="theme-color" content="#1e40af">
-    <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Bootstrap Icons -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
-    
+    <title>PT Rand Nusantara Sejahtera - Peralatan Medis Berkualitas</title>
+    <link rel="icon" href="{{ asset('assets/images/favicon.ico') }}" type="image/x-icon">
+    <link rel="manifest" href="{{ asset('manifest.json') }}">
+    <!-- Google Fonts: Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Tailwind CSS (CDN for standalone landing page) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            dark: '#0f204b',
+                            blue: '#163b8a',
+                            light: '#f4f7fb',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
     <style>
-        :root {
-            --primary-color: #1e40af;
-            --primary-dark: #1e3a8a;
-            --secondary-color: #3b82f6;
-            --accent-color: #60a5fa;
-            --text-dark: #1f2937;
-            --text-muted: #6b7280;
-            --bg-light: #f9fafb;
-            --border-light: #e5e7eb;
+        body { font-family: 'Inter', sans-serif; }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 12px;
         }
-
-        html, body {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            width: 100%;
-            overflow-x: hidden; /* Prevent horizontal scroll */
-            position: relative; /* Fixed overflow issues on some mobile browsers */
+        ::-webkit-scrollbar-track {
+            background: #f4f7fb; 
         }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            color: var(--text-dark);
-            line-height: 1.6;
+        ::-webkit-scrollbar-thumb {
+            background-color: #0f204b;
+            border-radius: 6px;
+            border: 3px solid #f4f7fb;
         }
-
-        /* Navbar */
-        .navbar {
-            backdrop-filter: blur(20px);
-            background-color: rgba(255, 255, 255, 0.98);
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-            padding: 1rem 0;
-            transition: all 0.3s ease;
-        }
-
-        .navbar.scrolled {
-            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-        }
-
-        .navbar-brand img {
-            height: 55px;
-            transition: transform 0.3s ease;
-        }
-
-        .navbar-brand:hover img {
-            transform: scale(1.05);
-        }
-
-        .btn-login {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            white-space: nowrap;
-            padding: 0.6rem 1.8rem;
-            font-weight: 600;
-            border-radius: 50px;
-            transition: all 0.3s ease;
-            border: 2px solid var(--primary-color);
-            color: var(--primary-color);
-            background: transparent;
-        }
-
-        .btn-login:hover {
-            background: var(--primary-color);
-            color: white;
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(30, 64, 175, 0.2);
-        }
-
-        .btn-install {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            white-space: nowrap;
-            padding: 0.6rem 1.8rem;
-            font-weight: 600;
-            border-radius: 50px;
-            transition: all 0.3s ease;
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            border: none;
-            color: white;
-            box-shadow: 0 4px 15px rgba(30, 64, 175, 0.2);
-        }
-
-        .btn-install:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(30, 64, 175, 0.3);
-            color: white;
-        }
-
-        /* Hero Section */
-        .hero-section {
-            padding: 140px 0 100px;
-            background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 50%, #bfdbfe 100%);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .hero-section::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            right: 0;
-            width: 50%;
-            height: 100%;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="%231e40af" fill-opacity="0.03" d="M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,122.7C672,117,768,139,864,144C960,149,1056,139,1152,122.7C1248,107,1344,85,1392,74.7L1440,64L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>') no-repeat;
-            background-size: cover;
-            opacity: 0.5;
-        }
-
-        /* Gradient overlay for smooth transition */
-        .hero-section::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: 150px;
-            background: linear-gradient(to bottom, 
-                rgba(191, 219, 254, 0) 0%,
-                rgba(219, 234, 254, 0.3) 20%,
-                rgba(239, 246, 255, 0.5) 40%,
-                rgba(249, 250, 251, 0.7) 60%,
-                rgba(255, 255, 255, 0.9) 80%,
-                rgba(255, 255, 255, 1) 100%
-            );
-            pointer-events: none;
-            z-index: 1;
-        }
-
-        .badge-custom {
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            color: white;
-            padding: 0.6rem 1.5rem;
-            border-radius: 50px;
-            font-weight: 600;
-            font-size: 0.875rem;
-            letter-spacing: 0.5px;
-            display: inline-block;
-            margin-bottom: 1.5rem;
-            box-shadow: 0 4px 15px rgba(30, 64, 175, 0.2);
-        }
-
-        .hero-title {
-            font-weight: 800;
-            font-size: 3.75rem;
-            line-height: 1.1;
-            margin-bottom: 1.5rem;
-            color: var(--text-dark);
-            letter-spacing: -0.02em;
+        ::-webkit-scrollbar-thumb:hover {
+            background-color: #163b8a;
         }
         
-        .hero-highlight {
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+        .bg-hero-pattern {
+            background: linear-gradient(180deg, #f0f4fd 0%, #ffffff 100%);
         }
-
-        .hero-subtitle {
-            font-size: 1.25rem;
-            color: var(--text-muted);
-            margin-bottom: 2.5rem;
-            font-weight: 400;
-            line-height: 1.8;
-            max-width: 600px;
+        @keyframes vibrate {
+            0% { transform: rotate(0deg); }
+            5% { transform: rotate(10deg); }
+            10% { transform: rotate(-10deg); }
+            15% { transform: rotate(10deg); }
+            20% { transform: rotate(-10deg); }
+            25% { transform: rotate(0deg); }
+            100% { transform: rotate(0deg); }
         }
-
-        .btn-primary-custom {
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            border: none;
-            padding: 1rem 2.5rem;
-            font-weight: 600;
-            border-radius: 50px;
-            color: white;
-            transition: all 0.3s ease;
-            box-shadow: 0 10px 30px rgba(30, 64, 175, 0.3);
-            font-size: 1.05rem;
+        .animate-vibrate {
+            animation: vibrate 3s infinite;
         }
-
-        .btn-primary-custom:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 40px rgba(30, 64, 175, 0.4);
-            color: white;
-        }
-
-        .btn-outline-custom {
-            border: 2px solid var(--primary-color);
-            color: var(--primary-color);
-            padding: 1rem 2.5rem;
-            font-weight: 600;
-            border-radius: 50px;
-            background: white;
-            transition: all 0.3s ease;
-            font-size: 1.05rem;
-        }
-
-        .btn-outline-custom:hover {
-            background: var(--primary-color);
-            color: white;
-            transform: translateY(-3px);
-            box-shadow: 0 10px 30px rgba(30, 64, 175, 0.2);
-        }
-
-        /* Stats Section */
-        .stats-section {
-            background: white;
-            padding: 80px 0;
-            border-bottom: 1px solid var(--border-light);
-        }
-
-        .stat-card {
-            text-align: center;
-            padding: 2rem;
-        }
-
-        .stat-number {
-            font-size: 3rem;
-            font-weight: 800;
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 0.5rem;
-        }
-
-        .stat-label {
-            color: var(--text-muted);
-            font-weight: 500;
-            font-size: 1rem;
-        }
-
-        /* Section Styling */
-        .section-header {
-            text-align: center;
-            margin-bottom: 4rem;
-        }
-
-        .section-title {
-            font-weight: 800;
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-            color: var(--text-dark);
-            letter-spacing: -0.02em;
-        }
-
-        .section-subtitle {
-            color: var(--text-muted);
-            font-size: 1.125rem;
-            max-width: 700px;
-            margin: 0 auto;
-            line-height: 1.8;
-        }
-
-        /* Feature Cards */
-        .feature-card {
-            border: none;
-            border-radius: 20px;
-            padding: 3rem 2rem;
-            background: white;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            height: 100%;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .feature-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
-            transform: scaleX(0);
-            transition: transform 0.4s ease;
-        }
-
-        .feature-card:hover::before {
-            transform: scaleX(1);
-        }
-
-        .feature-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 50px rgba(30, 64, 175, 0.15);
-        }
-
-        .feature-icon {
-            width: 80px;
-            height: 80px;
-            border-radius: 20px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2rem;
-            margin-bottom: 1.5rem;
-            transition: all 0.3s ease;
-        }
-
-        .feature-card:hover .feature-icon {
-            transform: scale(1.1) rotate(5deg);
-        }
-
-        .icon-blue { 
-            background: linear-gradient(135deg, #dbeafe, #bfdbfe);
-            color: var(--primary-color);
-        }
-        
-        .icon-teal { 
-            background: linear-gradient(135deg, #d1fae5, #a7f3d0);
-            color: #059669;
-        }
-        
-        .icon-orange { 
-            background: linear-gradient(135deg, #fed7aa, #fdba74);
-            color: #ea580c;
-        }
-
-        .feature-title {
-            font-weight: 700;
-            margin-bottom: 1rem;
-            font-size: 1.375rem;
-            color: var(--text-dark);
-        }
-
-        .feature-desc {
-            color: var(--text-muted);
-            line-height: 1.8;
-            font-size: 1rem;
-        }
-
-        /* Contact Section */
-        .contact-section {
-            background: var(--bg-light);
-            padding: 100px 0;
-        }
-        
-        .contact-card {
-            background: white;
-            border-radius: 20px;
-            padding: 3rem 2.5rem;
-            text-align: center;
-            border: 2px solid var(--border-light);
-            transition: all 0.3s ease;
-            height: 100%;
-        }
-
-        .contact-card:hover {
-            border-color: var(--primary-color);
-            transform: translateY(-5px);
-            box-shadow: 0 15px 40px rgba(30, 64, 175, 0.1);
-        }
-
-        .contact-icon {
-            font-size: 3rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .contact-card h4 {
-            font-weight: 700;
-            margin-bottom: 0.75rem;
-            color: var(--text-dark);
-        }
-
-        .contact-card .contact-value {
-            font-weight: 700;
-            font-size: 1.25rem;
-            margin-top: 1rem;
-        }
-
-        .map-embed-container iframe {
-            width: 100% !important;
-            height: 100% !important;
-            min-height: 400px;
-        }
-
-        /* Footer */
-        .footer {
-            background: linear-gradient(135deg, #1e3a8a, #1e40af);
-            color: white;
-            padding: 80px 0 30px;
-        }
-        
-        .footer a {
-            color: rgba(255, 255, 255, 0.7);
-            text-decoration: none;
-            transition: color 0.2s;
-        }
-        
-        .footer a:hover {
-            color: white;
-        }
-
-        .footer h6 {
-            font-weight: 700;
-            margin-bottom: 1.5rem;
-            font-size: 1.125rem;
-        }
-
-        /* Animations */
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-20px); }
-        }
-
-        .floating-img {
-            animation: float 6s ease-in-out infinite;
-            filter: drop-shadow(0 20px 40px rgba(0,0,0,0.1));
-        }
-
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .fade-in-up {
-            animation: fadeInUp 0.8s ease-out;
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .navbar {
-                padding: 0.75rem 0;
-            }
-
-            .navbar-brand img {
-                height: 40px;
-            }
-
-            .btn-login, .btn-install {
-                padding: 0.6rem 1.2rem;
-                font-size: 0.85rem;
-            }
-            
-            .navbar .ms-auto {
-                display: flex;
-                align-items: center;
-                gap: 0.5rem !important;
-            }
-            .navbar .container {
-                display: flex !important;
-                flex-wrap: nowrap !important;
-                justify-content: space-between !important;
-            }
-            .navbar-brand img {
-                height: 55px; /* Diperbesar maksimal sesuai permintaan */
-                transition: transform 0.3s ease;
-            }.hero-section {
-                padding: 100px 0 60px;
-            }
-
-            .hero-title {
-                font-size: 2rem;
-                line-height: 1.2;
-            }
-
-            .hero-subtitle {
-                font-size: 1rem;
-                margin-bottom: 2rem;
-            }
-
-            .badge-custom {
-                font-size: 0.75rem;
-                padding: 0.5rem 1rem;
-            }
-
-            .btn-primary-custom,
-            .btn-outline-custom {
-                padding: 0.85rem 1.8rem;
-                font-size: 0.95rem;
-            }
-
-            .section-title {
-                font-size: 1.75rem;
-            }
-
-            .section-subtitle {
-                font-size: 1rem;
-            }
-
-            .stats-section {
-                padding: 60px 0;
-            }
-            
-            .stat-number {
-                font-size: 2.5rem;
-            }
-
-            .stat-label {
-                font-size: 0.9rem;
-            }
-
-            .navbar-brand {
-                padding: 0 !important;
-                margin-right: 0.25rem !important;
-            }
-
-            .navbar-brand img {
-                height: 24px; /* Lebih kecil lagi */
-                max-width: 90px; /* Batasi lebih ketat */
-                object-fit: contain;
-            }
-
-            .feature-card {
-                padding: 2rem 1.5rem;
-                margin-bottom: 1rem;
-            }
-
-            .feature-icon {
-                width: 65px;
-                height: 65px;
-                font-size: 1.75rem;
-            }
-
-            .feature-title {
-                font-size: 1.125rem;
-            }
-
-            .feature-desc {
-                font-size: 0.95rem;
-            }
-
-            .contact-section {
-                padding: 60px 0;
-            }
-
-            .contact-card {
-                padding: 2rem 1.5rem;
-                margin-bottom: 1rem;
-            }
-
-            .contact-icon {
-                font-size: 2.5rem;
-            }
-
-            .contact-card .contact-value {
-                font-size: 1.1rem;
-            }
-
-            .footer {
-                padding: 40px 0 30px;
-            }
-
-            .footer .row {
-                row-gap: 1.5rem !important;
-            }
-
-            .footer h6 {
-                font-size: 0.85rem;
-                margin-top: 0.5rem;
-                margin-bottom: 0.5rem;
-                font-weight: 700;
-            }
-
-            .footer .footer-logo-section {
-                margin-bottom: 0;
-                text-align: center;
-            }
-
-            .footer .footer-logo-section .d-flex {
-                flex-direction: column !important;
-                align-items: center !important;
-                gap: 0.75rem;
-                margin-bottom: 0.75rem !important;
-            }
-
-            .footer .footer-logo-section img {
-                margin-right: 0 !important;
-                height: 35px !important;
-            }
-
-            .footer .footer-logo-section h5 {
-                font-size: 0.9rem;
-                text-align: center;
-            }
-
-            .footer .footer-logo-section p {
-                font-size: 0.8rem;
-                margin-bottom: 0;
-            }
-
-            /* 3 kolom horizontal untuk Tautan, Layanan, Alamat */
-            .footer .col-4 {
-                text-align: left;
-                padding-left: 0.5rem;
-                padding-right: 0.5rem;
-            }
-
-            .footer ul {
-                padding-left: 0;
-                margin-bottom: 0;
-            }
-
-            .footer ul li {
-                margin-bottom: 0.4rem !important;
-            }
-
-            .footer ul li:last-child {
-                margin-bottom: 0 !important;
-            }
-
-            .footer ul li a {
-                font-size: 0.8rem;
-            }
-
-            .footer .footer-address {
-                font-size: 0.75rem;
-                margin-bottom: 0;
-                line-height: 1.6 !important;
-            }
-
-            .floating-img {
-                max-width: 100% !important;
-                margin-top: 2rem;
-            }
-
-            /* Stack buttons vertically on very small screens */
-            @media (max-width: 480px) {
-                .hero-title {
-                    font-size: 1.75rem;
-                }
-
-                .d-flex.gap-3 {
-                    flex-direction: column;
-                    gap: 0.75rem !important;
-                }
-
-                .btn-primary-custom,
-                .btn-outline-custom {
-                    width: 100%;
-                    text-align: center;
-                }
-
-                .stat-number {
-                    font-size: 2rem;
-                }
-            }
-        }
-
-        /* Expandable Floating WhatsApp Menu */
-        .wa-menu-container {
-                position: fixed;
-                bottom: 20px;
-                right: 20px;
-                z-index: 1000;
-                display: flex;
-                flex-direction: column;
-                align-items: flex-end;
-                gap: 8px;
-                pointer-events: none; /* Make container click-through */
-            }
-
-            .wa-main-btn {
-                pointer-events: auto; /* Button itself captures clicks */
-            }
-
-            .wa-options {
-                display: flex;
-                flex-direction: column;
-                align-items: flex-end;
-                gap: 8px;
-                visibility: hidden;
-                opacity: 0;
-                transform: translateY(20px);
-                transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-                pointer-events: none;
-            }
-
-            .wa-menu-container.active .wa-options {
-                visibility: visible;
-                opacity: 1;
-                transform: translateY(0);
-                pointer-events: auto;
-            }
-            
-            /* Only allow hover behavior on desktop */
-            @media (min-width: 992px) {
-                .wa-menu-container:hover .wa-options {
-                    visibility: visible;
-                    opacity: 1;
-                    transform: translateY(0);
-                    pointer-events: auto;
-                }
-            }
-
-            .wa-option-item {
-                display: flex;
-                align-items: center;
-                gap: 12px;
-                text-decoration: none;
-                transition: transform 0.3s ease;
-            }
-
-            .wa-option-item:hover {
-                transform: translateX(-5px);
-            }
-
-            .wa-label {
-                background: white;
-                color: #333;
-                padding: 6px 15px;
-                border-radius: 20px;
-                font-size: 13px;
-                font-weight: 700;
-                box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-                white-space: nowrap;
-                border: 1px solid #eee;
-            }
-
-            .wa-icon-btn {
-                width: 55px;
-                height: 55px;
-                border-radius: 50%;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                font-size: 25px;
-                color: white;
-                box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-            }
-
-            .bg-cs { background: #3b82f6; } /* Blue */
-            .bg-maint { background: #f59e0b; } /* Orange */
-            .bg-order { background: #10b981; } /* Emerald */
-
-            .wa-main-btn {
-                width: 70px;
-                height: 70px;
-                background-color: #25d366;
-                color: white;
-                border-radius: 50%;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                font-size: 35px;
-                box-shadow: 0 6px 20px rgba(37, 211, 102, 0.4);
-                cursor: pointer;
-                transition: all 0.4s ease;
-                border: none;
-            }
-
-            .wa-menu-container.active .wa-main-btn {
-                transform: rotate(135deg);
-                background-color: #ef4444; /* Red to indicate "Close" */
-                box-shadow: 0 6px 20px rgba(239, 68, 68, 0.4);
-            }
-
-            @media (min-width: 992px) {
-                .wa-menu-container:hover .wa-main-btn {
-                    transform: rotate(135deg);
-                    background-color: #ef4444;
-                    box-shadow: 0 6px 20px rgba(239, 68, 68, 0.4);
-                }
-            }
-
-            .wa-menu-container.active .wa-main-btn i::before {
-                content: "\f62a"; /* x-lg icon if using bi */
-            }
-
-            @media (min-width: 992px) {
-                .wa-menu-container:hover .wa-main-btn i::before {
-                    content: "\f62a";
-                }
-            }
-
-            /* Periodic Pulse & Shake Animation */
-            .wa-main-btn {
-                animation: wa-zoom-shake 5s infinite;
-            }
-
-            @keyframes wa-zoom-shake {
-                0%, 80%, 100% { transform: scale(1) rotate(0); }
-                82% { transform: scale(1.2) rotate(5deg); }
-                84% { transform: scale(1.2) rotate(-5deg); }
-                86% { transform: scale(1.2) rotate(5deg); }
-                88% { transform: scale(1.2) rotate(-5deg); }
-                90% { transform: scale(1.1) rotate(0); }
-            }
-
-            @media (max-width: 768px) {
-                .wa-menu-container {
-                    bottom: 20px;
-                    right: 20px;
-                }
-                .wa-main-btn {
-                    width: 60px;
-                    height: 60px;
-                    font-size: 30px;
-                }
-                .wa-icon-btn {
-                    width: 50px;
-                    height: 50px;
-                    font-size: 22px;
-                }
-            }
     </style>
 </head>
-<body>
+<body class="antialiased text-gray-800 bg-white">
 
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg fixed-top">
-        <div class="container">
-            <a class="navbar-brand" href="#">
-                <img src="{{ asset('assets/images/hp-logo.png') }}" alt="Logo RNS" class="d-inline-block align-text-top">
-            </a>
-            <div class="ms-auto d-flex align-items-center gap-2">
-                <button id="btnInstallPwa" class="btn btn-install" style="display: none;">
-                    <i class="bi bi-download me-1"></i> <span class="d-none d-md-inline">Install </span>App
-                </button>
-                <a href="{{ route('login') }}" class="btn btn-login">
-                    <i class="bi bi-box-arrow-in-right me-2"></i>Login
-                </a>
+    <nav class="fixed w-full z-50 bg-white/90 backdrop-blur-md border-b border-gray-100 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="relative flex justify-end md:justify-between items-center h-20">
+                <!-- Logo -->
+                <div class="absolute left-1/2 -translate-x-1/2 md:static md:translate-x-0 flex-shrink-0 flex items-center">
+                    <img class="h-12 w-auto" src="{{ asset('assets/images/hp-logo.png') }}" alt="PT. RAND" onerror="this.src='https://ui-avatars.com/api/?name=PT+RAND&background=0D8ABC&color=fff&size=150'">
+                </div>
+                
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex space-x-8">
+                    <a href="#beranda" class="nav-link text-brand-blue font-semibold border-b-2 border-brand-blue py-1 text-sm transition">Beranda</a>
+                    <a href="#produk" class="nav-link text-gray-500 hover:text-brand-blue font-medium border-b-2 border-transparent py-1 text-sm transition">Produk</a>
+                    <a href="#kontak" class="nav-link text-gray-500 hover:text-brand-blue font-medium border-b-2 border-transparent py-1 text-sm transition">Kontak</a>
+                </div>
+
+                <!-- CTA Button -->
+                <div class="hidden md:flex items-center space-x-4">
+                    <button id="install-pwa-btn-desktop" class="inline-flex items-center justify-center px-4 py-2 border border-brand-blue rounded-full shadow-sm text-sm font-semibold text-brand-blue hover:bg-brand-blue hover:text-white transition-colors">
+                        <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                        Install App
+                    </button>
+                    <a href="{{ route('login') }}" class="inline-flex items-center justify-center px-6 py-2.5 border border-transparent rounded-full shadow-sm text-sm font-semibold text-white bg-brand-dark hover:bg-brand-blue transition-colors">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                        Login
+                    </a>
+                </div>
+                <!-- Mobile menu button -->
+                <div class="flex md:hidden items-center">
+                    <button type="button" id="mobile-menu-button" class="text-gray-500 hover:text-brand-blue focus:outline-none focus:text-brand-blue p-2">
+                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path id="menu-icon-open" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                            <path id="menu-icon-close" class="hidden" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-b border-gray-100 shadow-lg">
+            <div class="px-4 pt-2 pb-6 space-y-2 sm:px-6">
+                <a href="#beranda" class="nav-link-mobile block px-3 py-2 text-brand-blue font-semibold text-base border-l-4 border-brand-blue bg-blue-50 transition">Beranda</a>
+                <a href="#produk" class="nav-link-mobile block px-3 py-2 text-gray-500 hover:text-brand-blue hover:bg-blue-50 font-medium text-base border-l-4 border-transparent transition">Produk</a>
+                <a href="#kontak" class="nav-link-mobile block px-3 py-2 text-gray-500 hover:text-brand-blue hover:bg-blue-50 font-medium text-base border-l-4 border-transparent transition">Kontak</a>
+                
+                <div class="pt-4 pb-2 space-y-3">
+                    <button id="install-pwa-btn-mobile" class="flex items-center justify-center w-full px-6 py-2.5 border border-brand-blue rounded-full shadow-sm text-sm font-semibold text-brand-blue bg-white hover:bg-brand-blue hover:text-white transition-colors">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                        Install App
+                    </button>
+                    <a href="{{ route('login') }}" class="flex items-center justify-center w-full px-6 py-2.5 border border-transparent rounded-full shadow-sm text-sm font-semibold text-white bg-brand-dark hover:bg-brand-blue transition-colors">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                        Login
+                    </a>
+                </div>
             </div>
         </div>
     </nav>
 
     <!-- Hero Section -->
-    <section class="hero-section">
-        <div class="container position-relative" style="z-index: 2;">
-            <div class="row align-items-center">
-                <!-- Text Content - Order 1 on mobile, Order 1 on desktop -->
-                <div class="col-lg-6 order-1 order-lg-1 fade-in-up">
-                    <span class="badge-custom">
-                        <i class="bi bi-shield-check me-2"></i>Distributor Resmi & Terpercaya
-                    </span>
-                    <h1 class="hero-title">
-                        {{ setting('hero_title_1', 'Solusi Profesional') }}<br>
-                        <span class="hero-highlight">{{ setting('hero_title_2', 'Alat Kesehatan Radiologi') }}</span>
+    <div id="beranda" class="relative bg-cover bg-right lg:bg-center bg-no-repeat pt-32 pb-24 lg:pt-40 lg:pb-32 overflow-hidden" style="background-image: url('{{ setting('hero_image_1') ? Storage::url(setting('hero_image_1')) : asset('assets/images/background_lp.png') }}');">
+        <!-- Overlay (Solid/Transparent on mobile, Gradient on desktop) -->
+        <div class="absolute inset-0 bg-white/90 lg:bg-transparent lg:bg-gradient-to-r lg:from-white/95 lg:via-white/80 lg:to-transparent"></div>
+        
+        <!-- Gradient Overlay (Bottom to Top for Seamless Transition) -->
+        <div class="absolute inset-x-0 -bottom-2 h-64 bg-gradient-to-t from-white via-white/95 to-transparent"></div>
+        <div class="absolute inset-x-0 bottom-0 h-4 bg-white"></div>
+        
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="lg:grid lg:grid-cols-12 lg:gap-8 items-center">
+                <div class="text-center md:max-w-2xl md:mx-auto lg:col-span-7 lg:text-left">
+                    <p class="text-xs font-bold tracking-widest text-brand-blue uppercase mb-4">Solusi Kesehatan Terpercaya</p>
+                    <h1 class="text-4xl tracking-tight font-extrabold text-brand-dark sm:text-5xl md:text-6xl lg:text-5xl xl:text-6xl leading-tight">
+                        {{ setting('hero_title_1', 'Solusi Profesional') }} <span class="text-brand-blue">{{ setting('hero_title_2', 'Alat Kesehatan Radiologi') }}</span>
                     </h1>
-                    <p class="hero-subtitle">
+                    <p class="mt-6 text-base text-gray-700 sm:text-lg lg:text-xl lg:max-w-xl">
                         {{ setting('hero_subtitle', 'Partner terpercaya untuk kebutuhan peralatan medis radiologi Anda. Kami menyediakan produk berkualitas tinggi dengan layanan konsultasi profesional untuk rumah sakit dan fasilitas kesehatan.') }}
                     </p>
-                    <!-- Buttons on desktop only -->
-                    <div class="d-none d-lg-flex gap-3 flex-wrap">
-                        <a href="#contact" class="btn btn-primary-custom">
-                            <i class="bi bi-whatsapp me-2"></i>Hubungi Kami
+                    <div class="mt-8 sm:max-w-lg sm:mx-auto lg:mx-0 flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+                        <a href="#produk" class="inline-flex items-center justify-center px-8 py-3.5 border border-transparent text-base font-semibold rounded-full text-white bg-brand-dark hover:bg-brand-blue transition-colors shadow-lg">
+                            Lihat Produk
+                            <svg class="ml-2 -mr-1 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
                         </a>
-                        <a href="#products" class="btn btn-outline-custom">
-                            Lihat Produk <i class="bi bi-arrow-right ms-2"></i>
-                        </a>
-                    </div>
-                </div>
-                
-                <!-- Image - Carousel on mobile and desktop -->
-                <div class="col-lg-6 text-center order-2 order-lg-2 mb-4 mb-lg-0">
-                    <style>
-                        #heroCarousel .carousel-item {
-                            transition: transform 2s ease-in-out, opacity 2s ease-in-out;
-                        }
-                        #heroCarousel .carousel-fade .active.carousel-item-start,
-                        #heroCarousel .carousel-fade .active.carousel-item-end {
-                            transition: opacity 0s 2s; /* delays hiding until new one is fully visible */
-                        }
-                    </style>
-                    <div id="heroCarousel" class="carousel slide carousel-fade floating-img" data-bs-ride="carousel" data-bs-interval="4000" style="max-width: 85%; margin: 0 auto;">
-                        <div class="carousel-inner">
-                            @php
-                                $hero_images = [];
-                                if (setting('hero_image_1'))
-                                    $hero_images[] = setting('hero_image_1');
-                                if (setting('hero_image_2'))
-                                    $hero_images[] = setting('hero_image_2');
-                                if (setting('hero_image_3'))
-                                    $hero_images[] = setting('hero_image_3');
-                            @endphp
-
-                            @if(count($hero_images) > 0)
-                                @foreach($hero_images as $index => $img)
-                                    <div class="carousel-item {{ $index === 0 ? 'active' : '' }}">
-                                        <img src="{{ Storage::url($img) }}" class="d-block w-100 img-fluid" alt="Hero Image {{ $index + 1 }}" style="border-radius: 16px;">
-                                    </div>
-                                @endforeach
-                            @else
-                                <div class="carousel-item active">
-                                    <img src="{{ asset('assets/images/TaeAugust19.jpg') }}" class="d-block w-100 img-fluid" alt="Medical Equipment" style="border-radius: 16px;">
-                                </div>
-                            @endif
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Buttons on mobile only - Order 3 -->
-                <div class="col-12 d-lg-none order-3">
-                    <div class="d-flex gap-3 flex-wrap">
-                        <a href="#contact" class="btn btn-primary-custom">
-                            <i class="bi bi-whatsapp me-2"></i>Hubungi Kami
-                        </a>
-                        <a href="#products" class="btn btn-outline-custom">
-                            Lihat Produk <i class="bi bi-arrow-right ms-2"></i>
+                        <a href="#" class="inline-flex items-center justify-center px-8 py-3.5 border border-gray-200 text-base font-semibold rounded-full text-gray-700 bg-white/90 hover:bg-white transition-colors shadow-sm backdrop-blur-sm">
+                            Konsultasi Gratis
+                            <svg class="ml-2 -mr-1 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
                         </a>
                     </div>
                 </div>
             </div>
         </div>
-    </section>
-
-    <!-- Stats Section -->
-    <section class="stats-section">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-4">
-                    <div class="stat-card">
-                        <div class="stat-number" data-target="{{ setting('stat_years', '3') }}">0</div>
-                        <div class="stat-label">Tahun Pengalaman</div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="stat-card">
-                        <div class="stat-number" data-target="{{ setting('stat_clients', '500') }}">0</div>
-                        <div class="stat-label">Klien Terlayani</div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="stat-card">
-                        <div class="stat-number" data-target="{{ setting('stat_products', '100') }}">0</div>
-                        <div class="stat-label">Produk Bergaransi</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+    </div>
 
     <!-- Features Section -->
-    <section id="products" class="py-5 bg-white">
-        <div class="container py-5">
-            <div class="section-header">
-                <h2 class="section-title">Mengapa Memilih Kami?</h2>
-                <p class="section-subtitle">
-                    Kami berkomitmen memberikan solusi terbaik dengan standar kualitas internasional dan layanan purna jual yang komprehensif.
-                </p>
-            </div>
-            
-            <div class="row g-4">
-                <div class="col-md-4">
-                    <div class="feature-card">
-                        <div class="feature-icon icon-blue">
-                            <i class="bi bi-hospital"></i>
+    <div class="relative -mt-12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 z-10">
+        <div class="bg-white rounded-2xl shadow-xl border border-gray-100 p-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <!-- Feature 1 -->
+                <div class="flex items-start">
+                    <div class="flex-shrink-0">
+                        <div class="flex items-center justify-center h-12 w-12 rounded-full bg-blue-50 text-brand-blue">
+                            <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"></path></svg>
                         </div>
-                        <h3 class="feature-title">{{ setting('feature_1_title', 'Peralatan Medis Lengkap') }}</h3>
-                        <p class="feature-desc">
-                            {{ setting('feature_1_desc', 'Menyediakan berbagai jenis alat kesehatan radiologi dan umum dari brand terkemuka dengan teknologi terkini.') }}
-                        </p>
+                    </div>
+                    <div class="ml-4">
+                        <h3 class="text-sm font-bold text-brand-dark">{{ setting('feature_1_title', 'Peralatan Medis Lengkap') }}</h3>
+                        <p class="mt-1 text-xs text-gray-500">{{ setting('feature_1_desc', 'Menyediakan berbagai jenis alat kesehatan radiologi dan umum dari brand terkemuka dengan teknologi terkini.') }}</p>
                     </div>
                 </div>
-
-                <div class="col-md-4">
-                    <div class="feature-card">
-                        <div class="feature-icon icon-teal">
-                            <i class="bi bi-shield-check"></i>
+                <!-- Feature 2 -->
+                <div class="flex items-start">
+                    <div class="flex-shrink-0">
+                        <div class="flex items-center justify-center h-12 w-12 rounded-full bg-blue-50 text-brand-blue">
+                            <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
                         </div>
-                        <h3 class="feature-title">{{ setting('feature_2_title', 'Terstandarisasi & Berizin') }}</h3>
-                        <p class="feature-desc">
-                            {{ setting('feature_2_desc', 'Seluruh produk memiliki izin edar resmi dan memenuhi standar keselamatan Kementerian Kesehatan RI.') }}
-                        </p>
+                    </div>
+                    <div class="ml-4">
+                        <h3 class="text-sm font-bold text-brand-dark">{{ setting('feature_2_title', 'Terstandarisasi & Berizin') }}</h3>
+                        <p class="mt-1 text-xs text-gray-500">{{ setting('feature_2_desc', 'Seluruh produk memiliki izin edar resmi dan memenuhi standar keselamatan Kementerian Kesehatan RI.') }}</p>
                     </div>
                 </div>
-
-                <div class="col-md-4">
-                    <div class="feature-card">
-                        <div class="feature-icon icon-orange">
-                            <i class="bi bi-headset"></i>
+                <!-- Feature 3 -->
+                <div class="flex items-start">
+                    <div class="flex-shrink-0">
+                        <div class="flex items-center justify-center h-12 w-12 rounded-full bg-blue-50 text-brand-blue">
+                            <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 11V9a6 6 0 00-12 0v2M5 11h2a2 2 0 012 2v3a2 2 0 01-2 2H5a2 2 0 01-2-2v-3a2 2 0 012-2zm12 0h2a2 2 0 012 2v3a2 2 0 01-2 2h-2a2 2 0 01-2-2v-3a2 2 0 012-2zm-3 8H10"></path></svg>
                         </div>
-                        <h3 class="feature-title">{{ setting('feature_3_title', 'Layanan Purna Jual') }}</h3>
-                        <p class="feature-desc">
-                            {{ setting('feature_3_desc', 'Dukungan teknis 24/7, garansi resmi, dan maintenance berkala untuk performa optimal peralatan Anda.') }}
-                        </p>
+                    </div>
+                    <div class="ml-4">
+                        <h3 class="text-sm font-bold text-brand-dark">{{ setting('feature_3_title', 'Layanan Purna Jual') }}</h3>
+                        <p class="mt-1 text-xs text-gray-500">{{ setting('feature_3_desc', 'Dukungan teknis 24/7, garansi resmi, dan maintenance berkala untuk performa optimal peralatan Anda.') }}</p>
+                    </div>
+                </div>
+                <!-- Feature 4 -->
+                <div class="flex items-start">
+                    <div class="flex-shrink-0">
+                        <div class="flex items-center justify-center h-12 w-12 rounded-full bg-blue-50 text-brand-blue">
+                            <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0"></path>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="ml-4">
+                        <h3 class="text-sm font-bold text-brand-dark">{{ setting('feature_4_title', 'Pengiriman Cepat') }}</h3>
+                        <p class="mt-1 text-xs text-gray-500">{{ setting('feature_4_desc', 'Pengiriman aman dan cepat ke seluruh Indonesia.') }}</p>
                     </div>
                 </div>
             </div>
         </div>
-    </section>
+    </div>
 
-    <!-- Contact Section -->
-    <section id="contact" class="contact-section">
-        <div class="container">
-            <div class="section-header">
-                <h2 class="section-title">Hubungi Kami</h2>
-                <p class="section-subtitle">
-                    Tim profesional kami siap membantu kebutuhan alat kesehatan Anda. Konsultasikan kebutuhan fasilitas kesehatan Anda bersama kami.
+    <!-- Products Section -->
+    <div id="produk" class="pt-32 pb-24 bg-gradient-to-b from-white to-brand-light relative -mt-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="text-center">
+                <h2 class="text-xs font-bold text-brand-blue tracking-widest uppercase">Kategori Produk</h2>
+                <p class="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-brand-dark sm:text-4xl">
+                    Temukan Kebutuhan Alat Kesehatan Anda
+                </p>
+                <p class="mt-4 max-w-2xl text-sm text-gray-500 mx-auto">
+                    Kami menyediakan berbagai kategori alat kesehatan untuk memenuhi kebutuhan fasilitas medis, klinik, rumah sakit, hingga laboratorium.
                 </p>
             </div>
 
-            <div class="row g-4">
-                <!-- Informasi Kontak -->
-                <div class="col-lg-5">
-                    <div class="d-flex flex-column gap-4 h-100">
-                        @php
-                            // Bersihkan nomor wa agar cocok untuk url (hanya angka)
-                            $wa_raw = setting('contact_wa', '0852-8000-2289');
-                            $wa_clean = preg_replace('/[^0-9]/', '', $wa_raw);
-                            // Ubah 0 jadi 62 jika depan adalah 0
-                            if (str_starts_with($wa_clean, '0')) {
-                                $wa_clean = '62' . substr($wa_clean, 1);
+            <div class="mt-16 grid grid-cols-2 gap-6 sm:grid-cols-3 lg:grid-cols-6">
+                @if(isset($products) && $products->count() > 0)
+                    @foreach($products as $product)
+                    @php
+                        $displayImage = $product->foto_produk;
+                        if (!$displayImage && $product->barangMasuks && $product->barangMasuks->count() > 0) {
+                            foreach($product->barangMasuks as $bm) {
+                                $imgs = is_string($bm->images) ? json_decode($bm->images, true) : $bm->images;
+                                if (is_string($imgs)) $imgs = json_decode($imgs, true);
+                                if(is_array($imgs) && count($imgs) > 0) {
+                                    $displayImage = $imgs[0];
+                                    break;
+                                }
                             }
-                        @endphp
-                        <a href="https://wa.me/{{ $wa_clean }}" target="_blank" class="text-decoration-none h-100">
-                            <div class="contact-card h-100 d-flex flex-column justify-content-center align-items-center">
-                                <i class="bi bi-whatsapp contact-icon text-success"></i>
-                                <h4>WhatsApp</h4>
-                                <p class="text-muted mb-0">Chat langsung untuk respons cepat</p>
-                                <p class="contact-value text-success">{{ $wa_raw }}</p>
-                            </div>
+                        }
+                    @endphp
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-lg transition-shadow duration-300 flex flex-col h-full overflow-hidden group">
+                        <div class="p-6 bg-gray-50 flex items-center justify-center h-40">
+                            @if($displayImage)
+                                <img src="{{ asset('storage/' . $displayImage) }}" alt="{{ $product->name }}" class="max-h-full max-w-full object-contain group-hover:scale-110 transition-transform duration-300">
+                            @else
+                                <!-- Placeholder if no image -->
+                                <img src="https://ui-avatars.com/api/?name={{ urlencode(substr($product->name, 0, 2)) }}&background=EBF4FF&color=1E3A8A&size=150&font-size=0.33" alt="{{ $product->name }}" class="h-24 w-24 rounded-full shadow-sm group-hover:scale-110 transition-transform duration-300">
+                            @endif
+                        </div>
+                        <div class="p-4 flex-grow flex flex-col justify-between text-center border-t border-gray-50">
+                            <h3 class="text-sm font-bold text-gray-900 mb-4 line-clamp-2">{{ $product->name }}</h3>
+                            <a href="#" class="inline-flex items-center justify-center text-xs font-semibold text-brand-blue hover:text-brand-dark transition-colors">
+                                Hubungi Kami
+                                <svg class="ml-1 w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                            </a>
+                        </div>
+                    </div>
+                    @endforeach
+                @else
+                    <!-- Dummy Data if no products in database -->
+                    @php
+                        $dummyCategories = ['Alat Diagnostik', 'Alat Bedah', 'Alat Monitoring', 'Alat Laboratorium', 'Alat Rehabilitasi', 'Sterilisasi'];
+                    @endphp
+                    @foreach($dummyCategories as $cat)
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-lg transition-shadow duration-300 flex flex-col h-full overflow-hidden group">
+                        <div class="p-6 bg-gray-50 flex items-center justify-center h-40">
+                            <img src="https://ui-avatars.com/api/?name={{ urlencode(substr($cat, 5, 2)) }}&background=EBF4FF&color=1E3A8A&size=150" alt="{{ $cat }}" class="h-24 w-24 rounded-full shadow-sm group-hover:scale-110 transition-transform duration-300">
+                        </div>
+                        <div class="p-4 flex-grow flex flex-col justify-between text-center border-t border-gray-50">
+                            <h3 class="text-sm font-bold text-gray-900 mb-4">{{ $cat }}</h3>
+                            <a href="#" class="inline-flex items-center justify-center text-xs font-semibold text-brand-blue hover:text-brand-dark transition-colors">
+                                Hubungi Kami
+                                <svg class="ml-1 w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                            </a>
+                        </div>
+                    </div>
+                    @endforeach
+                @endif
+            </div>
+        </div>
+    </div>
+
+    <!-- Stats Section -->
+    <div class="bg-brand-dark">
+        <div class="max-w-7xl mx-auto py-10 lg:py-16 px-4 sm:py-20 sm:px-6 lg:px-8">
+            <div class="text-center mb-8 lg:mb-12">
+                <h2 class="text-xl lg:text-2xl font-bold text-white tracking-wide">Dipercaya oleh Ribuan Fasilitas Kesehatan</h2>
+            </div>
+            <div class="grid grid-cols-2 gap-4 sm:gap-8 md:grid-cols-4 text-center">
+                <div class="flex flex-col items-center">
+                    <svg class="h-8 w-8 lg:h-10 lg:w-10 text-white opacity-80 mb-2 lg:mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
+                    <p class="text-3xl lg:text-4xl font-extrabold text-white">{{ setting('stat_1_value', '2.500+') }}</p>
+                    <p class="mt-1 lg:mt-2 text-xs lg:text-sm font-medium text-blue-200">{{ setting('stat_1_label', 'Fasilitas Kesehatan') }}</p>
+                </div>
+                <div class="flex flex-col items-center">
+                    <svg class="h-8 w-8 lg:h-10 lg:w-10 text-white opacity-80 mb-2 lg:mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+                    <p class="text-3xl lg:text-4xl font-extrabold text-white">{{ setting('stat_2_value', '10.000+') }}</p>
+                    <p class="mt-1 lg:mt-2 text-xs lg:text-sm font-medium text-blue-200">{{ setting('stat_2_label', 'Produk Terjual') }}</p>
+                </div>
+                <div class="flex flex-col items-center">
+                    <svg class="h-8 w-8 lg:h-10 lg:w-10 text-white opacity-80 mb-2 lg:mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                    <p class="text-3xl lg:text-4xl font-extrabold text-white">{{ setting('stat_3_value', '98%') }}</p>
+                    <p class="mt-1 lg:mt-2 text-xs lg:text-sm font-medium text-blue-200">{{ setting('stat_3_label', 'Kepuasan Pelanggan') }}</p>
+                </div>
+                <div class="flex flex-col items-center">
+                    <svg class="h-8 w-8 lg:h-10 lg:w-10 text-white opacity-80 mb-2 lg:mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zM12 12h.01"></path></svg>
+                    <p class="text-3xl lg:text-4xl font-extrabold text-white">{{ setting('stat_4_value', '24/7') }}</p>
+                    <p class="mt-1 lg:mt-2 text-xs lg:text-sm font-medium text-blue-200">{{ setting('stat_4_label', 'Layanan Support') }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Brands Section -->
+    <div class="bg-white py-12 border-b border-gray-100 overflow-hidden">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <p class="text-center text-sm font-semibold uppercase text-gray-500 tracking-wider mb-8">
+                Brand Global Terpercaya
+            </p>
+        </div>
+        
+        <style>
+            @keyframes scroll-marquee {
+                0% { transform: translateX(0); }
+                100% { transform: translateX(-50%); }
+            }
+            .animate-scroll-marquee {
+                animation: scroll-marquee 20s linear infinite;
+            }
+            .animate-scroll-marquee:hover {
+                animation-play-state: paused;
+            }
+        </style>
+        
+        <div class="relative flex overflow-hidden w-full group">
+            <!-- Fade overlays to make it look smooth -->
+            <div class="absolute left-0 top-0 bottom-0 w-16 bg-gradient-to-r from-white to-transparent z-10"></div>
+            <div class="absolute right-0 top-0 bottom-0 w-16 bg-gradient-to-l from-white to-transparent z-10"></div>
+            
+            <div class="flex w-max animate-scroll-marquee items-center">
+                <!-- Group 1 -->
+                <div class="flex items-center gap-16 md:gap-24 px-8 md:px-12">
+                    <h3 class="text-2xl font-black text-red-600">mindray</h3>
+                    <h3 class="text-2xl font-black text-blue-800">OMRON</h3>
+                    <h3 class="text-2xl font-black text-blue-500">Dräger</h3>
+                    <h3 class="text-2xl font-black text-blue-600">PHILIPS</h3>
+                    <h3 class="text-xl font-bold text-orange-500 text-center">SIEMENS<br><span class="text-sm">Healthineers</span></h3>
+                    <h3 class="text-2xl font-bold text-purple-700">GE Healthcare</h3>
+                </div>
+                
+                <!-- Group 2 (Duplicate for seamless loop) -->
+                <div class="flex items-center gap-16 md:gap-24 px-8 md:px-12">
+                    <h3 class="text-2xl font-black text-red-600">mindray</h3>
+                    <h3 class="text-2xl font-black text-blue-800">OMRON</h3>
+                    <h3 class="text-2xl font-black text-blue-500">Dräger</h3>
+                    <h3 class="text-2xl font-black text-blue-600">PHILIPS</h3>
+                    <h3 class="text-xl font-bold text-orange-500 text-center">SIEMENS<br><span class="text-sm">Healthineers</span></h3>
+                    <h3 class="text-2xl font-bold text-purple-700">GE Healthcare</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CTA & Location Section -->
+    <div id="kontak" class="bg-brand-dark py-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                
+                <!-- CTA Text & Contact Info -->
+                <div class="text-center lg:text-left">
+                    <h2 class="text-3xl font-extrabold text-white mb-4 leading-tight">Butuh Solusi yang Tepat<br>untuk Fasilitas Kesehatan Anda?</h2>
+                    <p class="text-blue-200 text-base mb-8 max-w-lg mx-auto lg:mx-0">Tim kami siap membantu Anda menemukan produk terbaik sesuai kebutuhan. Konsultasi gratis sekarang!</p>
+                    
+                    @php
+                        $waNumber = setting('contact_wa', '085280002289');
+                        $cleanWa = preg_replace('/[^0-9]/', '', $waNumber);
+                        if (substr($cleanWa, 0, 1) == '0') {
+                            $cleanWa = '62' . substr($cleanWa, 1);
+                        }
+                    @endphp
+                    <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start mb-8">
+                        <a href="https://wa.me/{{ $cleanWa }}" target="_blank" class="inline-flex items-center justify-center px-8 py-3.5 border border-transparent text-sm font-bold rounded-full text-brand-dark bg-white hover:bg-gray-50 transition-colors shadow-lg">
+                            <svg class="w-5 h-5 mr-2 text-green-500" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg>
+                            Konsultasi Gratis
                         </a>
-                        
-                        @php $email = setting('company_email', 'rand.sejahtera25@gmail.com'); @endphp
-                        <a href="mailto:{{ $email }}" class="text-decoration-none h-100">
-                            <div class="contact-card h-100 d-flex flex-column justify-content-center align-items-center">
-                                <i class="bi bi-envelope contact-icon text-primary"></i>
-                                <h4>Email</h4>
-                                <p class="text-muted mb-0">Kirim permintaan penawaran resmi</p>
-                                <p class="contact-value text-primary">{{ $email }}</p>
-                            </div>
+                        <a href="mailto:{{ setting('company_email', 'rand.sejahtera25@gmail.com') }}" class="inline-flex items-center justify-center px-8 py-3.5 border border-blue-400 text-sm font-bold rounded-full text-white bg-blue-600 hover:bg-blue-700 transition-colors shadow-lg">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                            {{ setting('company_email', 'rand.sejahtera25@gmail.com') }}
                         </a>
                     </div>
                 </div>
 
                 <!-- Google Maps Embed -->
-                <div class="col-lg-7">
-                    <div class="contact-card p-0 overflow-hidden h-100 map-embed-container" style="min-height: 400px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.08);">
-                        {!! setting('contact_map', '<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d294.85188397023!2d106.2361296994999!3d-6.12555160450554!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e41f5004d9468f5%3A0xdf1342efde753632!2sPT%20Rand%20Nusantara%20Sejahtera!5e0!3m2!1sid!2sid!4v1776351251076!5m2!1sid!2sid" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>') !!}
-                    </div>
+                <div class="h-72 w-full rounded-2xl overflow-hidden shadow-2xl border-4 border-white/10">
+                    {!! setting('contact_map', '<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1983.5188157016973!2d106.23525822104469!3d-6.125638377002207!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e41f5004d9468f5%3A0xdf1342efde753632!2sPT%20Rand%20Nusantara%20Sejahtera!5e0!3m2!1sid!2sid!4v1784476443455!5m2!1sid!2sid" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>') !!}
                 </div>
+                
             </div>
         </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="container">
-            <div class="row gy-4">
-                <div class="col-lg-4 col-12 footer-logo-section">
-                    <div class="d-flex align-items-center mb-3">
-                        <img src="{{ asset('assets/images/hp-logo.png') }}" alt="Logo RNS" height="45" class="me-3 bg-white rounded p-2">
-                        <h5 class="mb-0 fw-bold">PT. Rand Nusantara Sejahtera</h5>
-                    </div>
-                    <p style="color: rgba(255, 255, 255, 0.8); line-height: 1.8;">
-                        {{ setting('footer_desc', 'Mitra terpercaya dalam penyediaan alat kesehatan radiologi berkualitas untuk menunjang pelayanan kesehatan Indonesia.') }}
-                    </p>
-                </div>
-                <div class="col-lg-2 offset-lg-1 col-4">
-                    <h6>Tautan</h6>
-                    <ul class="list-unstyled">
-                        <li class="mb-2"><a href="#">Beranda</a></li>
-                        <li class="mb-2"><a href="#products">Produk</a></li>
-                        <li class="mb-2"><a href="#contact">Kontak</a></li>
-                        <li><a href="{{ route('login') }}">Login Staff</a></li>
-                    </ul>
-                </div>
-                <div class="col-lg-2 col-4">
-                    <h6>Layanan</h6>
-                    <ul class="list-unstyled">
-                        <li class="mb-2"><a href="#">Alat Radiologi</a></li>
-                        <li class="mb-2"><a href="#">Konsultan Alkes</a></li>
-                        <li class="mb-2"><a href="#">Maintenance</a></li>
-                    </ul>
-                </div>
-                <div class="col-lg-3 col-4">
-                    <h6>Alamat & Kontak</h6>
-                    <p class="footer-address" style="color: rgba(255, 255, 255, 0.8); line-height: 1.8; font-size: 0.85rem;">
-                        {!! nl2br(e(setting('company_address', "Jl. Raya Serang - Jakarta Km. 6,5\nKepuren Residence, Kota Serang\nBanten - 42183"))) !!}
-                    </p>
-                    <p class="mt-3 mb-0" style="color: rgba(255, 255, 255, 0.8); font-size: 0.85rem;">
-                        <i class="bi bi-envelope me-2"></i> {{ setting('company_email', 'rand.sejahtera25@gmail.com') }}
-                    </p>
-                </div>
-            </div>
-            <hr style="border-color: rgba(255, 255, 255, 0.2); margin: 3rem 0 2rem;">
-            <div class="text-center" style="color: rgba(255, 255, 255, 0.7);">
-                <small>&copy; {{ date('Y') }} PT. Rand Nusantara Sejahtera. All rights reserved.</small>
-            </div>
-        </div>
-    </footer>
-
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    </div>
     
-    <!-- Expandable Floating WhatsApp -->
-    @php
-        $wa_raw_float = setting('contact_wa', '0852-8000-2289');
-        $wa_clean_float = preg_replace('/[^0-9]/', '', $wa_raw_float);
-        if (str_starts_with($wa_clean_float, '0')) {
-            $wa_clean_float = '62' . substr($wa_clean_float, 1);
-        }
-    @endphp
-    
-    <div class="wa-menu-container" id="waMenu">
-        <div class="wa-options">
-            <!-- Order -->
-            @php 
-                                $wa_order_label = setting('wa_order_label', 'Order Alkes');
-                $wa_order_text = rawurlencode(setting('wa_order_text', 'Halo RNS, saya ingin melakukan Pemesanan Alat...'));
-            @endphp
-            <a href="https://wa.me/{{ $wa_clean_float }}?text={{ $wa_order_text }}" target="_blank" class="wa-option-item">
-                <span class="wa-label">{{ $wa_order_label }}</span>
-                <div class="wa-icon-btn bg-order">
-                    <i class="bi bi-cart-plus"></i>
-                </div>
-            </a>
-            <!-- Maintenance -->
-            @php 
-                                $wa_maint_label = setting('wa_maint_label', 'Maintenance');
-                $wa_maint_text = rawurlencode(setting('wa_maint_text', 'Halo RNS, saya butuh layanan Maintenance/Perbaikan...'));
-            @endphp
-            <a href="https://wa.me/{{ $wa_clean_float }}?text={{ $wa_maint_text }}" target="_blank" class="wa-option-item">
-                <span class="wa-label">{{ $wa_maint_label }}</span>
-                <div class="wa-icon-btn bg-maint">
-                    <i class="bi bi-tools"></i>
-                </div>
-            </a>
+    <!-- Simple Footer -->
+    <div class="bg-gray-900 py-6 text-center px-4">
+        <p class="text-xs text-gray-500">&copy; {{ date('Y') }} {{ setting('hero_title_1', 'PT. RAND Nusantara Sejahtera') }}. All rights reserved.</p>
+    </div>
+
+    <!-- Floating WhatsApp Widget -->
+        <div class="fixed bottom-6 right-6 z-50 flex flex-col items-end">
+        <!-- Bubbles (Hidden by default, shown by translating up and fading in) -->
+        <div id="wa-menu" class="absolute bottom-16 right-0 flex flex-col gap-3 items-end pointer-events-none opacity-0 transition-all duration-300 translate-y-4 mb-2">
+            
             <!-- CS -->
-            @php 
-                                $wa_cs_label = setting('wa_cs_label', 'Hubungi CS');
-                $wa_cs_text = rawurlencode(setting('wa_cs_text', 'Halo RNS, saya ingin berkonsultasi dengan Customer Service...'));
-            @endphp
-            <a href="https://wa.me/{{ $wa_clean_float }}?text={{ $wa_cs_text }}" target="_blank" class="wa-option-item">
-                <span class="wa-label">{{ $wa_cs_label }}</span>
-                <div class="wa-icon-btn bg-cs">
-                    <i class="bi bi-headset"></i>
+            <a href="https://wa.me/{{ $cleanWa }}?text={{ urlencode(setting('wa_cs_text', 'Halo RNS, saya ingin bertanya tentang...')) }}" target="_blank" class="flex items-center gap-3 bg-white p-1.5 pl-4 rounded-full shadow-lg border border-gray-100 hover:bg-gray-50 transition-transform hover:scale-105">
+                <span class="text-xs font-semibold text-gray-700 whitespace-nowrap">{{ setting('wa_cs_label', 'Hubungi CS') }}</span>
+                <div class="bg-green-500 text-white p-2 rounded-full shadow-md">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg>
                 </div>
             </a>
+            
+            <!-- Maintenance -->
+            <a href="https://wa.me/{{ $cleanWa }}?text={{ urlencode(setting('wa_maint_text', 'Halo RNS, saya butuh layanan Maintenance/Perbaikan...')) }}" target="_blank" class="flex items-center gap-3 bg-white p-1.5 pl-4 rounded-full shadow-lg border border-gray-100 hover:bg-gray-50 transition-transform hover:scale-105">
+                <span class="text-xs font-semibold text-gray-700 whitespace-nowrap">{{ setting('wa_maint_label', 'Maintenance') }}</span>
+                <div class="bg-green-500 text-white p-2 rounded-full shadow-md">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg>
+                </div>
+            </a>
+
+            <!-- Order -->
+            <a href="https://wa.me/{{ $cleanWa }}?text={{ urlencode(setting('wa_order_text', 'Halo RNS, saya ingin melakukan Pemesanan Alat...')) }}" target="_blank" class="flex items-center gap-3 bg-white p-1.5 pl-4 rounded-full shadow-lg border border-gray-100 hover:bg-gray-50 transition-transform hover:scale-105">
+                <span class="text-xs font-semibold text-gray-700 whitespace-nowrap">{{ setting('wa_order_label', 'Order Alkes') }}</span>
+                <div class="bg-green-500 text-white p-2 rounded-full shadow-md">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg>
+                </div>
+            </a>
+            
         </div>
-        <button class="wa-main-btn" onclick="toggleWaMenu()">
-            <i class="bi bi-whatsapp"></i>
+
+        <!-- Main Button -->
+        <button id="wa-toggle-btn" class="relative bg-green-500 text-white rounded-full p-4 shadow-xl shadow-green-500/30 hover:bg-green-600 transition-all duration-300 flex items-center justify-center animate-vibrate z-10">
+            <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/>
+            </svg>
         </button>
     </div>
 
+    <!-- Script for mobile menu toggle -->
     <script>
-        function toggleWaMenu() {
-            const menu = document.getElementById('waMenu');
-            menu.classList.toggle('active');
-        }
+        document.addEventListener('DOMContentLoaded', () => {
+            // Mobile Menu Toggle
+            const btn = document.getElementById('mobile-menu-button');
+            const menu = document.getElementById('mobile-menu');
+            const iconOpen = document.getElementById('menu-icon-open');
+            const iconClose = document.getElementById('menu-icon-close');
 
-        // Close WhatsApp menu when clicking outside
-        document.addEventListener('click', function(event) {
-            const waMenu = document.getElementById('waMenu');
-            if (!waMenu) return;
+            if (btn) {
+                btn.addEventListener('click', () => {
+                    menu.classList.toggle('hidden');
+                    iconOpen.classList.toggle('hidden');
+                    iconClose.classList.toggle('hidden');
+                });
+            }
+
+            // WhatsApp Widget Toggle
+            const waToggleBtn = document.getElementById('wa-toggle-btn');
+            const waMenu = document.getElementById('wa-menu');
             
-            const isClickInside = waMenu.contains(event.target);
-
-            if (!isClickInside && waMenu.classList.contains('active')) {
-                waMenu.classList.remove('active');
+            if (waToggleBtn && waMenu) {
+                waToggleBtn.addEventListener('click', () => {
+                    waMenu.classList.toggle('opacity-0');
+                    waMenu.classList.toggle('pointer-events-none');
+                    waMenu.classList.toggle('translate-y-4');
+                    waToggleBtn.classList.toggle('animate-vibrate');
+                });
+                
+                document.addEventListener('click', (e) => {
+                    if (!waToggleBtn.contains(e.target) && !waMenu.contains(e.target)) {
+                        waMenu.classList.add('opacity-0', 'pointer-events-none', 'translate-y-4');
+                        waToggleBtn.classList.add('animate-vibrate');
+                    }
+                });
             }
-        });
-        // Navbar scroll effect
-        window.addEventListener('scroll', function() {
-            const navbar = document.querySelector('.navbar');
-            if (window.scrollY > 50) {
-                navbar.classList.add('scrolled');
-            } else {
-                navbar.classList.remove('scrolled');
-            }
-        });
-
-        // Smooth scroll for anchor links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
-                }
-            });
-        });
-
-        // Counter animation for stats
-        function animateCounter(element, target, suffix = '') {
-            let current = 0;
-            const increment = target / 100;
-            const duration = 2000; // 2 seconds
-            const stepTime = duration / 100;
+            // ScrollSpy Logic
+            const sections = [
+                document.getElementById("beranda"),
+                document.getElementById("produk"),
+                document.getElementById("kontak")
+            ].filter(Boolean); // Filter out any null elements just in case
             
-            const timer = setInterval(() => {
-                current += increment;
-                if (current >= target) {
-                    element.textContent = target + suffix;
-                    clearInterval(timer);
-                } else {
-                    element.textContent = Math.floor(current) + suffix;
+            const navLinksDesktop = document.querySelectorAll(".nav-link");
+            const navLinksMobile = document.querySelectorAll(".nav-link-mobile");
+
+            function updateScrollSpy() {
+                let current = "beranda";
+                let scrollPos = window.scrollY;
+
+                sections.forEach((section) => {
+                    // Check if section is in viewport (considering header height)
+                    const sectionTop = section.offsetTop;
+                    if (scrollPos >= (sectionTop - 300)) {
+                        current = section.getAttribute("id");
+                    }
+                });
+
+                // Default to beranda if at the very top
+                if (scrollPos < 100) current = 'beranda';
+                
+                // If scrolled to the very bottom, force 'kontak' active
+                if ((window.innerHeight + scrollPos) >= document.body.offsetHeight - 50) {
+                    current = 'kontak';
                 }
-            }, stepTime);
-        }
 
-        // Intersection Observer for triggering counter animation
-        const observerOptions = {
-            threshold: 0.5,
-            rootMargin: '0px'
-        };
+                // Update Desktop Navbar
+                navLinksDesktop.forEach((link) => {
+                    // Reset to inactive state
+                    link.classList.remove("text-brand-blue", "font-semibold", "border-brand-blue");
+                    link.classList.add("text-gray-500", "font-medium", "border-transparent");
+                    
+                    // Set active state
+                    if (link.getAttribute("href") === `#${current}`) {
+                        link.classList.remove("text-gray-500", "font-medium", "border-transparent");
+                        link.classList.add("text-brand-blue", "font-semibold", "border-brand-blue");
+                    }
+                });
 
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting && !entry.target.classList.contains('counted')) {
-                    entry.target.classList.add('counted');
-                    const target = parseInt(entry.target.getAttribute('data-target'));
-                    const suffix = entry.target.parentElement.querySelector('.stat-label').textContent.includes('Bergaransi') ? '%' : '+';
-                    animateCounter(entry.target, target, suffix);
-                }
-            });
-        }, observerOptions);
-
-        // Observe all stat numbers
-        document.querySelectorAll('.stat-number').forEach(stat => {
-            observer.observe(stat);
-        });
-
-        // PWA Installation
-        let deferredPrompt;
-        const btnInstallPwa = document.getElementById('btnInstallPwa');
-
-        window.addEventListener('beforeinstallprompt', (e) => {
-            console.log('beforeinstallprompt event fired');
-            // Prevent the mini-infobar from appearing on mobile
-            e.preventDefault();
-            // Stash the event so it can be triggered later.
-            deferredPrompt = e;
-            // Update UI notify the user they can install the PWA
-            if (btnInstallPwa) {
-                btnInstallPwa.style.display = 'inline-flex';
+                // Update Mobile Navbar
+                navLinksMobile.forEach((link) => {
+                    // Reset to inactive state
+                    link.classList.remove("text-brand-blue", "font-semibold", "border-brand-blue", "bg-blue-50");
+                    link.classList.add("text-gray-500", "font-medium", "border-transparent");
+                    
+                    // Set active state
+                    if (link.getAttribute("href") === `#${current}`) {
+                        link.classList.remove("text-gray-500", "font-medium", "border-transparent");
+                        link.classList.add("text-brand-blue", "font-semibold", "border-brand-blue", "bg-blue-50");
+                    }
+                });
             }
+
+            window.addEventListener("scroll", updateScrollSpy);
+            
+            // Run on load after a brief delay to ensure DOM layout is calculated
+            setTimeout(updateScrollSpy, 100);
         });
 
-        if (btnInstallPwa) {
-            btnInstallPwa.addEventListener('click', async () => {
-                // Show the install prompt if available
-                if (deferredPrompt) {
-                    // Hide the app provided install promotion
-                    btnInstallPwa.style.display = 'none';
-                    deferredPrompt.prompt();
-                    // Wait for the user to respond to the prompt
-                    const { outcome } = await deferredPrompt.userChoice;
-                    console.log(`User response to the install prompt: ${outcome}`);
-                    // We've used the prompt, and can't use it again, throw it away
-                    deferredPrompt = null;
-                } else {
-                    alert('Pemasangan aplikasi PWA tidak tersedia saat ini. Mungkin Anda sudah menginstalnya atau browser Anda tidak mendukung.');
-                }
-            });
-        }
-
-        window.addEventListener('appinstalled', () => {
-            // Hide the app-provided install promotion
-            if (btnInstallPwa) {
-                btnInstallPwa.style.display = 'none';
-            }
-            // Clear the deferredPrompt so it can be garbage collected
-            deferredPrompt = null;
-            console.log('PWA was installed');
-        });
-
-        // Register Service Worker
+        // Register Service Worker for PWA
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register("{{ asset('sw.js') }}")
@@ -1287,6 +564,44 @@
                     });
             });
         }
+
+        // PWA Install Prompt Logic
+        let deferredPrompt;
+        const installBtnDesktop = document.getElementById('install-pwa-btn-desktop');
+        const installBtnMobile = document.getElementById('install-pwa-btn-mobile');
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            // Prevent the mini-infobar from appearing on mobile
+            e.preventDefault();
+            // Stash the event so it can be triggered later.
+            deferredPrompt = e;
+        });
+
+        function installPWA() {
+            if (!deferredPrompt) {
+                alert('Fitur Install tidak tersedia. Kemungkinan browser Anda tidak mendukung, tidak dalam mode HTTPS/localhost, atau aplikasi sudah terinstall.');
+                return;
+            }
+            
+            // Show the install prompt
+            deferredPrompt.prompt();
+            
+            // Wait for the user to respond to the prompt
+            deferredPrompt.userChoice.then((choiceResult) => {
+                if (choiceResult.outcome === 'accepted') {
+                    console.log('User accepted the PWA install prompt');
+                    // Hide the install buttons after installation
+                    if (installBtnDesktop) installBtnDesktop.classList.add('hidden');
+                    if (installBtnMobile) installBtnMobile.classList.add('hidden');
+                } else {
+                    console.log('User dismissed the PWA install prompt');
+                }
+                deferredPrompt = null;
+            });
+        }
+
+        if (installBtnDesktop) installBtnDesktop.addEventListener('click', installPWA);
+        if (installBtnMobile) installBtnMobile.addEventListener('click', installPWA);
     </script>
 </body>
 </html>
