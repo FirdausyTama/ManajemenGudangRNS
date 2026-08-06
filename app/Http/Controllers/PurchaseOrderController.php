@@ -26,19 +26,13 @@ class PurchaseOrderController
             });
         }
 
-        if ($date) {
-            $query->whereDate('tanggal_po', $date);
-        } elseif ($period) {
-            $now = Carbon::now();
-            if ($period === 'today') {
-                $query->whereDate('tanggal_po', $now->toDateString());
-            } elseif ($period === 'week') {
-                $query->whereBetween('tanggal_po', [$now->startOfWeek()->toDateString(), $now->endOfWeek()->toDateString()]);
-            } elseif ($period === 'month') {
-                $query->whereMonth('tanggal_po', $now->month)
-                    ->whereYear('tanggal_po', $now->year);
-            } elseif ($period === 'year') {
-                $query->whereYear('tanggal_po', $now->year);
+        if ($request->filled('start_date') && $request->filled('end_date')) {
+            $query->whereBetween('tanggal_po', [$request->start_date, $request->end_date]);
+        } elseif ($request->filled('month')) {
+            $monthParts = explode('-', $request->month);
+            if (count($monthParts) == 2) {
+                $query->whereYear('tanggal_po', $monthParts[0])
+                      ->whereMonth('tanggal_po', $monthParts[1]);
             }
         }
 

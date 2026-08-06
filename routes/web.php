@@ -70,6 +70,13 @@ Route::middleware('auth')->group(function () {
         Route::get('/admin/monitoring-stok/{barang}/print-barcode', [\App\Http\Controllers\MonitoringStokController::class , 'printBarcode'])->name('monitoring-stok.print-barcode');
         Route::delete('/admin/monitoring-stok/{id}', [\App\Http\Controllers\MonitoringStokController::class , 'destroy'])->name('monitoring-stok.destroy');
 
+        // ---------------- FITUR MASTER DATA REKANAN ----------------
+        Route::resource('/admin/rekanan', \App\Http\Controllers\RekananController::class);
+        Route::post('/admin/rekanan/{rekanan}/upload-dokumen', [\App\Http\Controllers\RekananController::class, 'uploadDokumen'])->name('rekanan.uploadDokumen');
+        Route::delete('/admin/rekanan/dokumen/{id}', [\App\Http\Controllers\RekananController::class, 'destroyDokumen'])->name('rekanan.destroyDokumen');
+        Route::get('/admin/rekanan-export-excel', [\App\Http\Controllers\RekananController::class, 'exportExcel'])->name('rekanan.exportExcel');
+        Route::get('/admin/rekanan-export-pdf', [\App\Http\Controllers\RekananController::class, 'exportPdf'])->name('rekanan.exportPdf');
+
         // ---------------- FITUR TRANSAKSI PENJUALAN ----------------
         // Alur utama kasir/admin untuk mencatat barang keluar (terjual), cicilan, dan status pembayaran.
         Route::resource('/admin/penjualan', \App\Http\Controllers\PenjualanController::class)->except(['create', 'edit'])->names([
@@ -130,4 +137,10 @@ Route::middleware('auth')->group(function () {
         Route::get('/admin/service-report/{service_report}/print', [\App\Http\Controllers\ServiceReportController::class , 'print'])->name('service-report.print');
         Route::delete('/admin/service-report/{service_report}', [\App\Http\Controllers\ServiceReportController::class , 'destroy'])->name('service-report.destroy');
         Route::post('/admin/service-report/bulk-destroy', [\App\Http\Controllers\ServiceReportController::class , 'bulkDestroy'])->name('service-report.bulkDestroy');
+
+        // Serah Terima Barang
+        Route::get('/admin/serah-terima', [\App\Http\Controllers\SuratSerahTerimaController::class , 'index'])->name('serah-terima.index');
+        Route::post('/admin/serah-terima', [\App\Http\Controllers\SuratSerahTerimaController::class , 'store'])->name('serah-terima.store');
+        Route::get('/admin/serah-terima/{serah_terima}/print', [\App\Http\Controllers\SuratSerahTerimaController::class , 'print'])->name('serah-terima.print');
+        Route::delete('/admin/serah-terima/{serah_terima}', [\App\Http\Controllers\SuratSerahTerimaController::class , 'destroy'])->name('serah-terima.destroy');
     });

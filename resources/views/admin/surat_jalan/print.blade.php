@@ -118,6 +118,20 @@
             display: block;
         }
 
+        .watermark {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            
+            box-sizing: border-box;
+            object-fit: contain;
+            opacity: 0.1;
+            z-index: 1;
+            pointer-events: none;
+        }
+
         .btn-floating-print {
             position: fixed;
             bottom: 30px;
@@ -184,7 +198,9 @@
             .container {
                 padding: 5mm 15mm;
                 width: 100%;
+                background: none;
             }
+            .watermark { display: block !important; }
         }
     </style>
 </head>
@@ -201,6 +217,7 @@
     </button>
 
     <div class="container">
+        <img src="{{ asset('assets/images/logo-rns-bg.png') }}" class="watermark" alt="Watermark">
         <div class="header">
             <img src="{{ asset('assets/images/kopsurat.png') }}" alt="Kop Surat RNS" class="logo-kopsurat" onerror="this.src=''">
         </div>

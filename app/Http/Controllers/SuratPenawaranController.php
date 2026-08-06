@@ -28,19 +28,13 @@ class SuratPenawaranController
             });
         }
 
-        if ($date) {
-            $query->whereDate('tanggal_sph', $date);
-        } elseif ($period) {
-            $now = Carbon::now();
-            if ($period === 'today') {
-                $query->whereDate('tanggal_sph', $now->toDateString());
-            } elseif ($period === 'week') {
-                $query->whereBetween('tanggal_sph', [$now->startOfWeek()->toDateString(), $now->endOfWeek()->toDateString()]);
-            } elseif ($period === 'month') {
-                $query->whereMonth('tanggal_sph', $now->month)
-                    ->whereYear('tanggal_sph', $now->year);
-            } elseif ($period === 'year') {
-                $query->whereYear('tanggal_sph', $now->year);
+        if ($request->filled('start_date') && $request->filled('end_date')) {
+            $query->whereBetween('tanggal_sph', [$request->start_date, $request->end_date]);
+        } elseif ($request->filled('month')) {
+            $monthParts = explode('-', $request->month);
+            if (count($monthParts) == 2) {
+                $query->whereYear('tanggal_sph', $monthParts[0])
+                      ->whereMonth('tanggal_sph', $monthParts[1]);
             }
         }
 
@@ -80,7 +74,9 @@ class SuratPenawaranController
             $month = date('n', strtotime($request->tanggal_sph));
             $romanMonths = ['', 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII'];
             
-            $count = SuratPenawaran::whereYear('tanggal_sph', $year)->count() + 1;
+            $count = SuratPenawaran::whereYear('tanggal_sph', $year)
+                                   ->whereMonth('tanggal_sph', $month)
+                                   ->count() + 1;
             $no_sph = str_pad($count, 2, '0', STR_PAD_LEFT) . '/SPH/RNS-' . $romanMonths[$month] . '/' . $year;
 
             $surat = SuratPenawaran::create([

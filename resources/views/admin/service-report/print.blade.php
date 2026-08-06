@@ -30,16 +30,15 @@
         /* Watermark Background */
         .watermark {
             position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 60px;
-            font-weight: bold;
-            color: rgba(100, 149, 237, 0.15); /* Light blue watermark */
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            
+            box-sizing: border-box;
+            object-fit: contain;
+            opacity: 0.1;
             z-index: 0;
-            white-space: nowrap;
-            text-align: center;
-            line-height: 1.2;
             pointer-events: none;
         }
         .kop-surat {
@@ -255,7 +254,9 @@
                 }
             .container {
                 padding: 10mm;
+                background: none;
             }
+            .watermark { display: block !important; }
         }
     </style>
 </head>
@@ -271,6 +272,7 @@
     </button>
 
     <div class="container">
+        <img src="{{ asset('assets/images/logo-rns-bg.png') }}" class="watermark" alt="Watermark">
         <!-- Header -->
         <div class="kop-surat">
             <img src="{{ asset('assets/images/kopsurat.png') }}" alt="Kop Surat PT. RAND Nusantara Sejahtera">

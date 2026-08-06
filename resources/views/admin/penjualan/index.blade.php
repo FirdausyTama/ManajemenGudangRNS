@@ -189,9 +189,9 @@
                 @endif
 
                 <!-- Search Form -->
-                <form action="{{ route('penjualan.index') }}" method="GET" class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex flex-col md:flex-row items-center gap-4 mb-6 relative z-20">
+                <form action="{{ route('penjualan.index') }}" method="GET" class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex flex-col md:flex-row md:flex-wrap items-center gap-4 mb-6 relative z-20">
                     <!-- Status Filter -->
-                    <div class="w-full md:w-44">
+                    <div class="w-full md:w-auto">
                         <select name="status" onchange="this.form.submit()" class="block w-full py-2 px-3 border border-gray-300 bg-white rounded-lg outline-none focus:ring-2 focus:ring-rns-blue sm:text-sm transition-all text-gray-700">
                             <option value="">-- Semua Status --</option>
                             <option value="lunas" {{ request('status') == 'lunas' ? 'selected' : '' }}>Lunas</option>
@@ -200,24 +200,21 @@
                         </select>
                     </div>
 
-                    <!-- Period Filter -->
-                    <div class="w-full md:w-44">
-                        <select name="period" onchange="this.form.submit()" class="block w-full py-2 px-3 border border-gray-300 bg-white rounded-lg outline-none focus:ring-2 focus:ring-rns-blue sm:text-sm transition-all text-gray-700">
-                            <option value="">-- Semua Waktu --</option>
-                            <option value="today" {{ request('period') == 'today' ? 'selected' : '' }}>Hari Ini</option>
-                            <option value="week" {{ request('period') == 'week' ? 'selected' : '' }}>Minggu Ini</option>
-                            <option value="month" {{ request('period') == 'month' ? 'selected' : '' }}>Bulan Ini</option>
-                            <option value="year" {{ request('period') == 'year' ? 'selected' : '' }}>Tahun Ini</option>
-                        </select>
+                    <div class="w-full md:w-auto flex flex-col md:flex-row md:items-center gap-2">
+                        <label class="text-sm text-gray-600 font-medium whitespace-nowrap">Bulan:</label>
+                        <input type="month" name="month" value="{{ request('month') }}" onchange="this.form.submit()" class="block w-full md:w-40 py-2 px-3 border border-gray-300 bg-white rounded-lg outline-none focus:ring-2 focus:ring-rns-blue sm:text-sm text-gray-700 transition-all">
                     </div>
 
-                    <!-- Date Picker Filter -->
-                    <div class="w-full md:w-40">
-                        <input type="date" name="date" value="{{ request('date') }}" max="{{ date('Y-m-d') }}" onchange="this.form.submit()" class="block w-full py-2 px-3 border border-gray-300 bg-white rounded-lg outline-none focus:ring-2 focus:ring-rns-blue sm:text-sm transition-all text-gray-700">
+                    <div class="w-full md:w-auto flex flex-col md:flex-row md:items-center gap-2">
+                        <label class="text-sm text-gray-600 font-medium whitespace-nowrap">Rentang Waktu:</label>
+                        <div class="flex flex-col sm:flex-row sm:items-center gap-2 w-full">
+                            <input type="date" name="start_date" value="{{ request('start_date') }}" onchange="this.form.submit()" class="block w-full sm:w-36 py-2 px-3 border border-gray-300 bg-white rounded-lg outline-none focus:ring-2 focus:ring-rns-blue sm:text-sm text-gray-700 transition-all">
+                            <span class="text-gray-400 font-medium hidden sm:block">-</span>
+                            <input type="date" name="end_date" value="{{ request('end_date') }}" onchange="this.form.submit()" class="block w-full sm:w-36 py-2 px-3 border border-gray-300 bg-white rounded-lg outline-none focus:ring-2 focus:ring-rns-blue sm:text-sm text-gray-700 transition-all">
+                        </div>
                     </div>
 
-                    <!-- Search Input -->
-                    <div class="flex-1 w-full relative">
+                    <div class="flex-1 w-full relative min-w-[200px]">
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                             <svg class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -226,13 +223,12 @@
                         <input type="text" name="search" value="{{ request('search') }}" class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-rns-blue sm:text-sm" placeholder="Cari No Transaksi atau Nama Customer...">
                     </div>
                     
-                    <!-- Actions -->
                     <div class="flex gap-2 w-full md:w-auto">
                         <button type="submit" class="flex-1 md:flex-none px-5 py-2 bg-rns-blue text-white rounded-lg hover:bg-blue-800 text-sm font-medium shadow-sm transition-all">
                             Cari
                         </button>
-                        @if(request()->anyFilled(['search', 'status', 'period', 'date']))
-                            <a href="{{ route('penjualan.index') }}" class="flex-1 md:flex-none px-5 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 text-sm font-medium text-center shadow-sm transition-all">
+                        @if(request()->anyFilled(['search', 'status', 'month', 'start_date', 'end_date']))
+                            <a href="{{ url()->current() }}" class="flex-1 md:flex-none px-5 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 text-sm font-medium text-center shadow-sm transition-all">
                                 Reset
                             </a>
                         @endif
@@ -431,8 +427,7 @@
                             <div id="ongkirFields" class="hidden grid grid-cols-1 md:grid-cols-2 gap-6 bg-indigo-50/50 p-5 rounded-lg border border-indigo-100">
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 mb-1">Berat Total (Kg) <span class="text-red-500">*</span></label>
-                                    <input type="number" step="0.01" min="0" name="berat_total" id="beratTotal" class="w-full rounded-lg border-gray-300 border px-3 py-2 text-sm bg-gray-100 text-gray-600 focus:ring-rns-blue focus:border-rns-blue shadow-sm cursor-not-allowed" readonly placeholder="Otomatis dihitung">
-                                    <p class="text-[10px] mt-1 text-indigo-600 font-medium">*Dihitung otomatis dari berat barang di atas</p>
+                                    <input type="number" step="0.01" min="0" name="berat_total" id="beratTotal" class="w-full rounded-lg border-gray-300 border px-3 py-2 text-sm focus:ring-rns-blue focus:border-rns-blue shadow-sm bg-white" placeholder="Masukkan total berat (Kg)" onkeyup="calculateGrandTotal();" onchange="calculateGrandTotal();">
                                 </div>
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 mb-1">Harga per Kg (Rp) <span class="text-red-500">*</span></label>
@@ -527,7 +522,6 @@
 
         function calculateGrandTotal() {
             let total = 0;
-            let totalWeight = 0;
             const rows = document.querySelectorAll('.item-row');
             rows.forEach(row => {
                 const selectElement = row.querySelector('select[name^="items["]');
@@ -539,24 +533,14 @@
                 const price = parseInt(priceInput.value) || 0;
                 const subtotal = qty * price;
                 
-                // Add to total weight
-                if (selectElement && selectElement.selectedIndex > 0) {
-                    const selectedOpt = selectElement.options[selectElement.selectedIndex];
-                    const weight = parseFloat(selectedOpt.getAttribute('data-weight')) || 0;
-                    totalWeight += (weight * qty);
-                }
-                
                 subtotalDisplay.innerText = formatRupiah(subtotal);
                 total += subtotal;
             });
-            
-            // Set Total Weight Input
-            document.getElementById('beratTotal').value = totalWeight > 0 ? totalWeight : '';
 
             // Calculate Ongkir
             let ongkir = 0;
             if (document.getElementById('isOngkirAktif').checked) {
-                const berat = totalWeight;
+                const berat = parseFloat(document.getElementById('beratTotal').value) || 0;
                 const harga = parseInt(document.getElementById('hargaPerKg').value) || 0;
                 ongkir = berat * harga;
                 document.getElementById('subtotalOngkirDisplay').innerText = formatRupiah(ongkir);

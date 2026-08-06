@@ -37,23 +37,13 @@ class PenjualanController
             $query->where('status_pembayaran', $status);
         }
 
-        if ($date) {
-            $query->whereDate('tanggal_transaksi', $date);
-        }
-        elseif ($period) {
-            $now = Carbon::now();
-            if ($period === 'today') {
-                $query->whereDate('tanggal_transaksi', $now->toDateString());
-            }
-            elseif ($period === 'week') {
-                $query->whereBetween('tanggal_transaksi', [$now->startOfWeek()->toDateString(), $now->endOfWeek()->toDateString()]);
-            }
-            elseif ($period === 'month') {
-                $query->whereMonth('tanggal_transaksi', $now->month)
-                    ->whereYear('tanggal_transaksi', $now->year);
-            }
-            elseif ($period === 'year') {
-                $query->whereYear('tanggal_transaksi', $now->year);
+        if ($request->filled('start_date') && $request->filled('end_date')) {
+            $query->whereBetween('tanggal_transaksi', [$request->start_date, $request->end_date]);
+        } elseif ($request->filled('month')) {
+            $monthParts = explode('-', $request->month);
+            if (count($monthParts) == 2) {
+                $query->whereYear('tanggal_transaksi', $monthParts[0])
+                      ->whereMonth('tanggal_transaksi', $monthParts[1]);
             }
         }
 
@@ -177,7 +167,9 @@ class PenjualanController
             $month = date('n', strtotime($request->tanggal_transaksi));
             $romanMonths = ['', 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII'];
             
-            $count = Penjualan::whereYear('tanggal_transaksi', $year)->count() + 1;
+            $count = Penjualan::whereYear('tanggal_transaksi', $year)
+                              ->whereMonth('tanggal_transaksi', $month)
+                              ->count() + 1;
             $no_transaksi = str_pad($count, 2, '0', STR_PAD_LEFT) . '/TRX/RNS-' . $romanMonths[$month] . '/' . $year;
 
             // Hitung ongkir

@@ -34,17 +34,32 @@ class PurchaseOrder extends Model
     // Auto generate PO number format: 002/P-RAND/IV/2026
     public static function generateNoPo()
     {
-        $lastPo = self::orderBy('id', 'desc')->first();
-        $lastNumber = $lastPo ? intval(substr($lastPo->no_po, 0, 3)) : 0;
-        $newNumber = str_pad($lastNumber + 1, 3, '0', STR_PAD_LEFT);
-        
+        $year = date('Y');
+        $month = date('n');
+
         $romanMonths = [
             1 => 'I', 2 => 'II', 3 => 'III', 4 => 'IV', 5 => 'V', 6 => 'VI',
             7 => 'VII', 8 => 'VIII', 9 => 'IX', 10 => 'X', 11 => 'XI', 12 => 'XII'
         ];
-        $month = $romanMonths[date('n')];
+        
+        $allPo = self::whereYear('tanggal_po', $year)
+                     ->whereMonth('tanggal_po', $month)
+                     ->get();
+                     
+        $maxSequence = 0;
+        foreach ($allPo as $po) {
+            $parts = explode('/', $po->no_po);
+            $seq = (int) $parts[0];
+            if ($seq > $maxSequence) {
+                $maxSequence = $seq;
+            }
+        }
+        
+        $newNumber = str_pad($maxSequence + 1, 3, '0', STR_PAD_LEFT);
+        
+        $monthStr = $romanMonths[$month];
         $year = date('Y');
 
-        return "{$newNumber}/P-RAND/{$month}/{$year}";
+        return "{$newNumber}/P-RAND/{$monthStr}/{$year}";
     }
 }

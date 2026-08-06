@@ -57,25 +57,22 @@
           </div>
 
           <!-- Search & Filter Card -->
-          <form action="{{ route('kwitansi.index') }}" method="GET" class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex flex-col md:flex-row items-center gap-4 mb-6">
-              <!-- Period Filter -->
-              <div class="w-full md:w-44">
-                  <select name="period" onchange="this.form.submit()" class="block w-full py-2 px-3 border border-gray-300 bg-white rounded-lg outline-none focus:ring-2 focus:ring-rns-blue sm:text-sm transition-all text-gray-700">
-                      <option value="">-- Semua Waktu --</option>
-                      <option value="today" {{ request('period') == 'today' ? 'selected' : '' }}>Hari Ini</option>
-                      <option value="week" {{ request('period') == 'week' ? 'selected' : '' }}>Minggu Ini</option>
-                      <option value="month" {{ request('period') == 'month' ? 'selected' : '' }}>Bulan Ini</option>
-                      <option value="year" {{ request('period') == 'year' ? 'selected' : '' }}>Tahun Ini</option>
-                  </select>
+          <form action="{{ route('kwitansi.index') }}" method="GET" class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex flex-col md:flex-row md:flex-wrap items-center gap-4 mb-6">
+              <div class="w-full md:w-auto flex flex-col md:flex-row md:items-center gap-2">
+                  <label class="text-sm text-gray-600 font-medium whitespace-nowrap">Bulan:</label>
+                  <input type="month" name="month" value="{{ request('month') }}" onchange="this.form.submit()" class="block w-full md:w-40 py-2 px-3 border border-gray-300 bg-white rounded-lg outline-none focus:ring-2 focus:ring-rns-blue sm:text-sm text-gray-700 transition-all">
               </div>
 
-              <!-- Date Picker Filter -->
-              <div class="w-full md:w-44">
-                  <input type="date" name="date" value="{{ request('date') }}" max="{{ date('Y-m-d') }}" onchange="this.form.submit()" class="block w-full py-2 px-3 border border-gray-300 bg-white rounded-lg outline-none focus:ring-2 focus:ring-rns-blue sm:text-sm transition-all text-gray-700">
+              <div class="w-full md:w-auto flex flex-col md:flex-row md:items-center gap-2">
+                  <label class="text-sm text-gray-600 font-medium whitespace-nowrap">Rentang Waktu:</label>
+                  <div class="flex flex-col sm:flex-row sm:items-center gap-2 w-full">
+                      <input type="date" name="start_date" value="{{ request('start_date') }}" onchange="this.form.submit()" class="block w-full sm:w-36 py-2 px-3 border border-gray-300 bg-white rounded-lg outline-none focus:ring-2 focus:ring-rns-blue sm:text-sm text-gray-700 transition-all">
+                      <span class="text-gray-400 font-medium hidden sm:block">-</span>
+                      <input type="date" name="end_date" value="{{ request('end_date') }}" onchange="this.form.submit()" class="block w-full sm:w-36 py-2 px-3 border border-gray-300 bg-white rounded-lg outline-none focus:ring-2 focus:ring-rns-blue sm:text-sm text-gray-700 transition-all">
+                  </div>
               </div>
 
-              <!-- Search Input -->
-              <div class="flex-1 w-full relative">
+              <div class="flex-1 w-full relative min-w-[200px]">
                   <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                       <svg class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -84,13 +81,12 @@
                   <input type="text" name="search" value="{{ request('search') }}" class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-rns-blue sm:text-sm" placeholder="Cari Kwitansi atau Klien...">
               </div>
 
-              <!-- Actions -->
               <div class="flex gap-2 w-full md:w-auto">
                   <button type="submit" class="flex-1 md:flex-none px-5 py-2 bg-rns-blue text-white rounded-lg hover:bg-blue-800 text-sm font-medium shadow-sm transition-all">
                       Cari
                   </button>
-                  @if(request()->anyFilled(['search', 'period', 'date']))
-                      <a href="{{ route('kwitansi.index') }}" class="flex-1 md:flex-none px-5 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 text-sm font-medium text-center shadow-sm transition-all">
+                  @if(request()->anyFilled(['search', 'month', 'start_date', 'end_date']))
+                      <a href="{{ url()->current() }}" class="flex-1 md:flex-none px-5 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 text-sm font-medium text-center shadow-sm transition-all">
                           Reset
                       </a>
                   @endif

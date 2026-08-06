@@ -25,19 +25,13 @@ class ServiceReportController
             });
         }
 
-        if ($date) {
-            $query->whereDate('working_start', $date);
-        } elseif ($period) {
-            $now = Carbon::now();
-            if ($period === 'today') {
-                $query->whereDate('working_start', $now->toDateString());
-            } elseif ($period === 'week') {
-                $query->whereBetween('working_start', [$now->startOfWeek()->toDateString(), $now->endOfWeek()->toDateString()]);
-            } elseif ($period === 'month') {
-                $query->whereMonth('working_start', $now->month)
-                      ->whereYear('working_start', $now->year);
-            } elseif ($period === 'year') {
-                $query->whereYear('working_start', $now->year);
+        if ($request->filled('start_date') && $request->filled('end_date')) {
+            $query->whereBetween('working_start', [$request->start_date, $request->end_date]);
+        } elseif ($request->filled('month')) {
+            $monthParts = explode('-', $request->month);
+            if (count($monthParts) == 2) {
+                $query->whereYear('working_start', $monthParts[0])
+                      ->whereMonth('working_start', $monthParts[1]);
             }
         }
 

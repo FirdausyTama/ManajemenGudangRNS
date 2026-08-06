@@ -234,6 +234,20 @@
             z-index: 1000;
         }
 
+        .watermark {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            
+            box-sizing: border-box;
+            object-fit: contain;
+            opacity: 0.1;
+            z-index: 1;
+            pointer-events: none;
+        }
+
         .btn-back {
             position: fixed;
             top: 20px;
@@ -265,7 +279,8 @@
 
         @media print {
             .btn-floating-print, .btn-back { display: none !important; }
-            .container { padding: 5mm 15mm; width: 100%; }
+            .container { padding: 5mm 15mm; width: 100%; background: none; }
+            .watermark { display: block !important; }
         }
     </style>
 </head>
@@ -283,6 +298,7 @@
     </button>
 
     <div class="container">
+        <img src="{{ asset('assets/images/logo-rns-bg.png') }}" class="watermark" alt="Watermark">
         <div class="header">
             <img src="{{ asset('assets/images/kopsurat.png') }}" alt="Kop Surat RNS" class="logo-kopsurat">
         </div>
@@ -453,6 +469,7 @@
     <div class="page-break"></div>
     
     <div class="container">
+        <img src="{{ asset('assets/images/logo-rns-bg.png') }}" class="watermark" alt="Watermark">
         <div class="header">
             <img src="{{ asset('assets/images/kopsurat.png') }}" alt="Kop Surat RNS" class="logo-kopsurat">
         </div>

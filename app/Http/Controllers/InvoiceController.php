@@ -29,23 +29,13 @@ class InvoiceController
             });
         }
 
-        if ($date) {
-            $query->whereDate('tanggal_invoice', $date);
-        }
-        elseif ($period) {
-            $now = Carbon::now();
-            if ($period === 'today') {
-                $query->whereDate('tanggal_invoice', $now->toDateString());
-            }
-            elseif ($period === 'week') {
-                $query->whereBetween('tanggal_invoice', [$now->startOfWeek()->toDateString(), $now->endOfWeek()->toDateString()]);
-            }
-            elseif ($period === 'month') {
-                $query->whereMonth('tanggal_invoice', $now->month)
-                    ->whereYear('tanggal_invoice', $now->year);
-            }
-            elseif ($period === 'year') {
-                $query->whereYear('tanggal_invoice', $now->year);
+        if ($request->filled('start_date') && $request->filled('end_date')) {
+            $query->whereBetween('tanggal_invoice', [$request->start_date, $request->end_date]);
+        } elseif ($request->filled('month')) {
+            $monthParts = explode('-', $request->month);
+            if (count($monthParts) == 2) {
+                $query->whereYear('tanggal_invoice', $monthParts[0])
+                      ->whereMonth('tanggal_invoice', $monthParts[1]);
             }
         }
 
@@ -72,7 +62,9 @@ class InvoiceController
         $month = date('n', strtotime($request->tanggal_invoice));
         $romanMonths = ['', 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII'];
         
-        $count = Invoice::whereYear('tanggal_invoice', $year)->count() + 1;
+        $count = Invoice::whereYear('tanggal_invoice', $year)
+                        ->whereMonth('tanggal_invoice', $month)
+                        ->count() + 1;
         $no_invoice = str_pad($count, 2, '0', STR_PAD_LEFT) . '/INV/RNS-' . $romanMonths[$month] . '/' . $year;
 
         $invoice = Invoice::create([

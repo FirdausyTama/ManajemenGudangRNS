@@ -26,19 +26,13 @@ class KwitansiController
             });
         }
 
-        if ($date) {
-            $query->whereDate('tanggal_kwitansi', $date);
-        } elseif ($period) {
-            $now = Carbon::now();
-            if ($period === 'today') {
-                $query->whereDate('tanggal_kwitansi', $now->toDateString());
-            } elseif ($period === 'week') {
-                $query->whereBetween('tanggal_kwitansi', [$now->startOfWeek()->toDateString(), $now->endOfWeek()->toDateString()]);
-            } elseif ($period === 'month') {
-                $query->whereMonth('tanggal_kwitansi', $now->month)
-                      ->whereYear('tanggal_kwitansi', $now->year);
-            } elseif ($period === 'year') {
-                $query->whereYear('tanggal_kwitansi', $now->year);
+        if ($request->filled('start_date') && $request->filled('end_date')) {
+            $query->whereBetween('tanggal_kwitansi', [$request->start_date, $request->end_date]);
+        } elseif ($request->filled('month')) {
+            $monthParts = explode('-', $request->month);
+            if (count($monthParts) == 2) {
+                $query->whereYear('tanggal_kwitansi', $monthParts[0])
+                      ->whereMonth('tanggal_kwitansi', $monthParts[1]);
             }
         }
 

@@ -15,7 +15,9 @@ class Kwitansi extends Model
         $romanMonths = ['', 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII'];
         
         // Cari angka urutan paling besar di tahun yang sama
-        $allKwitansis = self::whereYear('tanggal_kwitansi', $year)->get();
+        $allKwitansis = self::whereYear('tanggal_kwitansi', $year)
+                            ->whereMonth('tanggal_kwitansi', $month)
+                            ->get();
         $maxSequence = 0;
         foreach ($allKwitansis as $kwt) {
             $parts = explode('/', $kwt->nomor_kwitansi);
