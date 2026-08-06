@@ -123,4 +123,11 @@ Route::middleware('auth')->group(function () {
         Route::get('/admin/purchase-order/{purchase_order}/print', [\App\Http\Controllers\PurchaseOrderController::class , 'print'])->name('purchase-order.print');
         Route::delete('/admin/purchase-order/{purchase_order}', [\App\Http\Controllers\PurchaseOrderController::class , 'destroy'])->name('purchase-order.destroy');
         Route::post('/admin/purchase-order/bulk-destroy', [\App\Http\Controllers\PurchaseOrderController::class , 'bulkDestroy'])->name('purchase-order.bulkDestroy');
+
+        // Service Report
+        Route::get('/admin/service-report', [\App\Http\Controllers\ServiceReportController::class , 'index'])->name('service-report.index');
+        Route::post('/admin/service-report', [\App\Http\Controllers\ServiceReportController::class , 'store'])->name('service-report.store');
+        Route::get('/admin/service-report/{service_report}/print', [\App\Http\Controllers\ServiceReportController::class , 'print'])->name('service-report.print');
+        Route::delete('/admin/service-report/{service_report}', [\App\Http\Controllers\ServiceReportController::class , 'destroy'])->name('service-report.destroy');
+        Route::post('/admin/service-report/bulk-destroy', [\App\Http\Controllers\ServiceReportController::class , 'bulkDestroy'])->name('service-report.bulkDestroy');
     });
