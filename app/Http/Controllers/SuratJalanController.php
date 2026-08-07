@@ -65,7 +65,7 @@ class SuratJalanController
         $count = SuratJalan::whereYear('tanggal_surat_jalan', $year)
                             ->whereMonth('tanggal_surat_jalan', $month)
                             ->count() + 1;
-        $nomor = str_pad($count, 2, '0', STR_PAD_LEFT) . '/SJ/RNS-' . $romanMonths[$month] . '/' . $year;
+        $nomor = str_pad($count, 3, '0', STR_PAD_LEFT) . '/SJ-RAND/' . $romanMonths[$month] . '/' . $year;
 
         SuratJalan::create([
             'nomor_surat_jalan' => $nomor,

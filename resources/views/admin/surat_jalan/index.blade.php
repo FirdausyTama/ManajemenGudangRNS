@@ -213,10 +213,11 @@
                     </h4>
                     
                     <div class="grid grid-cols-1 gap-4">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Pilih Transaksi Pembelian <span class="text-red-500">*</span></label>
-                            <input type="text" id="searchPenjualan" list="penjualanList" class="w-full rounded-lg border-gray-300 border px-4 py-2 text-sm focus:ring-rns-blue focus:border-rns-blue bg-white" placeholder="Ketik No Transaksi atau Nama Customer..." oninput="onPenjualanSelect(this.value)">
+                        <div class="p-3 bg-blue-50 border border-blue-100 rounded-lg">
+                            <label class="block text-xs font-medium text-blue-800 mb-1">Auto-fill dari Data Penjualan (Opsional)</label>
+                            <input type="text" id="searchPenjualan" list="penjualanList" class="w-full rounded-md border-blue-200 border px-3 py-1.5 text-sm focus:ring-blue-500 focus:border-blue-500 bg-white" placeholder="Ketik No Transaksi atau Nama Customer..." oninput="onPenjualanSelect(this.value)">
                             <datalist id="penjualanList">
+                                <option value="">-- Manual / Kosongkan --</option>
                                 @foreach($penjualans as $p)
                                     <option value="{{ $p->no_transaksi }} - {{ $p->nama_customer }}">
                                 @endforeach

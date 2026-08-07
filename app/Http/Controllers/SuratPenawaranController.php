@@ -77,7 +77,7 @@ class SuratPenawaranController
             $count = SuratPenawaran::whereYear('tanggal_sph', $year)
                                    ->whereMonth('tanggal_sph', $month)
                                    ->count() + 1;
-            $no_sph = str_pad($count, 2, '0', STR_PAD_LEFT) . '/SPH/RNS-' . $romanMonths[$month] . '/' . $year;
+            $no_sph = str_pad($count, 3, '0', STR_PAD_LEFT) . '/SPH-RAND/' . $romanMonths[$month] . '/' . $year;
 
             $surat = SuratPenawaran::create([
                 'no_sph' => $no_sph,

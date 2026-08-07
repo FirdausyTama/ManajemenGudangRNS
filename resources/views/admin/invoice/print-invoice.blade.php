@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
     <meta charset="utf-8">
-    <title>INVOICE_{{ $penjualan->nama_customer }}_{{ \Carbon\Carbon::parse($tanggal_invoice)->format('d_m_Y') }}</title>
+    <title>INVOICE_{{ $invoice->penjualan_id ? $penjualan->nama_customer : $invoice->kepada }}_{{ \Carbon\Carbon::parse($tanggal_invoice)->format('d_m_Y') }}</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
         
@@ -309,16 +309,18 @@
             <div></div> <!-- Spacer -->
             <div class="invoice-title">
                 <h2>INVOICE</h2>
-                <p># {{ $penjualan->no_transaksi }}</p>
+                <p># {{ $no_invoice }}</p>
             </div>
         </div>
 
         <div class="details-section">
             <div class="bill-to">
                 <h3>Tagihan Kepada:</h3>
-                <p style="font-weight: 700; font-size: 15px; color: #1e3a8a;">{{ $penjualan->nama_customer }}</p>
-                <p>{{ $penjualan->alamat_customer ?? '-' }}</p>
-                <p>Telp: {{ $penjualan->no_hp_customer ?? '-' }}</p>
+                <p style="font-weight: 700; font-size: 15px; color: #1e3a8a;">{{ $invoice->penjualan_id ? $penjualan->nama_customer : $invoice->kepada }}</p>
+                <p>{{ $invoice->penjualan_id ? ($penjualan->alamat_customer ?? '-') : ($invoice->alamat ?? '-') }}</p>
+                @if($invoice->penjualan_id && isset($penjualan->no_hp_customer))
+                    <p>Telp: {{ $penjualan->no_hp_customer }}</p>
+                @endif
             </div>
         </div>
 
@@ -333,24 +335,45 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach($penjualan->items as $idx => $item)
-                <tr>
-                    <td>{{ $idx + 1 }}</td>
-                    <td style="font-weight: 500;">{{ $item->barang->name ?? 'Barang Terhapus' }}</td>
-                    <td class="center">{{ $item->kuantitas }}</td>
-                    <td class="right">Rp {{ number_format($item->harga_satuan, 0, ',', '.') }}</td>
-                    <td class="right" style="font-weight: 600;">Rp {{ number_format($item->total_harga, 0, ',', '.') }}</td>
-                </tr>
-                @endforeach
+                @php $totalSemua = 0; @endphp
+                @if($invoice->penjualan_id)
+                    @foreach($penjualan->items as $idx => $item)
+                    <tr>
+                        <td>{{ $idx + 1 }}</td>
+                        <td style="font-weight: 500;">{{ $item->barang->name ?? 'Barang Terhapus' }}</td>
+                        <td class="center">{{ $item->kuantitas }}</td>
+                        <td class="right">Rp {{ number_format($item->harga_satuan, 0, ',', '.') }}</td>
+                        <td class="right" style="font-weight: 600;">Rp {{ number_format($item->total_harga, 0, ',', '.') }}</td>
+                    </tr>
+                    @php $totalSemua += $item->total_harga; @endphp
+                    @endforeach
+                @else
+                    @php 
+                        $items = json_decode($invoice->items, true) ?? [];
+                    @endphp
+                    @foreach($items as $idx => $item)
+                    <tr>
+                        <td>{{ $idx + 1 }}</td>
+                        <td style="font-weight: 500;">{{ $item['nama_barang'] ?? '-' }}</td>
+                        <td class="center">{{ $item['qty'] ?? 0 }}</td>
+                        @php 
+                            $hargaSatuan = floatval($item['harga'] ?? 0) / (floatval($item['qty'] ?? 1) ?: 1);
+                        @endphp
+                        <td class="right">Rp {{ number_format($hargaSatuan, 0, ',', '.') }}</td>
+                        <td class="right" style="font-weight: 600;">Rp {{ number_format($item['harga'] ?? 0, 0, ',', '.') }}</td>
+                    </tr>
+                    @php $totalSemua += floatval($item['harga'] ?? 0); @endphp
+                    @endforeach
+                @endif
             </tbody>
         </table>
 
         <div class="totals-section">
             <table class="totals-table">
-                @if($penjualan->is_ongkir_aktif)
+                @if($invoice->penjualan_id && $penjualan->is_ongkir_aktif)
                 <tr>
                     <td>Subtotal Barang</td>
-                    <td class="right">Rp {{ number_format($penjualan->total_keseluruhan - $penjualan->total_ongkir, 0, ',', '.') }}</td>
+                    <td class="right">Rp {{ number_format($totalSemua, 0, ',', '.') }}</td>
                 </tr>
                 <tr>
                     <td>Ongkos Kirim ({{ $penjualan->berat_total }} kg)</td>
@@ -359,7 +382,7 @@
                 @endif
                 <tr class="total">
                     <th>TOTAL TAGIHAN</th>
-                    <td class="right">Rp {{ number_format($penjualan->total_keseluruhan, 0, ',', '.') }}</td>
+                    <td class="right">Rp {{ number_format($invoice->penjualan_id ? $penjualan->total_keseluruhan : $totalSemua, 0, ',', '.') }}</td>
                 </tr>
             </table>
         </div>

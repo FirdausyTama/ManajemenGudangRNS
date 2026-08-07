@@ -210,29 +210,59 @@
                 <div class="bg-white p-5 rounded-lg border border-gray-200 shadow-sm mb-6">
                     <h4 class="font-bold text-gray-800 mb-4 flex items-center gap-2">
                         <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
-                        Pilih Data Penjualan
+                        Informasi Customer & Barang
                     </h4>
                     
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div class="md:col-span-2">
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Pilih Transaksi Pembelian <span class="text-red-500">*</span></label>
-                            <input type="text" id="searchPenjualan" list="penjualanList" class="w-full rounded-lg border-gray-300 border px-4 py-2 text-sm focus:ring-rns-blue focus:border-rns-blue bg-white" placeholder="Ketik No Transaksi atau Nama Customer..." oninput="onPenjualanSelect(this.value)" required>
+                        <div class="md:col-span-2 mb-2 p-3 bg-blue-50 border border-blue-100 rounded-lg">
+                            <label class="block text-xs font-medium text-blue-800 mb-1">Auto-fill dari Data Penjualan (Opsional)</label>
+                            <input type="text" id="searchPenjualan" list="penjualanList" class="w-full rounded-md border-blue-200 border px-3 py-1.5 text-sm focus:ring-blue-500 focus:border-blue-500 bg-white" placeholder="Ketik No Transaksi atau Nama Customer..." oninput="onPenjualanSelect(this.value)">
                             <datalist id="penjualanList">
                                 @foreach($penjualans as $p)
-                                    <option value="{{ $p->no_transaksi }} - {{ $p->nama_customer }} (Rp {{ number_format($p->total_keseluruhan, 0, ',', '.') }})">
+                                    <option value="{{ $p->no_transaksi }}" data-id="{{ $p->id }}" data-customer="{{ $p->nama_customer }}" data-alamat="{{ $p->alamat_customer }}">{{ $p->no_transaksi }} - {{ $p->nama_customer }}</option>
                                 @endforeach
                             </datalist>
-                            <input type="hidden" name="penjualan_id" id="penjualanId" required>
+                            <input type="hidden" name="penjualan_id" id="penjualanId">
                             <p class="text-[11px] text-gray-500 mt-1">Invoice dapat dicetak kapanpun (termasuk status Belum Lunas).</p>
                         </div>
                         
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Nama Perusahaan / Customer</label>
-                            <input type="text" id="previewCustomer" readonly class="w-full rounded-lg border-gray-200 border px-4 py-2 text-sm bg-gray-100 text-gray-600 cursor-not-allowed" placeholder="Otomatis terisi">
+                        <div class="md:col-span-2">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Kepada Yth (Customer / RS) <span class="text-red-500">*</span></label>
+                            <input type="text" name="kepada" id="inputKepada" required class="w-full rounded-lg border-gray-300 border px-4 py-2 text-sm focus:ring-rns-blue focus:border-rns-blue bg-white" placeholder="Nama Perusahaan / Customer">
                         </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Total Tagihan</label>
-                            <input type="text" id="previewTotal" readonly class="w-full rounded-lg border-gray-200 border px-4 py-2 text-sm bg-gray-100 text-gray-600 font-bold cursor-not-allowed" placeholder="Otomatis terisi">
+                        <div class="md:col-span-2">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Alamat Lengkap <span class="text-red-500">*</span></label>
+                            <textarea name="alamat" id="inputAlamat" rows="2" required class="w-full rounded-lg border-gray-300 border px-4 py-2 text-sm focus:ring-rns-blue focus:border-rns-blue bg-white" placeholder="Alamat lengkap..."></textarea>
+                        </div>
+
+                        <div class="md:col-span-2 mt-4" id="items-container">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Daftar Barang / Jasa <span class="text-red-500">*</span></label>
+                            
+                            <div class="item-row grid grid-cols-1 md:grid-cols-12 gap-3 mb-3 p-3 bg-gray-50 border border-gray-200 rounded-lg relative">
+                                <div class="md:col-span-5">
+                                    <label class="block text-xs text-gray-500 mb-1">Nama Barang / Jasa</label>
+                                    <input type="text" name="items[0][nama_barang]" required class="w-full rounded-md border-gray-300 border px-3 py-1.5 text-sm focus:ring-rns-blue focus:border-rns-blue bg-white" placeholder="Cth: Xray Mobile...">
+                                </div>
+                                <div class="md:col-span-2">
+                                    <label class="block text-xs text-gray-500 mb-1">QTY</label>
+                                    <input type="text" name="items[0][qty]" required class="w-full rounded-md border-gray-300 border px-3 py-1.5 text-sm focus:ring-rns-blue focus:border-rns-blue bg-white" placeholder="Cth: 1 Unit">
+                                </div>
+                                <div class="md:col-span-4">
+                                    <label class="block text-xs text-gray-500 mb-1">Harga Total (Rp)</label>
+                                    <input type="text" name="items[0][harga]" required class="w-full rounded-md border-gray-300 border px-3 py-1.5 text-sm focus:ring-rns-blue focus:border-rns-blue bg-white" placeholder="Cth: 15000000">
+                                </div>
+                                <div class="md:col-span-1 flex items-end justify-center pb-1">
+                                    <button type="button" class="text-red-500 hover:text-red-700 p-1 opacity-50 cursor-not-allowed" disabled title="Tidak bisa dihapus">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="md:col-span-2">
+                            <button type="button" onclick="addItemRow()" class="text-sm text-rns-blue hover:text-blue-800 font-medium flex items-center gap-1">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                                Tambah Barang/Jasa Lain
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -288,23 +318,86 @@ Kode bank : 451</textarea>
     }
 
     const penjualansData = @json($penjualans);
+    
     function onPenjualanSelect(value) {
-        const customerField = document.getElementById('previewCustomer');
-        const totalField = document.getElementById('previewTotal');
-        const p = penjualansData.find(item => value.startsWith(item.no_transaksi));
+        const option = document.querySelector('#penjualanList option[value="' + value + '"]');
+        if (option) {
+            const pId = option.dataset.id;
+            document.getElementById('penjualanId').value = pId;
+            document.getElementById('inputKepada').value = option.dataset.customer;
+            document.getElementById('inputAlamat').value = option.dataset.alamat;
 
-        if (!p) {
+            // Find the full object and fill items
+            const p = penjualansData.find(item => item.id == pId);
+            if (p && p.items && p.items.length > 0) {
+                const container = document.getElementById('items-container');
+                // Remove all existing item rows
+                container.querySelectorAll('.item-row').forEach(row => row.remove());
+                
+                // Add new rows from items
+                p.items.forEach((item, index) => {
+                    const itemName = item.barang ? item.barang.name : '';
+                    const hargaTotal = (parseFloat(item.harga_satuan) || 0) * (parseFloat(item.kuantitas) || 0);
+                    
+                    const html = `
+                        <div class="item-row grid grid-cols-1 md:grid-cols-12 gap-3 mb-3 p-3 bg-gray-50 border border-gray-200 rounded-lg relative" id="row-${index}">
+                            <div class="md:col-span-5">
+                                <label class="block text-xs text-gray-500 mb-1">Nama Barang / Jasa</label>
+                                <input type="text" name="items[${index}][nama_barang]" value="${itemName}" required class="w-full rounded-md border-gray-300 border px-3 py-1.5 text-sm focus:ring-rns-blue focus:border-rns-blue bg-white" placeholder="Cth: Xray Mobile...">
+                            </div>
+                            <div class="md:col-span-2">
+                                <label class="block text-xs text-gray-500 mb-1">QTY</label>
+                                <input type="text" name="items[${index}][qty]" value="${item.kuantitas}" required class="w-full rounded-md border-gray-300 border px-3 py-1.5 text-sm focus:ring-rns-blue focus:border-rns-blue bg-white" placeholder="Cth: 1 Unit">
+                            </div>
+                            <div class="md:col-span-4">
+                                <label class="block text-xs text-gray-500 mb-1">Harga Total (Rp)</label>
+                                <input type="text" name="items[${index}][harga]" value="${hargaTotal}" required class="w-full rounded-md border-gray-300 border px-3 py-1.5 text-sm focus:ring-rns-blue focus:border-rns-blue bg-white" placeholder="Cth: 15000000">
+                            </div>
+                            <div class="md:col-span-1 flex items-end justify-center pb-1">
+                                <button type="button" onclick="removeItemRow(${index})" class="text-red-500 hover:text-red-700 p-1" title="Hapus Barang">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                    container.insertAdjacentHTML('beforeend', html);
+                });
+            }
+        } else {
             document.getElementById('penjualanId').value = '';
-            customerField.value = '';
-            totalField.value = '';
-            return;
         }
+    }
 
-        document.getElementById('penjualanId').value = p.id;
-        customerField.value = p.nama_customer || '';
+    function addItemRow() {
+        const container = document.getElementById('items-container');
+        const count = container.querySelectorAll('.item-row').length;
         
-        const total = parseFloat(p.total_keseluruhan || 0);
-        totalField.value = new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(total);
+        const html = `
+            <div class="item-row grid grid-cols-1 md:grid-cols-12 gap-3 mb-3 p-3 bg-gray-50 border border-gray-200 rounded-lg relative" id="row-${count}">
+                <div class="md:col-span-5">
+                    <label class="block text-xs text-gray-500 mb-1">Nama Barang / Jasa</label>
+                    <input type="text" name="items[${count}][nama_barang]" required class="w-full rounded-md border-gray-300 border px-3 py-1.5 text-sm focus:ring-rns-blue focus:border-rns-blue bg-white" placeholder="Cth: Xray Mobile...">
+                </div>
+                <div class="md:col-span-2">
+                    <label class="block text-xs text-gray-500 mb-1">QTY</label>
+                    <input type="text" name="items[${count}][qty]" required class="w-full rounded-md border-gray-300 border px-3 py-1.5 text-sm focus:ring-rns-blue focus:border-rns-blue bg-white" placeholder="Cth: 1 Unit">
+                </div>
+                <div class="md:col-span-4">
+                    <label class="block text-xs text-gray-500 mb-1">Harga Total (Rp)</label>
+                    <input type="text" name="items[${count}][harga]" required class="w-full rounded-md border-gray-300 border px-3 py-1.5 text-sm focus:ring-rns-blue focus:border-rns-blue bg-white" placeholder="Cth: 15000000">
+                </div>
+                <div class="md:col-span-1 flex items-end justify-center pb-1">
+                    <button type="button" onclick="removeItemRow(${count})" class="text-red-500 hover:text-red-700 p-1" title="Hapus Barang">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                    </button>
+                </div>
+            </div>
+        `;
+        container.insertAdjacentHTML('beforeend', html);
+    }
+
+    function removeItemRow(id) {
+        document.getElementById('row-' + id).remove();
     }
 
 

@@ -46,7 +46,7 @@ class KwitansiController
     public function store(Request $request)
     {
         $request->validate([
-            'penjualan_id' => 'required|exists:penjualans,id',
+            'penjualan_id' => 'nullable|exists:penjualans,id',
             'tanggal_kwitansi' => 'required|date',
             'penandatangan' => 'required|string',
             'nama_penerima' => 'required|string',
@@ -82,7 +82,9 @@ class KwitansiController
 
     public function print(Kwitansi $kwitansi)
     {
-        $kwitansi->load(['penjualan.items.barang', 'user']);
+        if ($kwitansi->penjualan_id) {
+            $kwitansi->load(['penjualan.items.barang', 'user']);
+        }
         return view('admin.kwitansi.print', compact('kwitansi'));
     }
 

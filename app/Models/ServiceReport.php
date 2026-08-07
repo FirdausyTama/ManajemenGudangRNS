@@ -34,7 +34,7 @@ class ServiceReport extends Model
             }
         }
 
-        return sprintf("%02d/SR-RNS/%s/%s", $nextNumber, $monthRoman, $year);
+        return sprintf("%03d/SR-RAND/%s/%s", $nextNumber, $monthRoman, $year);
     }
 
     private static function romanNumerals($num)

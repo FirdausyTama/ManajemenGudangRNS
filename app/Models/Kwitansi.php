@@ -28,7 +28,7 @@ class Kwitansi extends Model
         }
         
         $count = $maxSequence + 1;
-        return str_pad($count, 2, '0', STR_PAD_LEFT) . '/KWT/RNS-' . $romanMonths[$month] . '/' . $year;
+        return str_pad($count, 3, '0', STR_PAD_LEFT) . '/KWT-RAND/' . $romanMonths[$month] . '/' . $year;
     }
 
     public function penjualan()

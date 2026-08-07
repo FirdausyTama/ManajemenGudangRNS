@@ -71,7 +71,7 @@ class PurchaseOrderController
             DB::beginTransaction();
 
             $po = PurchaseOrder::create([
-                'no_po' => PurchaseOrder::generateNoPo(),
+                'no_po' => PurchaseOrder::generateNoPo($request->tanggal_po),
                 'supplier_name' => $request->supplier_name,
                 'supplier_address' => $request->supplier_address,
                 'tanggal_po' => $request->tanggal_po,

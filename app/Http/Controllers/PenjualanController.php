@@ -170,7 +170,7 @@ class PenjualanController
             $count = Penjualan::whereYear('tanggal_transaksi', $year)
                               ->whereMonth('tanggal_transaksi', $month)
                               ->count() + 1;
-            $no_transaksi = str_pad($count, 2, '0', STR_PAD_LEFT) . '/TRX/RNS-' . $romanMonths[$month] . '/' . $year;
+            $no_transaksi = str_pad($count, 3, '0', STR_PAD_LEFT) . '/TRX-RAND/' . $romanMonths[$month] . '/' . $year;
 
             // Hitung ongkir
             $isOngkirAktif = $request->boolean('is_ongkir_aktif');

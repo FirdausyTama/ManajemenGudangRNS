@@ -32,10 +32,11 @@ class PurchaseOrder extends Model
     }
 
     // Auto generate PO number format: 002/P-RAND/IV/2026
-    public static function generateNoPo()
+    public static function generateNoPo($tanggal_po = null)
     {
-        $year = date('Y');
-        $month = date('n');
+        $date = $tanggal_po ? \Carbon\Carbon::parse($tanggal_po) : now();
+        $year = $date->format('Y');
+        $month = (int)$date->format('n');
 
         $romanMonths = [
             1 => 'I', 2 => 'II', 3 => 'III', 4 => 'IV', 5 => 'V', 6 => 'VI',
@@ -58,8 +59,7 @@ class PurchaseOrder extends Model
         $newNumber = str_pad($maxSequence + 1, 3, '0', STR_PAD_LEFT);
         
         $monthStr = $romanMonths[$month];
-        $year = date('Y');
 
-        return "{$newNumber}/P-RAND/{$monthStr}/{$year}";
+        return "{$newNumber}/PO-RAND/{$monthStr}/{$year}";
     }
 }

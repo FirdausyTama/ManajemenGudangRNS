@@ -63,7 +63,7 @@ class SuratSerahTerimaController
         $count = SuratSerahTerima::whereYear('tanggal', $year)
                             ->whereMonth('tanggal', $month)
                             ->count() + 1;
-        $nomor_surat = str_pad($count, 2, '0', STR_PAD_LEFT) . '/STB/RNS-' . $romanMonths[$month] . '/' . $year;
+        $nomor_surat = str_pad($count, 3, '0', STR_PAD_LEFT) . '/STB-RAND/' . $romanMonths[$month] . '/' . $year;
 
         SuratSerahTerima::create([
             'nomor_surat' => $nomor_surat,

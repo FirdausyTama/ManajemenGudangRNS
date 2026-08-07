@@ -49,13 +49,14 @@ class InvoiceController
     public function store(Request $request)
     {
         $request->validate([
-            'penjualan_id' => 'required|exists:penjualans,id',
+            'penjualan_id' => 'nullable|exists:penjualans,id',
+            'kepada' => 'nullable|string',
+            'alamat' => 'nullable|string',
+            'items' => 'nullable|array',
             'tanggal_invoice' => 'required|date',
             'penandatangan' => 'required|string',
             'keterangan' => 'nullable|string'
         ]);
-
-        $penjualan = Penjualan::findOrFail($request->penjualan_id);
 
         // Generate Invoice Number: XX/INV/RNS-[Month]/[Year]
         $year = date('Y', strtotime($request->tanggal_invoice));
@@ -65,11 +66,14 @@ class InvoiceController
         $count = Invoice::whereYear('tanggal_invoice', $year)
                         ->whereMonth('tanggal_invoice', $month)
                         ->count() + 1;
-        $no_invoice = str_pad($count, 2, '0', STR_PAD_LEFT) . '/INV/RNS-' . $romanMonths[$month] . '/' . $year;
+        $no_invoice = str_pad($count, 3, '0', STR_PAD_LEFT) . '/INV-RAND/' . $romanMonths[$month] . '/' . $year;
 
         $invoice = Invoice::create([
             'no_invoice' => $no_invoice,
-            'penjualan_id' => $penjualan->id,
+            'penjualan_id' => $request->penjualan_id,
+            'kepada' => $request->kepada,
+            'alamat' => $request->alamat,
+            'items' => $request->has('items') ? json_encode($request->items) : null,
             'tanggal_invoice' => $request->tanggal_invoice,
             'penandatangan' => $request->penandatangan,
             'keterangan' => $request->keterangan,
@@ -82,14 +86,16 @@ class InvoiceController
     // Fungsi untuk memproses dan mencetak (print) dokumen Invoice ke kertas
     public function print(Invoice $invoice)
     {
-        $invoice->load(['penjualan.items.barang', 'user']);
+        if ($invoice->penjualan_id) {
+            $invoice->load(['penjualan.items.barang', 'user']);
+        }
         $penjualan = $invoice->penjualan;
         $penandatangan = $invoice->penandatangan;
         $no_invoice = $invoice->no_invoice;
         $tanggal_invoice = $invoice->tanggal_invoice;
         $keterangan = $invoice->keterangan;
 
-        return view('admin.invoice.print-invoice', compact('penjualan', 'penandatangan', 'no_invoice', 'tanggal_invoice', 'keterangan'));
+        return view('admin.invoice.print-invoice', compact('invoice', 'penjualan', 'penandatangan', 'no_invoice', 'tanggal_invoice', 'keterangan'));
     }
 
     // Fungsi untuk menghapus riwayat Invoice dari database

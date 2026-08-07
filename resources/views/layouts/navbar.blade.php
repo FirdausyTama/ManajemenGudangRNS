@@ -25,36 +25,28 @@
             Kelola Penjualan
         </a>
 
-        <!-- Master Data Dropdown -->
-        <div class="relative x-dropdown">
-            <button type="button" class="{{ request()->routeIs('rekanan.*') ? 'bg-blue-50 text-rns-blue' : 'text-gray-600 hover:bg-gray-50 hover:text-rns-blue' }} flex items-center justify-between w-full gap-3 px-4 py-3 rounded-lg transition-colors font-medium text-left" onclick="this.nextElementSibling.classList.toggle('hidden')">
-                <div class="flex items-center gap-3">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
-                    Master Data
-                </div>
-                <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-            </button>
-            <div class="{{ request()->routeIs('rekanan.*') ? 'block' : 'hidden' }} pl-11 pr-4 py-2 space-y-1 mt-1 font-medium text-sm">
-                <a href="{{ route('rekanan.index') }}" class="{{ request()->routeIs('rekanan.*') ? 'text-rns-blue font-bold px-2 py-1.5' : 'text-gray-500 hover:text-rns-blue px-2 py-1.5' }} block rounded transition-colors">Manajemen Rekanan</a>
-            </div>
-        </div>
+        <!-- Master Data Link -->
+        <a href="{{ route('rekanan.index') }}" class="{{ request()->routeIs('rekanan.*') ? 'bg-blue-50 text-rns-blue' : 'text-gray-600 hover:bg-gray-50 hover:text-rns-blue' }} flex items-center gap-3 px-4 py-3 rounded-lg transition-colors font-medium">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+            Master Data
+        </a>
         <!-- Dokumen Dropdown -->
         <div class="relative x-dropdown">
-            <button type="button" class="{{ request()->routeIs('invoice.*') || request()->routeIs('kwitansi.*') || request()->routeIs('surat-jalan.*') || request()->routeIs('surat-penawaran.*') || request()->routeIs('purchase-order.*') || request()->routeIs('service-report.*') || request()->routeIs('serah-terima.*') ? 'bg-blue-50 text-rns-blue' : 'text-gray-600 hover:bg-gray-50 hover:text-rns-blue' }} flex items-center justify-between w-full gap-3 px-4 py-3 rounded-lg transition-colors font-medium text-left" onclick="this.nextElementSibling.classList.toggle('hidden')">
+            <button type="button" class="{{ request()->routeIs('invoice.*') || request()->routeIs('kwitansi.*') || request()->routeIs('surat-jalan.*') || request()->routeIs('surat-penawaran.*') || request()->routeIs('purchase-order.*') || request()->routeIs('service-report.*') || request()->routeIs('serah-terima.*') ? 'bg-blue-50 text-rns-blue' : 'text-gray-600 hover:bg-gray-50 hover:text-rns-blue' }} flex items-center justify-between w-full gap-3 px-4 py-3 rounded-lg transition-colors font-medium text-left cursor-pointer touch-manipulation" onclick="document.getElementById('menu-dokumen').classList.toggle('hidden')">
                 <div class="flex items-center gap-3">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
                     Dokumen
                 </div>
-                <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                <svg class="w-4 h-4 ml-2 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
             </button>
-            <div class="{{ request()->routeIs('invoice.*') || request()->routeIs('kwitansi.*') || request()->routeIs('surat-jalan.*') || request()->routeIs('surat-penawaran.*') || request()->routeIs('purchase-order.*') || request()->routeIs('service-report.*') || request()->routeIs('serah-terima.*') ? 'block' : 'hidden' }} pl-11 pr-4 py-2 space-y-1 mt-1 font-medium text-sm">
-                <a href="{{ route('surat-penawaran.index') }}" class="{{ request()->routeIs('surat-penawaran.*') ? 'text-rns-blue font-bold px-2 py-1.5' : 'text-gray-500 hover:text-rns-blue px-2 py-1.5' }} block rounded transition-colors">Surat Penawaran</a>
-                <a href="{{ route('purchase-order.index') }}" class="{{ request()->routeIs('purchase-order.*') ? 'text-rns-blue font-bold px-2 py-1.5' : 'text-gray-500 hover:text-rns-blue px-2 py-1.5' }} block rounded transition-colors">Purchase Order</a>
-                <a href="{{ route('invoice.index') }}" class="{{ request()->routeIs('invoice.*') ? 'text-rns-blue font-bold px-2 py-1.5' : 'text-gray-500 hover:text-rns-blue px-2 py-1.5' }} block rounded transition-colors">Surat Invoice</a>
-                <a href="{{ route('kwitansi.index') }}" class="{{ request()->routeIs('kwitansi.*') ? 'text-rns-blue font-bold px-2 py-1.5' : 'text-gray-500 hover:text-rns-blue px-2 py-1.5' }} block rounded transition-colors">Surat Kwitansi</a>
-                <a href="{{ route('surat-jalan.index') }}" class="{{ request()->routeIs('surat-jalan.*') ? 'text-rns-blue font-bold px-2 py-1.5' : 'text-gray-500 hover:text-rns-blue px-2 py-1.5' }} block rounded transition-colors">Surat Jalan</a>
-                <a href="{{ route('service-report.index') }}" class="{{ request()->routeIs('service-report.*') ? 'text-rns-blue font-bold px-2 py-1.5' : 'text-gray-500 hover:text-rns-blue px-2 py-1.5' }} block rounded transition-colors">Service Report</a>
-                <a href="{{ route('serah-terima.index') }}" class="{{ request()->routeIs('serah-terima.*') ? 'text-rns-blue font-bold px-2 py-1.5' : 'text-gray-500 hover:text-rns-blue px-2 py-1.5' }} block rounded transition-colors">Serah Terima Barang</a>
+            <div id="menu-dokumen" class="{{ request()->routeIs('invoice.*') || request()->routeIs('kwitansi.*') || request()->routeIs('surat-jalan.*') || request()->routeIs('surat-penawaran.*') || request()->routeIs('purchase-order.*') || request()->routeIs('service-report.*') || request()->routeIs('serah-terima.*') ? 'block' : 'hidden' }} pl-11 pr-4 py-2 space-y-1 mt-1 font-medium text-sm">
+                <a href="{{ route('surat-penawaran.index') }}" class="{{ request()->routeIs('surat-penawaran.*') ? 'text-rns-blue font-bold px-2 py-1.5' : 'text-gray-500 hover:text-rns-blue px-2 py-1.5' }} block rounded transition-colors touch-manipulation">Surat Penawaran</a>
+                <a href="{{ route('purchase-order.index') }}" class="{{ request()->routeIs('purchase-order.*') ? 'text-rns-blue font-bold px-2 py-1.5' : 'text-gray-500 hover:text-rns-blue px-2 py-1.5' }} block rounded transition-colors touch-manipulation">Purchase Order</a>
+                <a href="{{ route('invoice.index') }}" class="{{ request()->routeIs('invoice.*') ? 'text-rns-blue font-bold px-2 py-1.5' : 'text-gray-500 hover:text-rns-blue px-2 py-1.5' }} block rounded transition-colors touch-manipulation">Surat Invoice</a>
+                <a href="{{ route('kwitansi.index') }}" class="{{ request()->routeIs('kwitansi.*') ? 'text-rns-blue font-bold px-2 py-1.5' : 'text-gray-500 hover:text-rns-blue px-2 py-1.5' }} block rounded transition-colors touch-manipulation">Surat Kwitansi</a>
+                <a href="{{ route('surat-jalan.index') }}" class="{{ request()->routeIs('surat-jalan.*') ? 'text-rns-blue font-bold px-2 py-1.5' : 'text-gray-500 hover:text-rns-blue px-2 py-1.5' }} block rounded transition-colors touch-manipulation">Surat Jalan</a>
+                <a href="{{ route('service-report.index') }}" class="{{ request()->routeIs('service-report.*') ? 'text-rns-blue font-bold px-2 py-1.5' : 'text-gray-500 hover:text-rns-blue px-2 py-1.5' }} block rounded transition-colors touch-manipulation">Service Report</a>
+                <a href="{{ route('serah-terima.index') }}" class="{{ request()->routeIs('serah-terima.*') ? 'text-rns-blue font-bold px-2 py-1.5' : 'text-gray-500 hover:text-rns-blue px-2 py-1.5' }} block rounded transition-colors touch-manipulation">Serah Terima Barang</a>
             </div>
         </div>
         <a href="{{ route('laporan-keuntungan.index') }}" class="{{ request()->routeIs('laporan-keuntungan.*') ? 'bg-blue-50 text-rns-blue' : 'text-gray-600 hover:bg-gray-50 hover:text-rns-blue' }} flex items-center gap-3 px-4 py-3 rounded-lg transition-colors font-medium">
